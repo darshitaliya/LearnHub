@@ -31,20 +31,59 @@ export default function StudentProfilePage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const [fieldErrors, setFieldErrors] = useState({});
+
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const validate = () => {
+    const errors = {};
+    if (!formData.name?.trim()) {
+      errors.name = 'Full name is required.';
+    }
+    if (formData.phone && !/^[\+\d\s\(\)\-]{7,20}$/.test(formData.phone.trim())) {
+      errors.phone = 'Please enter a valid phone number.';
+    }
+    if (formData.newPassword) {
+      if (!formData.currentPassword) {
+        errors.currentPassword = 'Current password is required to set a new password.';
+      }
+      if (formData.newPassword.length < 6) {
+        errors.newPassword = 'New password must be at least 6 characters.';
+      }
+    }
+    return errors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
     setError('');
+    setFieldErrors({});
+
+    const clientErrors = validate();
+    if (Object.keys(clientErrors).length > 0) {
+      setFieldErrors(clientErrors);
+      setError(Object.values(clientErrors)[0]);
+      return;
+    }
+
     setLoading(true);
     try {
       await updateProfile(formData);
       setMessage('Profile updated successfully!');
+      setFormData((prev) => ({ ...prev, currentPassword: '', newPassword: '' }));
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to update profile.');
+      const serverErr = err.response?.data?.error || 'Failed to update profile.';
+      setError(serverErr);
+      if (err.response?.data?.fieldErrors) {
+        setFieldErrors(err.response.data.fieldErrors);
+      }
     } finally {
       setLoading(false);
     }
@@ -90,9 +129,10 @@ export default function StudentProfilePage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="form-control font-body-base input-premium"
+                className={`form-control font-body-base input-premium ${fieldErrors.name ? 'is-invalid' : ''}`}
                 required
               />
+              {fieldErrors.name && <div className="invalid-feedback font-body-sm d-block">{fieldErrors.name}</div>}
             </div>
 
             <div className="d-flex flex-column gap-1">
@@ -102,8 +142,10 @@ export default function StudentProfilePage() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="form-control font-body-base input-premium"
+                placeholder="+91 98765 43210"
+                className={`form-control font-body-base input-premium ${fieldErrors.phone ? 'is-invalid' : ''}`}
               />
+              {fieldErrors.phone && <div className="invalid-feedback font-body-sm d-block">{fieldErrors.phone}</div>}
             </div>
 
             <div className="d-flex flex-column gap-1">
@@ -130,8 +172,9 @@ export default function StudentProfilePage() {
                 value={formData.currentPassword}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="form-control font-body-base input-premium"
+                className={`form-control font-body-base input-premium ${fieldErrors.currentPassword ? 'is-invalid' : ''}`}
               />
+              {fieldErrors.currentPassword && <div className="invalid-feedback font-body-sm d-block">{fieldErrors.currentPassword}</div>}
             </div>
 
             <div className="d-flex flex-column gap-1">
@@ -142,8 +185,9 @@ export default function StudentProfilePage() {
                 value={formData.newPassword}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="form-control font-body-base input-premium"
+                className={`form-control font-body-base input-premium ${fieldErrors.newPassword ? 'is-invalid' : ''}`}
               />
+              {fieldErrors.newPassword && <div className="invalid-feedback font-body-sm d-block">{fieldErrors.newPassword}</div>}
             </div>
 
             <button type="submit" disabled={loading} className="btn btn-primary font-body-base py-3 rounded-3 mt-3">

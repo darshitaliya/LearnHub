@@ -154,47 +154,41 @@ export default function VideoPlayerPage() {
     }
   };
 
-  // Resolve 100% embeddable YouTube course video URL synchronized with course name
-  const getSyncedYouTubeUrl = (lesson, courseTitle) => {
-    const textToSearch = `${courseTitle || ''} ${lesson?.title || ''} ${lesson?.videoUrl || ''}`.toLowerCase();
-
-    // 100% Verified, 100% Embeddable YouTube Full-Course Video IDs (Zero "Video unavailable" errors)
-    let ytId = 'SqcY0GlETPk'; // Default: React 18 & Web Dev Full Course (FreeCodeCamp - 100% Embeddable)
-
-    if (textToSearch.includes('next') || textToSearch.includes('app router')) {
-      ytId = 'wm5gMKCORL8';
-    } else if (textToSearch.includes('node') || textToSearch.includes('express')) {
-      ytId = 'Oe421EPjeBE';
-    } else if (textToSearch.includes('python') || textToSearch.includes('django') || textToSearch.includes('fastapi')) {
-      ytId = 'rfscVS0vtbw';
-    } else if (textToSearch.includes('typescript')) {
-      ytId = 'd56mG7DezGs';
-    } else if (textToSearch.includes('figma') || textToSearch.includes('ui/ux') || textToSearch.includes('design')) {
-      ytId = 'c9Wg6Cb_YlU';
-    } else if (textToSearch.includes('flutter') || textToSearch.includes('dart') || textToSearch.includes('mobile')) {
-      ytId = 'VPvVD8t02U8';
-    } else if (textToSearch.includes('machine learning') || textToSearch.includes('pytorch') || textToSearch.includes('ai')) {
-      ytId = 'i_LwzRVP7bg';
-    } else if (textToSearch.includes('docker') || textToSearch.includes('kubernetes') || textToSearch.includes('devops')) {
-      ytId = 'fqMOX6JJhGo';
-    } else if (textToSearch.includes('sql') || textToSearch.includes('postgres') || textToSearch.includes('database')) {
-      ytId = 'HXV3zeQKqGY';
-    } else if (textToSearch.includes('java')) {
-      ytId = 'grEKMHGYyns';
-    } else if (textToSearch.includes('c++') || textToSearch.includes('c#') || textToSearch.includes('.net')) {
-      ytId = 'vLnPwxZdW4w';
-    } else if (textToSearch.includes('security') || textToSearch.includes('cyber') || textToSearch.includes('crypto')) {
-      ytId = '3Kq1MIfTWCE';
-    } else {
-      // Check if explicit video ID in lesson URL
-      const rawUrl = lesson?.videoUrl || lesson?.url || '';
-      const ytMatch = String(rawUrl).match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
-      if (ytMatch && ytMatch[1] && ytMatch[1] !== 'bMknfKXIFA8' && ytMatch[1] !== 'w7ejDZ8SWv8') {
-        ytId = ytMatch[1];
+  // Extract exact YouTube Video ID from lesson URL or fallback to subject-synchronized tutorial
+  const extractYouTubeId = (lesson, courseTitle) => {
+    const raw = lesson?.videoUrl || lesson?.url || '';
+    if (raw) {
+      const str = String(raw).trim();
+      if (/^[a-zA-Z0-9_-]{11}$/.test(str)) {
+        return str;
+      }
+      const match = str.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/i);
+      if (match && match[1]) {
+        return match[1];
       }
     }
 
-    return `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&controls=1`;
+    // Fallback if no specific URL was entered
+    const textToSearch = `${courseTitle || ''} ${lesson?.title || ''}`.toLowerCase();
+    if (textToSearch.includes('next') || textToSearch.includes('react')) return 'wm5gMKCORL8';
+    if (textToSearch.includes('node') || textToSearch.includes('express')) return 'Oe421EPjeBE';
+    if (textToSearch.includes('python') || textToSearch.includes('machine learning') || textToSearch.includes('ai') || textToSearch.includes('pytorch')) return 'Gv9_4yMHFhI';
+    if (textToSearch.includes('docker') || textToSearch.includes('kubernetes') || textToSearch.includes('devops') || textToSearch.includes('ci/cd') || textToSearch.includes('github')) return 'R8_veQiYBjU';
+    if (textToSearch.includes('gcp') || textToSearch.includes('cloud')) return 'jpno9AtS2wU';
+    if (textToSearch.includes('flutter') || textToSearch.includes('dart') || textToSearch.includes('mobile')) return 'VPvVD8t02U8';
+    if (textToSearch.includes('security') || textToSearch.includes('owasp') || textToSearch.includes('crypto')) return '2e6i_YgXW_A';
+    if (textToSearch.includes('typescript')) return 'd56mG7DezGs';
+    if (textToSearch.includes('figma') || textToSearch.includes('design') || textToSearch.includes('ui')) return 'c9Wg6Cb_YlU';
+    if (textToSearch.includes('sql') || textToSearch.includes('database')) return 'HXV3zeQKqGY';
+    if (textToSearch.includes('java')) return 'grEKMHGYyns';
+    if (textToSearch.includes('c++') || textToSearch.includes('c#')) return 'vLnPwxZdW4w';
+
+    return 'SqcY0GlETPk';
+  };
+
+  const getSyncedYouTubeUrl = (lesson, courseTitle) => {
+    const ytId = extractYouTubeId(lesson, courseTitle);
+    return `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&controls=1&playsinline=1`;
   };
 
   // Helper for Direct MP4 CDN Backup Stream
@@ -227,8 +221,10 @@ export default function VideoPlayerPage() {
     );
   }
 
-  const syncedYtUrl = getSyncedYouTubeUrl(activeLesson, course?.title);
+  const currentYtId = extractYouTubeId(activeLesson, course?.title);
+  const syncedYtUrl = `https://www.youtube.com/embed/${currentYtId}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&controls=1&playsinline=1`;
   const directMp4Source = getDirectVideoSource(activeLesson);
+  const directWatchUrl = `https://www.youtube.com/watch?v=${currentYtId}`;
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-surface">
@@ -262,11 +258,11 @@ export default function VideoPlayerPage() {
             <div className="d-flex align-items-center gap-2">
               <span className="badge bg-primary font-label-caps px-2.5 py-1">SYNCHRONIZED VIDEO STREAM ENGINE</span>
               <span className="font-label-caps text-white-50" style={{ fontSize: '11px' }}>
-                Mode: {streamMode === 'youtube' ? '📺 Official YouTube HD Stream (Synced)' : '⚡ Direct Ultra-HD MP4 Stream'}
+                Mode: {streamMode === 'youtube' ? '📺 Official YouTube HD Stream' : '⚡ Direct Ultra-HD MP4 Stream'}
               </span>
             </div>
 
-            <div className="d-flex gap-2">
+            <div className="d-flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={() => setStreamMode('youtube')}
@@ -288,6 +284,17 @@ export default function VideoPlayerPage() {
               >
                 <span className="material-symbols-outlined fs-6">bolt</span> Direct MP4 Stream
               </button>
+
+              <a
+                href={directWatchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm btn-outline-danger px-3 py-1 rounded-pill font-body-sm d-flex align-items-center gap-1 text-decoration-none"
+                style={{ fontSize: '12px' }}
+                title="Open and watch video directly on YouTube"
+              >
+                <span className="material-symbols-outlined fs-6">open_in_new</span> Watch on YouTube
+              </a>
             </div>
           </div>
 

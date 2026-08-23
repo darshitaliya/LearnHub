@@ -52,6 +52,18 @@ export const registerUser = async (req, res, next) => {
     const { password: pw, ...userSafe } = raw;
     userSafe.id = userId;
 
+    const COOKIE_OPTIONS = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      path: '/',
+    };
+
+    try {
+      res.cookie('learnhub_token', token, COOKIE_OPTIONS);
+    } catch {}
+
     return res.status(201).json({
       success: true,
       message: 'Registration successful',
@@ -118,6 +130,18 @@ export const loginUser = async (req, res, next) => {
     const { password: pw, ...userSafe } = raw;
     userSafe.id = userId;
 
+    const COOKIE_OPTIONS = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      path: '/',
+    };
+
+    try {
+      res.cookie('learnhub_token', token, COOKIE_OPTIONS);
+    } catch {}
+
     return res.status(200).json({
       success: true,
       message: 'Login successful',
@@ -130,6 +154,15 @@ export const loginUser = async (req, res, next) => {
 };
 
 export const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie('learnhub_token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+    });
+  } catch {}
+
   return res.status(200).json({
     success: true,
     message: 'Logged out successfully',

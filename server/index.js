@@ -30,6 +30,26 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Cookie Parser Middleware
+app.use((req, res, next) => {
+  req.cookies = {};
+  if (req.headers.cookie) {
+    req.headers.cookie.split(';').forEach((cookie) => {
+      const parts = cookie.split('=');
+      const name = parts[0]?.trim();
+      const val = parts.slice(1).join('=')?.trim();
+      if (name) {
+        try {
+          req.cookies[name] = decodeURIComponent(val);
+        } catch {
+          req.cookies[name] = val;
+        }
+      }
+    });
+  }
+  next();
+});
+
 // Database connection middleware for Serverless
 app.use(async (req, res, next) => {
   try {

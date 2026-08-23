@@ -16,14 +16,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const POSSIBLE_DB_PATHS = [
-  path.resolve(process.cwd(), 'data', 'persistent_db.json'),
-  path.resolve(process.cwd(), 'server', 'data', 'persistent_db.json'),
-  path.resolve(__dirname, '..', '..', 'data', 'persistent_db.json'),
   path.resolve(__dirname, '..', 'data', 'persistent_db.json'),
+  path.resolve(process.cwd(), 'server', 'data', 'persistent_db.json'),
+  path.resolve(process.cwd(), 'data', 'persistent_db.json'),
+  path.resolve(__dirname, '..', '..', 'data', 'persistent_db.json'),
   '/tmp/persistent_db.json',
 ];
 
 export function saveStateToFile() {
+  let savedAtLeastOnce = false;
   for (const p of POSSIBLE_DB_PATHS) {
     try {
       const dir = path.dirname(p);
@@ -31,9 +32,9 @@ export function saveStateToFile() {
         fs.mkdirSync(dir, { recursive: true });
       }
       fs.writeFileSync(p, JSON.stringify(memoryStore, null, 2), 'utf-8');
-      break;
+      savedAtLeastOnce = true;
     } catch (err) {
-      // In serverless read-only filesystem, continue with next writable path (e.g. /tmp)
+      // Continue to next path
     }
   }
 }
