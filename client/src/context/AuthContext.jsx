@@ -56,8 +56,19 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const login = async (email, password) => {
-    const res = await api.post('/auth/login', { email, password });
+  const login = async (emailOrData, password, captchaToken, captchaInput) => {
+    let payload = {};
+    if (typeof emailOrData === 'object' && emailOrData !== null) {
+      payload = emailOrData;
+    } else {
+      payload = {
+        email: emailOrData,
+        password,
+        ...(captchaToken && { captchaToken }),
+        ...(captchaInput && { captchaInput }),
+      };
+    }
+    const res = await api.post('/auth/login', payload);
     const authToken = res.data.token;
     const authUser = res.data.user;
 

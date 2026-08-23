@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from '../components/Logo';
+import CaptchaField from '../components/CaptchaField';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [captchaData, setCaptchaData] = useState({ captchaToken: '', captchaInput: '' });
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -17,10 +19,21 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setFieldErrors({});
+
+    if (!captchaData.captchaInput?.trim()) {
+      setFieldErrors((prev) => ({ ...prev, captcha: 'Please enter the CAPTCHA verification code.' }));
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const loggedUser = await login(email, password);
+      const loggedUser = await login({
+        email,
+        password,
+        captchaToken: captchaData.captchaToken,
+        captchaInput: captchaData.captchaInput,
+      });
       if (loggedUser?.role === 'admin') {
         navigate('/admin');
       } else {
@@ -212,6 +225,16 @@ export default function LoginPage() {
               />
               {fieldErrors.password && <div className="invalid-feedback font-body-sm d-block">{fieldErrors.password}</div>}
             </div>
+
+            {/* Security CAPTCHA Challenge */}
+            <CaptchaField
+              id="login-captcha"
+              onCaptchaChange={(data) => {
+                setCaptchaData(data);
+                if (fieldErrors.captcha) setFieldErrors((prev) => ({ ...prev, captcha: '' }));
+              }}
+              error={fieldErrors.captcha}
+            />
 
             <button type="submit" disabled={loading} className="btn btn-primary w-100 py-3 font-body-base fw-medium rounded-3 mt-2 shadow-sm">
               {loading ? (

@@ -2,10 +2,23 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { dbStore } from '../services/dbStore.js';
 import { JWT_SECRET } from '../middleware/authMiddleware.js';
+import { verifyCaptchaToken } from '../services/captchaService.js';
 
 export const registerUser = async (req, res, next) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, captchaToken, captchaInput } = req.body;
+
+    // Validate Security CAPTCHA if provided
+    if (captchaToken || captchaInput) {
+      const captchaCheck = verifyCaptchaToken(captchaToken, captchaInput);
+      if (!captchaCheck.valid) {
+        return res.status(400).json({
+          success: false,
+          error: captchaCheck.error || 'Invalid security CAPTCHA code.',
+          fieldErrors: { captcha: captchaCheck.error || 'Invalid security CAPTCHA code.' },
+        });
+      }
+    }
 
     const existingEmail = await dbStore.findUserByEmail(email);
     if (existingEmail) {
@@ -77,10 +90,22 @@ export const registerUser = async (req, res, next) => {
 
 export const loginUser = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, captchaToken, captchaInput } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ success: false, error: 'Email and password are required.' });
+    }
+
+    // Validate Security CAPTCHA if provided
+    if (captchaToken || captchaInput) {
+      const captchaCheck = verifyCaptchaToken(captchaToken, captchaInput);
+      if (!captchaCheck.valid) {
+        return res.status(400).json({
+          success: false,
+          error: captchaCheck.error || 'Invalid security CAPTCHA code.',
+          fieldErrors: { captcha: captchaCheck.error || 'Invalid security CAPTCHA code.' },
+        });
+      }
     }
 
     const cleanEmail = email.trim().toLowerCase();

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import CaptchaField from '../components/CaptchaField';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ export default function ContactPage() {
     message: '',
   });
 
+  const [captchaData, setCaptchaData] = useState({ captchaToken: '', captchaInput: '' });
+  const [captchaError, setCaptchaError] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -20,11 +23,18 @@ export default function ContactPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setCaptchaError('');
+
+    if (!captchaData.captchaInput?.trim()) {
+      setCaptchaError('Please enter the CAPTCHA code.');
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setSubmitted(true);
-    }, 1000);
+    }, 800);
   };
 
   const faqs = [
@@ -174,6 +184,16 @@ export default function ContactPage() {
                           required
                         />
                       </div>
+
+                      {/* Security CAPTCHA Challenge */}
+                      <CaptchaField
+                        id="contact-captcha"
+                        onCaptchaChange={(data) => {
+                          setCaptchaData(data);
+                          setCaptchaError('');
+                        }}
+                        error={captchaError}
+                      />
 
                       <button type="submit" disabled={loading} className="btn btn-primary font-headline-md py-3 rounded-3 mt-2 shadow-sm">
                         {loading ? 'Sending Message...' : 'Send Message'}

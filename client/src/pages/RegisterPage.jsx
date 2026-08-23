@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from '../components/Logo';
+import CaptchaField from '../components/CaptchaField';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function RegisterPage() {
     confirmPassword: '',
   });
 
+  const [captchaData, setCaptchaData] = useState({ captchaToken: '', captchaInput: '' });
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -58,6 +60,10 @@ export default function RegisterPage() {
       errors.confirmPassword = 'Passwords do not match.';
     }
 
+    if (!captchaData.captchaInput?.trim()) {
+      errors.captcha = 'Please enter the CAPTCHA verification code.';
+    }
+
     return errors;
   };
 
@@ -80,6 +86,8 @@ export default function RegisterPage() {
         email: formData.email.trim(),
         phone: formData.phone.trim(),
         password: formData.password,
+        captchaToken: captchaData.captchaToken,
+        captchaInput: captchaData.captchaInput,
       });
       navigate('/dashboard');
     } catch (err) {
@@ -238,6 +246,16 @@ export default function RegisterPage() {
               />
               {fieldErrors.confirmPassword && <div className="invalid-feedback font-body-sm d-block">{fieldErrors.confirmPassword}</div>}
             </div>
+
+            {/* Security CAPTCHA Challenge */}
+            <CaptchaField
+              id="register-captcha"
+              onCaptchaChange={(data) => {
+                setCaptchaData(data);
+                if (fieldErrors.captcha) setFieldErrors((prev) => ({ ...prev, captcha: '' }));
+              }}
+              error={fieldErrors.captcha}
+            />
 
             <button type="submit" disabled={loading} className="btn btn-primary w-100 py-3 font-body-base fw-medium rounded-3 mt-2 shadow-sm">
               {loading ? (

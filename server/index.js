@@ -10,6 +10,7 @@ import courseRoutes from './routes/courseRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import captchaRoutes from './routes/captchaRoutes.js';
 
 dotenv.config();
 
@@ -62,6 +63,7 @@ app.use(async (req, res, next) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/captcha', captchaRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/progress', progressRoutes);

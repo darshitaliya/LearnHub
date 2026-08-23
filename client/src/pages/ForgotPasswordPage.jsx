@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
+import CaptchaField from '../components/CaptchaField';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
+  const [captchaData, setCaptchaData] = useState({ captchaToken: '', captchaInput: '' });
+  const [captchaError, setCaptchaError] = useState('');
   const [sent, setSent] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setCaptchaError('');
+
+    if (!captchaData.captchaInput?.trim()) {
+      setCaptchaError('Please enter the CAPTCHA code.');
+      return;
+    }
+
     if (email) {
       setSent(true);
     }
@@ -48,6 +58,16 @@ export default function ForgotPasswordPage() {
                 required
               />
             </div>
+
+            {/* Security CAPTCHA Challenge */}
+            <CaptchaField
+              id="forgot-captcha"
+              onCaptchaChange={(data) => {
+                setCaptchaData(data);
+                setCaptchaError('');
+              }}
+              error={captchaError}
+            />
 
             <button type="submit" className="btn btn-primary w-100 py-3 font-body-base fw-medium rounded-3">
               Send Reset Link
