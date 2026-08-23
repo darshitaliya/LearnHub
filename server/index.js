@@ -40,21 +40,12 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// API Routes (Mounted both with and without /api prefix for bulletproof deployment compatibility)
+// API Routes
 app.use('/api/auth', authRoutes);
-app.use('/auth', authRoutes);
-
 app.use('/api/courses', courseRoutes);
-app.use('/courses', courseRoutes);
-
 app.use('/api/orders', orderRoutes);
-app.use('/orders', orderRoutes);
-
 app.use('/api/progress', progressRoutes);
-app.use('/progress', progressRoutes);
-
 app.use('/api/admin', adminRoutes);
-app.use('/admin', adminRoutes);
 
 // Health check endpoint
 app.get(['/api/health', '/health'], (req, res) => {
@@ -73,14 +64,7 @@ const clientDistPath = path.resolve(__dirname, '..', 'client', 'dist');
 if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
   app.get('*', (req, res, next) => {
-    if (
-      req.path.startsWith('/api') ||
-      req.path.startsWith('/auth') ||
-      req.path.startsWith('/courses') ||
-      req.path.startsWith('/orders') ||
-      req.path.startsWith('/progress') ||
-      req.path.startsWith('/admin')
-    ) {
+    if (req.path.startsWith('/api')) {
       return next();
     }
     res.sendFile(path.join(clientDistPath, 'index.html'));

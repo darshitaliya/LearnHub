@@ -18,45 +18,46 @@ export const seedInitialData = async () => {
     return;
   }
   try {
-    // Seed initial users so admin@learnhub.com is always available
-    const userCount = await User.countDocuments().catch(() => 0);
-    if (userCount === 0) {
-      console.log('🌱 Seeding initial admin & instructor accounts into MongoDB...');
-      const usersToSeed = [
-        {
-          _id: 'usr_admin',
-          name: 'System Admin',
-          email: 'admin@learnhub.com',
-          phone: '+91 98765 43210',
-          password: await bcrypt.hash('admin123', 10),
-          role: 'admin',
-          avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC',
-          enrolledCourses: [],
-        },
-        {
-          _id: 'usr_instructor',
-          name: 'Dr. Elena Rostova',
-          email: 'elena@learnhub.com',
-          phone: '+91 98765 43211',
-          password: await bcrypt.hash('instructor123', 10),
-          role: 'instructor',
-          avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAXsLFd9D54QvHC0YzVKgLxHnnpERLlfdgwtLORSSs-tNRp-QmFZO2N6hDlOwY4x1YQPu2xppRb0y7Znoil2TshKCTUkd0a-yYGk5Su4MWRVe3T_a9Ip01U3Ouw28n9nEcUzBOnvUSpbLqrQhL2mobnRZyxz1nmOj7wHnAyCbza00LARkU3ve07zwoM3KCRp_eschNgIu0MYW1mNjmkarjPPMHEd9LoEG2l2hK4csZx1DvTbpTJqdf4',
-          enrolledCourses: [],
-        },
-        {
-          _id: 'usr_student',
-          name: 'Alex Morgan',
-          email: 'alex@learnhub.com',
-          phone: '+91 98765 43212',
-          password: await bcrypt.hash('student123', 10),
-          role: 'student',
-          avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC',
-          enrolledCourses: [],
-        },
-      ];
+    const usersToSeed = [
+      {
+        _id: 'usr_admin',
+        name: 'System Admin',
+        email: 'admin@learnhub.com',
+        phone: '+91 98765 43210',
+        password: await bcrypt.hash('admin123', 10),
+        role: 'admin',
+        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC',
+        enrolledCourses: [],
+      },
+      {
+        _id: 'usr_instructor',
+        name: 'Dr. Elena Rostova',
+        email: 'elena@learnhub.com',
+        phone: '+91 98765 43211',
+        password: await bcrypt.hash('instructor123', 10),
+        role: 'instructor',
+        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAXsLFd9D54QvHC0YzVKgLxHnnpERLlfdgwtLORSSs-tNRp-QmFZO2N6hDlOwY4x1YQPu2xppRb0y7Znoil2TshKCTUkd0a-yYGk5Su4MWRVe3T_a9Ip01U3Ouw28n9nEcUzBOnvUSpbLqrQhL2mobnRZyxz1nmOj7wHnAyCbza00LARkU3ve07zwoM3KCRp_eschNgIu0MYW1mNjmkarjPPMHEd9LoEG2l2hK4csZx1DvTbpTJqdf4',
+        enrolledCourses: [],
+      },
+      {
+        _id: 'usr_student',
+        name: 'Alex Morgan',
+        email: 'alex@learnhub.com',
+        phone: '+91 98765 43212',
+        password: await bcrypt.hash('student123', 10),
+        role: 'student',
+        avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC',
+        enrolledCourses: [],
+      },
+    ];
 
-      await User.insertMany(usersToSeed).catch(() => {});
-      console.log('✅ Demo users seeded successfully!');
+    for (const u of usersToSeed) {
+      try {
+        const exists = await User.findOne({ email: u.email });
+        if (!exists) {
+          await User.create(u);
+        }
+      } catch (err) {}
     }
 
     // Seed Categories

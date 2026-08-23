@@ -123,7 +123,32 @@ export const dbStore = {
     if (!email) return null;
     const query = email.toLowerCase().trim();
     if (isMongoConnected()) {
-      return await User.findOne({ email: query });
+      try {
+        let u = await User.findOne({ email: query });
+        if (u) return u;
+        // If it's a standard demo user, auto-provision into MongoDB
+        const demo = memoryStore.users.find((m) => m.email?.toLowerCase() === query);
+        if (demo) {
+          try {
+            u = await User.create({
+              _id: demo._id || demo.id,
+              name: demo.name,
+              email: demo.email,
+              phone: demo.phone,
+              password: demo.password,
+              role: demo.role,
+              avatar: demo.avatar,
+              enrolledCourses: demo.enrolledCourses || [],
+              wishlist: demo.wishlist || [],
+            });
+            return u;
+          } catch (e) {
+            return demo;
+          }
+        }
+      } catch (err) {
+        console.warn('Mongo findUserByEmail fallback:', err.message);
+      }
     }
     return memoryStore.users.find((u) => u.email?.toLowerCase() === query) || null;
   },
@@ -132,7 +157,9 @@ export const dbStore = {
     if (!phone) return null;
     const query = phone.trim();
     if (isMongoConnected()) {
-      return await User.findOne({ phone: query });
+      try {
+        return await User.findOne({ phone: query });
+      } catch (err) {}
     }
     return memoryStore.users.find((u) => u.phone === query) || null;
   },
@@ -141,12 +168,11 @@ export const dbStore = {
     if (!id) return null;
     if (isMongoConnected()) {
       try {
-        return await User.findById(id);
-      } catch (err) {
-        return await User.findOne({ id });
-      }
+        let u = await User.findOne({ $or: [{ _id: id }, { id: id }, { email: id }] });
+        if (u) return u;
+      } catch (err) {}
     }
-    return memoryStore.users.find((u) => u.id === id || u._id === id) || null;
+    return memoryStore.users.find((u) => u.id === id || u._id === id || u.email === id) || null;
   },
 
   async createUser(userData) {

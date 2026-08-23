@@ -16,18 +16,8 @@ export default function RegisterPage() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const { user, register } = useAuth();
+  const { user, register, logout } = useAuth();
   const navigate = useNavigate();
-
-  React.useEffect(() => {
-    if (user) {
-      if (user.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
-    }
-  }, [user, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -148,6 +138,34 @@ export default function RegisterPage() {
             </h1>
             <p className="font-body-base text-on-surface-variant m-0">Join LearnHub and start your journey today.</p>
           </div>
+
+          {user && (
+            <div className="p-3 mb-3 bg-primary-subtle border border-primary/20 rounded-3">
+              <div className="d-flex align-items-center justify-content-between mb-2">
+                <span className="font-body-sm text-on-surface">
+                  Currently signed in as <strong>{user.name}</strong> ({user.role?.toUpperCase()})
+                </span>
+              </div>
+              <div className="d-flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => navigate(user.role === 'admin' ? '/admin' : '/dashboard')}
+                  className="btn btn-sm btn-primary font-body-sm px-3 rounded-pill"
+                >
+                  Go to {user.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
+                </button>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await logout();
+                  }}
+                  className="btn btn-sm btn-outline-danger font-body-sm px-3 rounded-pill"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          )}
 
           {error && <div className="alert alert-danger font-body-sm rounded-3 mb-3">{error}</div>}
 

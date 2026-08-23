@@ -10,18 +10,8 @@ export default function LoginPage() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const { user, login } = useAuth();
+  const { user, login, logout } = useAuth();
   const navigate = useNavigate();
-
-  React.useEffect(() => {
-    if (user) {
-      if (user.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
-    }
-  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,6 +46,31 @@ export default function LoginPage() {
     setPassword(rolePass);
     setError('');
     setFieldErrors({});
+  };
+
+  const handleDemoLogin = async (roleEmail, rolePass) => {
+    fillCredentials(roleEmail, rolePass);
+    setError('');
+    setFieldErrors({});
+    setLoading(true);
+
+    try {
+      const loggedUser = await login(roleEmail, rolePass);
+      if (loggedUser?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      const serverErr =
+        err.response?.data?.error ||
+        (err.code === 'ERR_NETWORK' || !err.response
+          ? 'Cannot connect to server. Please ensure backend is running.'
+          : 'Invalid email or password.');
+      setError(serverErr);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -100,6 +115,35 @@ export default function LoginPage() {
             <p className="font-body-base text-on-surface-variant m-0">Enter your details to access your account.</p>
           </div>
 
+          {/* If currently signed in, show notification banner without blocking */}
+          {user && (
+            <div className="p-3 mb-3 bg-primary-subtle border border-primary/20 rounded-3">
+              <div className="d-flex align-items-center justify-content-between mb-2">
+                <span className="font-body-sm text-on-surface">
+                  Currently signed in as <strong>{user.name}</strong> ({user.role?.toUpperCase()})
+                </span>
+              </div>
+              <div className="d-flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => navigate(user.role === 'admin' ? '/admin' : '/dashboard')}
+                  className="btn btn-sm btn-primary font-body-sm px-3 rounded-pill"
+                >
+                  Go to {user.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
+                </button>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await logout();
+                  }}
+                  className="btn btn-sm btn-outline-danger font-body-sm px-3 rounded-pill"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          )}
+
           {error && <div className="alert alert-danger font-body-sm rounded-3 mb-3">{error}</div>}
 
           {/* Quick Preset Login Buttons for Demo */}
@@ -108,14 +152,16 @@ export default function LoginPage() {
             <div className="d-flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => { setEmail('alex@learnhub.com'); setPassword('student123'); setFieldErrors({}); setError(''); }}
+                disabled={loading}
+                onClick={() => handleDemoLogin('alex@learnhub.com', 'student123')}
                 className="btn btn-sm btn-outline-primary font-body-sm px-3 py-1.5 rounded-pill fw-semibold shadow-xs"
               >
                 Student Demo
               </button>
               <button
                 type="button"
-                onClick={() => { setEmail('admin@learnhub.com'); setPassword('admin123'); setFieldErrors({}); setError(''); }}
+                disabled={loading}
+                onClick={() => handleDemoLogin('admin@learnhub.com', 'admin123')}
                 className="btn btn-sm btn-outline-primary font-body-sm px-3 py-1.5 rounded-pill fw-semibold shadow-xs"
               >
                 Admin Demo
