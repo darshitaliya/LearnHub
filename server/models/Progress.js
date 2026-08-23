@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 
 const progressSchema = new mongoose.Schema(
   {
+    _id: {
+      type: String,
+      default: () => `prg_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+    },
     key: { type: String, required: true, unique: true, index: true },
     userId: { type: String, required: true, index: true },
     courseId: { type: String, required: true, index: true },

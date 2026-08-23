@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
   {
+    _id: {
+      type: String,
+      default: () => `usr_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+    },
     name: {
       type: String,
       required: [true, 'Name is required'],
