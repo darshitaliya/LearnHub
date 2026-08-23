@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "cd client && npm install --include=dev && npm run build",
     "start": "node server/index.js",
     "server": "node server/index.js",
@@ -17,6 +18,7 @@
     "mongoose": "^8.24.3"
   },
   "devDependencies": {
+    "concurrently": "^10.0.5",
     "puppeteer-core": "^25.8.0"
   }
 }

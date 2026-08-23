@@ -4,32 +4,70 @@ import api from '../services/api';
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('learnhub_token') || '');
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('learnhub_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [token, setToken] = useState(() => localStorage.getItem('learnhub_token') || '');
   const [loading, setLoading] = useState(true);
 
+  const refreshUser = async () => {
+    const activeToken = localStorage.getItem('learnhub_token') || token;
+    if (!activeToken) return null;
+    try {
+      const res = await api.get('/auth/me');
+      if (res.data && (res.data.id || res.data._id)) {
+        setUser(res.data);
+        localStorage.setItem('learnhub_user', JSON.stringify(res.data));
+        return res.data;
+      }
+    } catch (err) {
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        logout();
+      }
+    }
+    return null;
+  };
+
   useEffect(() => {
-    if (token) {
+    const savedToken = localStorage.getItem('learnhub_token');
+    if (savedToken) {
+      setToken(savedToken);
       api
         .get('/auth/me')
         .then((res) => {
-          setUser(res.data);
+          if (res.data && (res.data.id || res.data._id)) {
+            setUser(res.data);
+            localStorage.setItem('learnhub_user', JSON.stringify(res.data));
+          }
         })
-        .catch(() => {
-          logout();
+        .catch((err) => {
+          if (err.response?.status === 401 || err.response?.status === 403) {
+            logout();
+          }
         })
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
-    localStorage.setItem('learnhub_token', res.data.token);
-    setToken(res.data.token);
-    setUser(res.data.user);
-    return res.data.user;
+    const authToken = res.data.token;
+    const authUser = res.data.user;
+
+    localStorage.setItem('learnhub_token', authToken);
+    localStorage.setItem('learnhub_user', JSON.stringify(authUser));
+
+    setToken(authToken);
+    setUser(authUser);
+    setLoading(false);
+    return authUser;
   };
 
   const register = async (nameOrData, email, phone, password) => {
@@ -38,30 +76,42 @@ export function AuthProvider({ children }) {
         ? nameOrData
         : { name: nameOrData, email, phone, password };
     const res = await api.post('/auth/register', payload);
-    localStorage.setItem('learnhub_token', res.data.token);
-    setToken(res.data.token);
-    setUser(res.data.user);
-    return res.data.user;
+    const authToken = res.data.token;
+    const authUser = res.data.user;
+
+    localStorage.setItem('learnhub_token', authToken);
+    localStorage.setItem('learnhub_user', JSON.stringify(authUser));
+
+    setToken(authToken);
+    setUser(authUser);
+    setLoading(false);
+    return authUser;
   };
 
   const logout = async () => {
     try {
-      if (token) {
-        await api.post('/auth/logout');
+      const activeToken = localStorage.getItem('learnhub_token');
+      if (activeToken) {
+        await api.post('/auth/logout').catch(() => {});
       }
     } catch (err) {
       console.warn('Logout API call error:', err);
     } finally {
       localStorage.removeItem('learnhub_token');
+      localStorage.removeItem('learnhub_user');
       setToken('');
       setUser(null);
+      setLoading(false);
     }
   };
 
   const updateProfile = async (profileData) => {
     const res = await api.put('/auth/profile', profileData);
-    setUser(res.data.user);
-    return res.data.user;
+    if (res.data.user) {
+      setUser(res.data.user);
+      localStorage.setItem('learnhub_user', JSON.stringify(res.data.user));
+      return res.data.user;
+    }
   };
 
   return (
@@ -74,6 +124,7 @@ export function AuthProvider({ children }) {
         register,
         logout,
         updateProfile,
+        refreshUser,
         isAuthenticated: !!user,
         isAdmin: user?.role === 'admin',
         isInstructor: user?.role === 'instructor' || user?.role === 'admin',
@@ -87,3 +138,4 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
+

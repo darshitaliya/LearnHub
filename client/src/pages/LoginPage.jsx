@@ -37,7 +37,11 @@ export default function LoginPage() {
         navigate('/dashboard');
       }
     } catch (err) {
-      const serverErr = err.response?.data?.error || 'Invalid email or password.';
+      const serverErr =
+        err.response?.data?.error ||
+        (err.code === 'ERR_NETWORK' || !err.response
+          ? 'Cannot connect to server. Please ensure backend is running.'
+          : 'Invalid email or password.');
       setError(serverErr);
       if (err.response?.data?.fieldErrors) {
         setFieldErrors(err.response.data.fieldErrors);

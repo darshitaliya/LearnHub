@@ -22,7 +22,12 @@ connectDB().then(() => {
 });
 
 // Global Middleware
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
 
 // Database connection middleware for Serverless
@@ -35,21 +40,25 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// API Routes
+// API Routes (Mounted both with and without /api prefix for bulletproof deployment compatibility)
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+
 app.use('/api/courses', courseRoutes);
+app.use('/courses', courseRoutes);
+
 app.use('/api/orders', orderRoutes);
+app.use('/orders', orderRoutes);
+
 app.use('/api/progress', progressRoutes);
+app.use('/progress', progressRoutes);
+
 app.use('/api/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok', message: 'LearnHub Backend operational' });
-});
-
-// 404 Route Handler for undefined endpoints
-app.use((req, res, next) => {
-  res.status(404).json({ success: false, error: `Route ${req.originalUrl} not found` });
+app.get(['/api/health', '/health'], (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'LearnHub Backend operational', env: process.env.NODE_ENV || 'production' });
 });
 
 // Centralized Error Handling Middleware

@@ -10,43 +10,54 @@ import Enrollment from '../models/Enrollment.js';
 import Category from '../models/Category.js';
 import Review from '../models/Review.js';
 
-const DB_FILE_PATH = path.resolve(process.cwd(), 'data', 'persistent_db.json');
+import { fileURLToPath } from 'url';
 
-function ensureDataDirExists() {
-  const dir = path.dirname(DB_FILE_PATH);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const POSSIBLE_DB_PATHS = [
+  path.resolve(process.cwd(), 'data', 'persistent_db.json'),
+  path.resolve(process.cwd(), 'server', 'data', 'persistent_db.json'),
+  path.resolve(__dirname, '..', '..', 'data', 'persistent_db.json'),
+  path.resolve(__dirname, '..', 'data', 'persistent_db.json'),
+  '/tmp/persistent_db.json',
+];
 
 export function saveStateToFile() {
-  try {
-    ensureDataDirExists();
-    fs.writeFileSync(DB_FILE_PATH, JSON.stringify(memoryStore, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('Error saving state to persistent_db.json:', err);
+  for (const p of POSSIBLE_DB_PATHS) {
+    try {
+      const dir = path.dirname(p);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      fs.writeFileSync(p, JSON.stringify(memoryStore, null, 2), 'utf-8');
+      break;
+    } catch (err) {
+      // In serverless read-only filesystem, continue with next writable path (e.g. /tmp)
+    }
   }
 }
 
 export function loadStateFromFile() {
-  try {
-    ensureDataDirExists();
-    if (fs.existsSync(DB_FILE_PATH)) {
-      const fileData = fs.readFileSync(DB_FILE_PATH, 'utf-8');
-      if (fileData.trim()) {
-        const parsed = JSON.parse(fileData);
-        if (parsed && typeof parsed === 'object') {
-          if (Array.isArray(parsed.users)) memoryStore.users = parsed.users;
-          if (Array.isArray(parsed.courses)) memoryStore.courses = parsed.courses;
-          if (Array.isArray(parsed.orders)) memoryStore.orders = parsed.orders;
-          if (Array.isArray(parsed.enrollments)) memoryStore.enrollments = parsed.enrollments;
-          if (parsed.progress) memoryStore.progress = parsed.progress;
-          return true;
+  for (const p of POSSIBLE_DB_PATHS) {
+    try {
+      if (fs.existsSync(p)) {
+        const fileData = fs.readFileSync(p, 'utf-8');
+        if (fileData.trim()) {
+          const parsed = JSON.parse(fileData);
+          if (parsed && typeof parsed === 'object') {
+            if (Array.isArray(parsed.users) && parsed.users.length > 0) memoryStore.users = parsed.users;
+            if (Array.isArray(parsed.courses) && parsed.courses.length > 0) memoryStore.courses = parsed.courses;
+            if (Array.isArray(parsed.orders)) memoryStore.orders = parsed.orders;
+            if (Array.isArray(parsed.enrollments)) memoryStore.enrollments = parsed.enrollments;
+            if (parsed.progress) memoryStore.progress = parsed.progress;
+            return true;
+          }
         }
       }
+    } catch (err) {
+      // Continue checking next path
     }
-  } catch (err) {
-    console.error('Error loading state from persistent_db.json:', err);
   }
   return false;
 }

@@ -28,8 +28,8 @@ export const validateRegister = (req, res, next) => {
 
   if (!password || password.length === 0) {
     errors.password = 'Password is required.';
-  } else if (password.length < 8) {
-    errors.password = 'Password must be at least 8 characters long.';
+  } else if (password.length < 6) {
+    errors.password = 'Password must be at least 6 characters long.';
   }
 
   if (confirmPassword !== undefined && password !== confirmPassword) {

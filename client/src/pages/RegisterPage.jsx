@@ -93,7 +93,11 @@ export default function RegisterPage() {
       });
       navigate('/dashboard');
     } catch (err) {
-      const serverErr = err.response?.data?.error || 'Registration failed.';
+      const serverErr =
+        err.response?.data?.error ||
+        (err.code === 'ERR_NETWORK' || !err.response
+          ? 'Cannot connect to server. Please ensure backend is running.'
+          : 'Registration failed.');
       setError(serverErr);
       if (err.response?.data?.fieldErrors) {
         setFieldErrors(err.response.data.fieldErrors);

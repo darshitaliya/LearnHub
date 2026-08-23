@@ -15,15 +15,27 @@ export const connectDB = async () => {
     return null;
   }
 
-  const connStr = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/learnhub';
+  const connStr = process.env.MONGODB_URI;
+
+  // In cloud/serverless environment without a remote MONGODB_URI, skip localhost connection wait
+  if (!connStr || connStr.includes('127.0.0.1') || connStr.includes('localhost')) {
+    if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+      if (!connStr) {
+        return null;
+      }
+    }
+  }
+
+  const targetUri = connStr || 'mongodb://127.0.0.1:27017/learnhub';
 
   if (!cachedPromise) {
     const opts = {
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 3000,
+      connectTimeoutMS: 3000,
     };
 
     cachedPromise = mongoose
-      .connect(connStr, opts)
+      .connect(targetUri, opts)
       .then((conn) => {
         console.log(`🍃 MongoDB Connected: ${conn.connection.host}/${conn.connection.name}`);
         lastFailureTime = 0;
@@ -32,7 +44,7 @@ export const connectDB = async () => {
       .catch((err) => {
         cachedPromise = null;
         lastFailureTime = Date.now();
-        console.log(`ℹ️ MongoDB connection note: ${err.message}. Adaptive Store active.`);
+        console.log(`ℹ️ MongoDB note: ${err.message}. Adaptive Store active.`);
         return null;
       });
   }
