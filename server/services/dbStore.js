@@ -125,10 +125,10 @@ export const dbStore = {
     const query = email.toLowerCase().trim();
     if (isMongoConnected()) {
       try {
-        let u = await User.findOne({ email: query });
+        let u = await User.findOne({ email: query, isDeleted: { $ne: true } });
         if (u) return u;
         // If it's a standard demo user, auto-provision into MongoDB
-        const demo = memoryStore.users.find((m) => m.email?.toLowerCase() === query);
+        const demo = memoryStore.users.find((m) => m.email?.toLowerCase() === query && !m.isDeleted);
         if (demo) {
           try {
             u = await User.create({
@@ -141,6 +141,8 @@ export const dbStore = {
               avatar: demo.avatar,
               enrolledCourses: demo.enrolledCourses || [],
               wishlist: demo.wishlist || [],
+              isDeleted: false,
+              deletedAt: null,
             });
             return u;
           } catch (e) {
@@ -151,7 +153,7 @@ export const dbStore = {
         console.warn('Mongo findUserByEmail fallback:', err.message);
       }
     }
-    return memoryStore.users.find((u) => u.email?.toLowerCase() === query) || null;
+    return memoryStore.users.find((u) => u.email?.toLowerCase() === query && !u.isDeleted) || null;
   },
 
   async findUserByPhone(phone) {
@@ -159,21 +161,21 @@ export const dbStore = {
     const query = phone.trim();
     if (isMongoConnected()) {
       try {
-        return await User.findOne({ phone: query });
+        return await User.findOne({ phone: query, isDeleted: { $ne: true } });
       } catch (err) {}
     }
-    return memoryStore.users.find((u) => u.phone === query) || null;
+    return memoryStore.users.find((u) => u.phone === query && !u.isDeleted) || null;
   },
 
   async findUserById(id) {
     if (!id) return null;
     if (isMongoConnected()) {
       try {
-        let u = await User.findOne({ $or: [{ _id: id }, { id: id }, { email: id }] });
+        let u = await User.findOne({ $or: [{ _id: id }, { id: id }, { email: id }], isDeleted: { $ne: true } });
         if (u) return u;
       } catch (err) {}
     }
-    return memoryStore.users.find((u) => u.id === id || u._id === id || u.email === id) || null;
+    return memoryStore.users.find((u) => (u.id === id || u._id === id || u.email === id) && !u.isDeleted) || null;
   },
 
   async createUser(userData) {
@@ -187,6 +189,8 @@ export const dbStore = {
       avatar: userData.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC',
       enrolledCourses: [],
       wishlist: [],
+      isDeleted: false,
+      deletedAt: null,
       createdAt: new Date().toISOString(),
     };
 
@@ -202,11 +206,14 @@ export const dbStore = {
     return newUser;
   },
 
-  async getAllUsers() {
+  async getAllUsers(includeDeleted = false) {
     if (isMongoConnected()) {
-      return await User.find({}).select('-password');
+      const query = includeDeleted ? {} : { isDeleted: { $ne: true } };
+      return await User.find(query).select('-password');
     }
-    return memoryStore.users.map(({ password, ...rest }) => rest);
+    return memoryStore.users
+      .filter((u) => includeDeleted || !u.isDeleted)
+      .map(({ password, ...rest }) => rest);
   },
 
   async updateUser(userId, updateData) {
@@ -229,18 +236,21 @@ export const dbStore = {
     return result;
   },
 
+  // SOFT DELETE USER
   async deleteUser(userId) {
+    const softDeleteData = { isDeleted: true, deletedAt: new Date().toISOString() };
     let result = null;
     if (isMongoConnected()) {
       try {
-        result = await User.findByIdAndDelete(userId);
+        result = await User.findByIdAndUpdate(userId, softDeleteData, { new: true });
       } catch (err) {
-        result = await User.findOneAndDelete({ id: userId });
+        result = await User.findOneAndUpdate({ id: userId }, softDeleteData, { new: true });
       }
     } else {
       const idx = memoryStore.users.findIndex((u) => u.id === userId || u._id === userId);
       if (idx !== -1) {
-        result = memoryStore.users.splice(idx, 1)[0];
+        memoryStore.users[idx] = { ...memoryStore.users[idx], ...softDeleteData };
+        result = memoryStore.users[idx];
       }
     }
     saveStateToFile();
@@ -248,12 +258,13 @@ export const dbStore = {
   },
 
   // COURSE OPERATIONS
-  async getAllCourses(filters = {}) {
+  async getAllCourses(filters = {}, includeDeleted = false) {
     let coursesList = [];
     if (isMongoConnected()) {
-      coursesList = await Course.find({});
+      const query = includeDeleted ? {} : { isDeleted: { $ne: true } };
+      coursesList = await Course.find(query);
     } else {
-      coursesList = [...memoryStore.courses];
+      coursesList = memoryStore.courses.filter((c) => includeDeleted || !c.isDeleted);
     }
 
     if (filters.category && filters.category !== 'All') {
@@ -285,15 +296,17 @@ export const dbStore = {
     return this.getAllCourses(filters);
   },
 
-  async getCourseById(id) {
+  async getCourseById(id, includeDeleted = false) {
     if (isMongoConnected()) {
       try {
-        return await Course.findById(id);
+        const query = { $or: [{ _id: id }, { id }] };
+        if (!includeDeleted) query.isDeleted = { $ne: true };
+        return await Course.findOne(query);
       } catch (err) {
-        return await Course.findOne({ id });
+        return null;
       }
     }
-    return memoryStore.courses.find((c) => c.id === id || c._id === id) || null;
+    return memoryStore.courses.find((c) => (c.id === id || c._id === id) && (includeDeleted || !c.isDeleted)) || null;
   },
 
   async createCourse(courseData) {
@@ -323,6 +336,8 @@ export const dbStore = {
       featured: courseData.featured !== undefined ? courseData.featured : true,
       modules: courseData.modules || [],
       includes: courseData.includes || ['Full video lessons', 'Certificate of completion', 'Lifetime access'],
+      isDeleted: false,
+      deletedAt: null,
       createdAt: new Date().toISOString(),
     };
 
@@ -338,28 +353,53 @@ export const dbStore = {
     return newCourse;
   },
 
-  async deleteCourse(id) {
+  async updateCourse(id, updateData) {
+    let result = null;
     if (isMongoConnected()) {
       try {
-        await Course.findByIdAndDelete(id);
+        result = await Course.findOneAndUpdate({ $or: [{ _id: id }, { id }] }, updateData, { new: true });
       } catch (err) {
-        await Course.findOneAndDelete({ id });
+        console.error('Error updating course in Mongo:', err);
       }
     } else {
       const idx = memoryStore.courses.findIndex((c) => c.id === id || c._id === id);
       if (idx !== -1) {
-        memoryStore.courses.splice(idx, 1);
+        memoryStore.courses[idx] = { ...memoryStore.courses[idx], ...updateData };
+        result = memoryStore.courses[idx];
       }
     }
     saveStateToFile();
-    return true;
+    return result;
   },
 
-  async deleteAllCourses() {
+  // SOFT DELETE COURSE
+  async deleteCourse(id) {
+    const softDeleteData = { isDeleted: true, status: 'draft', deletedAt: new Date().toISOString() };
+    let result = null;
     if (isMongoConnected()) {
-      await Course.deleteMany({});
+      try {
+        result = await Course.findOneAndUpdate({ $or: [{ _id: id }, { id }] }, softDeleteData, { new: true });
+      } catch (err) {
+        console.error('Error soft deleting course in Mongo:', err);
+      }
+    } else {
+      const idx = memoryStore.courses.findIndex((c) => c.id === id || c._id === id);
+      if (idx !== -1) {
+        memoryStore.courses[idx] = { ...memoryStore.courses[idx], ...softDeleteData };
+        result = memoryStore.courses[idx];
+      }
     }
-    memoryStore.courses = [];
+    saveStateToFile();
+    return result || true;
+  },
+
+  // SOFT DELETE ALL COURSES
+  async deleteAllCourses() {
+    const softDeleteData = { isDeleted: true, status: 'draft', deletedAt: new Date().toISOString() };
+    if (isMongoConnected()) {
+      await Course.updateMany({}, softDeleteData);
+    }
+    memoryStore.courses = memoryStore.courses.map((c) => ({ ...c, ...softDeleteData }));
     saveStateToFile();
     return true;
   },
@@ -374,6 +414,8 @@ export const dbStore = {
       totalAmount: orderData.totalAmount || 0,
       paymentStatus: 'completed',
       paymentMethod: orderData.paymentMethod || 'Free Checkout',
+      isDeleted: false,
+      deletedAt: null,
       createdAt: new Date().toISOString(),
     };
 
@@ -404,16 +446,16 @@ export const dbStore = {
 
   async getOrdersByUser(userId) {
     if (isMongoConnected()) {
-      return await Order.find({ userId });
+      return await Order.find({ userId, isDeleted: { $ne: true } });
     }
-    return memoryStore.orders.filter((o) => o.userId === userId);
+    return memoryStore.orders.filter((o) => o.userId === userId && !o.isDeleted);
   },
 
   async getAllOrders() {
     if (isMongoConnected()) {
-      return await Order.find({});
+      return await Order.find({ isDeleted: { $ne: true } });
     }
-    return memoryStore.orders;
+    return memoryStore.orders.filter((o) => !o.isDeleted);
   },
 
   // PROGRESS OPERATIONS
@@ -464,15 +506,15 @@ export const dbStore = {
     let totalEnrollments = 0;
 
     if (isMongoConnected()) {
-      totalUsers = await User.countDocuments();
-      totalCourses = await Course.countDocuments();
-      totalOrders = await Order.countDocuments();
-      totalEnrollments = await Enrollment.countDocuments();
+      totalUsers = await User.countDocuments({ isDeleted: { $ne: true } });
+      totalCourses = await Course.countDocuments({ isDeleted: { $ne: true } });
+      totalOrders = await Order.countDocuments({ isDeleted: { $ne: true } });
+      totalEnrollments = await Enrollment.countDocuments({ isDeleted: { $ne: true } });
     } else {
-      totalUsers = memoryStore.users.length;
-      totalCourses = memoryStore.courses.length;
-      totalOrders = memoryStore.orders.length;
-      totalEnrollments = (memoryStore.enrollments || []).length;
+      totalUsers = memoryStore.users.filter((u) => !u.isDeleted).length;
+      totalCourses = memoryStore.courses.filter((c) => !c.isDeleted).length;
+      totalOrders = memoryStore.orders.filter((o) => !o.isDeleted).length;
+      totalEnrollments = (memoryStore.enrollments || []).filter((e) => !e.isDeleted).length;
     }
 
     return { totalUsers, totalCourses, totalOrders, totalEnrollments, totalRevenue: 0 };
@@ -492,8 +534,10 @@ export const dbStore = {
       goal: data.goal || 'Skill Upgrade',
       courseId: data.courseId,
       courseTitle: data.courseTitle || 'Platform Course',
-      createdAt: new Date().toISOString(),
       status: 'Active',
+      isDeleted: false,
+      deletedAt: null,
+      createdAt: new Date().toISOString(),
     };
 
     if (isMongoConnected()) {
@@ -514,20 +558,26 @@ export const dbStore = {
   async getAllEnrollments() {
     if (isMongoConnected()) {
       try {
-        const list = await Enrollment.find({}).sort({ createdAt: -1 });
+        const list = await Enrollment.find({ isDeleted: { $ne: true } }).sort({ createdAt: -1 });
         return list;
       } catch (err) {
         console.error('Error fetching enrollments from Mongo:', err);
       }
     }
     if (!memoryStore.enrollments) memoryStore.enrollments = [];
-    return memoryStore.enrollments;
+    return memoryStore.enrollments.filter((e) => !e.isDeleted);
   },
 
+  // SOFT DELETE ENROLLMENT
   async deleteEnrollment(id) {
+    const softDeleteData = { isDeleted: true, status: 'Cancelled', deletedAt: new Date().toISOString() };
     if (isMongoConnected()) {
       try {
-        const deleted = await Enrollment.findOneAndDelete({ $or: [{ _id: id }, { id }] });
+        const deleted = await Enrollment.findOneAndUpdate(
+          { $or: [{ _id: id }, { id }] },
+          softDeleteData,
+          { new: true }
+        );
         return deleted;
       } catch (err) {
         console.error('Error deleting enrollment from Mongo:', err);
@@ -536,9 +586,9 @@ export const dbStore = {
     if (!memoryStore.enrollments) memoryStore.enrollments = [];
     const idx = memoryStore.enrollments.findIndex((e) => e.id === id || e._id === id);
     if (idx !== -1) {
-      const removed = memoryStore.enrollments.splice(idx, 1)[0];
+      memoryStore.enrollments[idx] = { ...memoryStore.enrollments[idx], ...softDeleteData };
       saveStateToFile();
-      return removed;
+      return memoryStore.enrollments[idx];
     }
     return null;
   },

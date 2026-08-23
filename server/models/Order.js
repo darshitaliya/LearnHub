@@ -19,6 +19,8 @@ const orderSchema = new mongoose.Schema(
     totalAmount: { type: Number, required: true },
     paymentStatus: { type: String, enum: ['completed', 'pending', 'failed'], default: 'completed' },
     paymentMethod: { type: String, default: 'Credit Card (Simulated)' },
+    isDeleted: { type: Boolean, default: false, index: true },
+    deletedAt: { type: Date, default: null },
   },
   {
     timestamps: true,

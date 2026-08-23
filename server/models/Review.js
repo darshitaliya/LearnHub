@@ -34,6 +34,15 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

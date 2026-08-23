@@ -54,6 +54,8 @@ const courseSchema = new mongoose.Schema(
     includes: [{ type: String }],
     status: { type: String, enum: ['published', 'draft', 'pending'], default: 'published' },
     featured: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false, index: true },
+    deletedAt: { type: Date, default: null },
   },
   {
     timestamps: true,

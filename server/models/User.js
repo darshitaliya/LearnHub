@@ -42,6 +42,8 @@ const userSchema = new mongoose.Schema(
     },
     enrolledCourses: [{ type: String }],
     wishlist: [{ type: String }],
+    isDeleted: { type: Boolean, default: false, index: true },
+    deletedAt: { type: Date, default: null },
   },
   {
     timestamps: true,
