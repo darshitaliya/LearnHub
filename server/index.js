@@ -55,7 +55,11 @@ app.use((req, res, next) => {
 // Centralized Error Handling Middleware
 app.use(errorHandler);
 
-if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+import { fileURLToPath } from 'url';
+
+const isDirectRun = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+
+if (isDirectRun && !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`🚀 LearnHub Production Server running on http://localhost:${PORT}`);
     console.log(`📡 Endpoints active for Authentication, MongoDB Persistence, Courses, Orders & Admin.`);

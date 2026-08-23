@@ -7,12 +7,16 @@ import Order from '../models/Order.js';
 import Progress from '../models/Progress.js';
 import Enrollment from '../models/Enrollment.js';
 import Category from '../models/Category.js';
+import mongoose from 'mongoose';
 import Review from '../models/Review.js';
 
 const LOCK_FILE_PATH = path.resolve(process.cwd(), 'data', 'seeded.lock');
 const DB_FILE_PATH = path.resolve(process.cwd(), 'data', 'persistent_db.json');
 
 export const seedInitialData = async () => {
+  if (mongoose.connection.readyState !== 1) {
+    return;
+  }
   try {
     const userCount = await User.countDocuments().catch(() => 0);
     if (userCount === 0) {

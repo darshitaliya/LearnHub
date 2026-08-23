@@ -48,7 +48,8 @@ export const registerUser = async (req, res, next) => {
       { expiresIn: '7d' }
     );
 
-    const { password: pw, ...userSafe } = newUser;
+    const raw = newUser._doc ? newUser._doc : (typeof newUser.toObject === 'function' ? newUser.toObject() : newUser);
+    const { password: pw, ...userSafe } = raw;
     userSafe.id = userId;
 
     return res.status(201).json({
@@ -113,7 +114,8 @@ export const loginUser = async (req, res, next) => {
       { expiresIn: '7d' }
     );
 
-    const { password: pw, ...userSafe } = user;
+    const raw = user._doc ? user._doc : (typeof user.toObject === 'function' ? user.toObject() : user);
+    const { password: pw, ...userSafe } = raw;
     userSafe.id = userId;
 
     return res.status(200).json({

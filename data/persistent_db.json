@@ -49,9 +49,251 @@
       ],
       "wishlist": [],
       "createdAt": "2026-08-23T11:18:27.985Z"
+    },
+    {
+      "id": "usr_1787488748432",
+      "name": "Test Student",
+      "email": "test_student_1787488748324@example.com",
+      "phone": "+91 99999 88888",
+      "password": "$2b$10$F51bNKApqjbK74zSa1p4oecztenU5seNqiUV1Pblszs7CMWaJ2e9a",
+      "role": "student",
+      "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "enrolledCourses": [
+        "web101",
+        "cs201"
+      ],
+      "wishlist": [],
+      "createdAt": "2026-08-23T12:39:08.432Z",
+      "_id": "usr_1787488748432"
+    },
+    {
+      "id": "usr_1787488850625",
+      "name": "Test Student",
+      "email": "student_1787488850425_it4u9@example.com",
+      "phone": "+91 9260151839",
+      "password": "$2b$10$Luv8tGb8n5wkEiXFHqzXDOVyDNG6KitGxTtb.6eMDFB9n9kK5f.ne",
+      "role": "student",
+      "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "enrolledCourses": [
+        "web101",
+        "cs201",
+        "crs_1787488826679"
+      ],
+      "wishlist": [],
+      "createdAt": "2026-08-23T12:40:50.625Z",
+      "_id": "usr_1787488850625"
     }
   ],
   "courses": [
+    {
+      "_id": "crs_1787488851175",
+      "id": "crs_1787488851175",
+      "title": "Next.js 15 & AI Full-Stack Mastery",
+      "subtitle": "Build enterprise Next.js 15 apps with AI streaming.",
+      "description": "Build enterprise Next.js 15 apps with AI streaming.",
+      "category": "Computer Science",
+      "level": "Advanced",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 5,
+      "reviewsCount": 1,
+      "hours": 12,
+      "lessonsCount": 5,
+      "languages": [
+        "English"
+      ],
+      "techStack": [
+        "Next.js",
+        "React",
+        "AI",
+        "Tailwind"
+      ],
+      "instructorName": "System Admin",
+      "instructorRole": "Principal Platform Engineer",
+      "instructorBio": "Expert instructor teaching modern software architecture.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80",
+      "status": "published",
+      "featured": true,
+      "modules": [
+        {
+          "id": "mod_1787488851175",
+          "title": "Module 1: Foundations",
+          "lessons": [
+            {
+              "id": "les_1787488851175",
+              "title": "Course Overview & Introduction",
+              "duration": "15:00",
+              "videoUrl": "https://www.youtube.com/watch?v=w7ejDZ8SWv8",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full HD Video Access",
+        "Certificate of completion",
+        "Lifetime Access"
+      ],
+      "createdAt": "2026-08-23T12:40:51.175Z"
+    },
+    {
+      "_id": "crs_1787488826679",
+      "id": "crs_1787488826679",
+      "title": "Next.js 15 & AI Full-Stack Mastery",
+      "subtitle": "Build enterprise Next.js 15 apps with AI streaming.",
+      "description": "Build enterprise Next.js 15 apps with AI streaming.",
+      "category": "Computer Science",
+      "level": "Advanced",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 5,
+      "reviewsCount": 1,
+      "hours": 12,
+      "lessonsCount": 5,
+      "languages": [
+        "English"
+      ],
+      "techStack": [
+        "Next.js",
+        "React",
+        "AI",
+        "Tailwind"
+      ],
+      "instructorName": "System Admin",
+      "instructorRole": "Principal Platform Engineer",
+      "instructorBio": "Expert instructor teaching modern software architecture.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80",
+      "status": "published",
+      "featured": true,
+      "modules": [
+        {
+          "id": "mod_1787488826679",
+          "title": "Module 1: Foundations",
+          "lessons": [
+            {
+              "id": "les_1787488826679",
+              "title": "Course Overview & Introduction",
+              "duration": "15:00",
+              "videoUrl": "https://www.youtube.com/watch?v=w7ejDZ8SWv8",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full HD Video Access",
+        "Certificate of completion",
+        "Lifetime Access"
+      ],
+      "createdAt": "2026-08-23T12:40:26.679Z"
+    },
+    {
+      "_id": "crs_1787488811541",
+      "id": "crs_1787488811541",
+      "title": "Next.js 15 & AI Full-Stack Mastery",
+      "subtitle": "Build enterprise Next.js 15 apps with AI streaming.",
+      "description": "Build enterprise Next.js 15 apps with AI streaming.",
+      "category": "Computer Science",
+      "level": "Advanced",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 5,
+      "reviewsCount": 1,
+      "hours": 12,
+      "lessonsCount": 5,
+      "languages": [
+        "English"
+      ],
+      "techStack": [
+        "Next.js",
+        "React",
+        "AI",
+        "Tailwind"
+      ],
+      "instructorName": "System Admin",
+      "instructorRole": "Principal Platform Engineer",
+      "instructorBio": "Expert instructor teaching modern software architecture.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80",
+      "status": "published",
+      "featured": true,
+      "modules": [
+        {
+          "id": "mod_1787488811541",
+          "title": "Module 1: Foundations",
+          "lessons": [
+            {
+              "id": "les_1787488811541",
+              "title": "Course Overview & Introduction",
+              "duration": "15:00",
+              "videoUrl": "https://www.youtube.com/watch?v=w7ejDZ8SWv8",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full HD Video Access",
+        "Certificate of completion",
+        "Lifetime Access"
+      ],
+      "createdAt": "2026-08-23T12:40:11.541Z"
+    },
+    {
+      "_id": "crs_1787488792882",
+      "id": "crs_1787488792882",
+      "title": "Full Stack Node Mastery",
+      "subtitle": "Master backend architecture with Node and Mongo.",
+      "description": "Master backend architecture with Node and Mongo.",
+      "category": "Computer Science",
+      "level": "Intermediate",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 5,
+      "reviewsCount": 1,
+      "hours": 12,
+      "lessonsCount": 5,
+      "languages": [
+        "English"
+      ],
+      "techStack": [
+        "Software Engineering"
+      ],
+      "instructorName": "System Admin",
+      "instructorRole": "Principal Platform Engineer",
+      "instructorBio": "Expert instructor teaching modern software architecture.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://lh3.googleusercontent.com/aida-public/AB6AXuCc_P4bDonDSVnHhQab5Iw5rgqL2FAg1YI9MYUOdkuuHogQ9yokQeqxsakBi3ghU_SkEsswrJXOsiDE0eephEXqbAPWnwm-HVr-n6KQl44LkfqSd0bw3cqp4f73eaOQj9iNCV5879MGfNdPVgSr_qD-Q9Yuj3b52KGmh_y1v4y143OHehRzZtU9dd2EDtWwqYsl9Qh-wtSI3bXsIe2_iu4OXD6vJMxsjiFaaJhgln9n9TkKdJRzDPIW",
+      "status": "published",
+      "featured": true,
+      "modules": [
+        {
+          "id": "mod_1787488792882",
+          "title": "Module 1: Foundations",
+          "lessons": [
+            {
+              "id": "les_1787488792882",
+              "title": "Course Overview & Introduction",
+              "duration": "15:00",
+              "videoUrl": "https://www.youtube.com/watch?v=w7ejDZ8SWv8",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full HD Video Access",
+        "Certificate of completion",
+        "Lifetime Access"
+      ],
+      "createdAt": "2026-08-23T12:39:52.882Z"
+    },
     {
       "_id": "crs_web101",
       "id": "web101",
@@ -3834,5 +4076,46 @@
       "createdAt": "2026-08-20T11:18:27.985Z"
     }
   ],
-  "progress": {}
+  "progress": {
+    "usr_1787488850625_crs_1787488826679": {
+      "userId": "usr_1787488850625",
+      "courseId": "crs_1787488826679",
+      "completedLessons": [
+        "les_1"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1"
+    }
+  },
+  "enrollments": [
+    {
+      "_id": "enr_1787488850924_u0nu1",
+      "id": "enr_1787488850924_u0nu1",
+      "userId": "usr_1787488850625",
+      "userName": "Test Student",
+      "userEmail": "student_1787488850425_it4u9@example.com",
+      "userPhone": "+91 99999 88888",
+      "profession": "Software Tester",
+      "goal": "Automated Testing",
+      "courseId": "crs_1787488826679",
+      "courseTitle": "Next.js 15 & AI Full-Stack Mastery",
+      "createdAt": "2026-08-23T12:40:50.924Z",
+      "status": "Active"
+    },
+    {
+      "_id": "enr_1787488748542_o06nl",
+      "id": "enr_1787488748542_o06nl",
+      "userId": "usr_1787488748432",
+      "userName": "Test Student",
+      "userEmail": "test_student_1787488748324@example.com",
+      "userPhone": "+91 99999 88888",
+      "profession": "Student",
+      "goal": "Skill Development",
+      "courseId": "web101",
+      "courseTitle": "React 18 & Modern Frontend Architecture",
+      "createdAt": "2026-08-23T12:39:08.542Z",
+      "status": "Active"
+    }
+  ]
 }
