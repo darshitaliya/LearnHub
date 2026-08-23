@@ -167,7 +167,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 6 Static HD Featured Course Cards Feed */}
+        {/* 6 Static HD Featured Popular Course Cards */}
         <section className="py-5 bg-white border-top border-bottom border-outline-variant/20">
           <div className="max-w-container-max mx-auto px-3 px-md-5">
             <div className="d-flex align-items-end justify-content-between mb-4">
@@ -180,31 +180,135 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {loading ? (
-              <div className="text-center py-5">
-                <div className="spinner-border text-primary" role="status" />
-                <p className="mt-2 text-on-surface-variant font-body-sm">Loading live curriculum from database...</p>
-              </div>
-            ) : featuredCourses.length > 0 ? (
-              <div className="row g-4">
-                {featuredCourses.slice(0, 6).map((course) => (
-                  <div key={course.id || course._id} className="col-12 col-md-6 col-lg-4">
-                    <CourseCard course={course} onEnrollClick={(crs) => setSelectedEnrollCourse(crs)} />
+            <div className="row g-4">
+              {[
+                {
+                  id: 'static_crs_1',
+                  title: 'Full-Stack MERN & Next.js 14 Enterprise Architecture',
+                  category: 'Computer Science',
+                  level: 'Intermediate',
+                  rating: 5.0,
+                  reviewsCount: 1,
+                  thumbnail: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80',
+                  description: 'Master full-stack web engineering from frontend components to scalable REST APIs and cloud deployments.',
+                  techStack: ['React', 'Next.js', 'Node.js', 'MongoDB', 'TailwindCSS'],
+                  price: 0,
+                },
+                {
+                  id: 'static_crs_2',
+                  title: 'Python for AI, Machine Learning & Deep Neural Networks',
+                  category: 'Data Science',
+                  level: 'Intermediate',
+                  rating: 5.0,
+                  reviewsCount: 1,
+                  thumbnail: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
+                  description: 'Build real-world artificial intelligence models, computer vision systems, and predictive neural network algorithms.',
+                  techStack: ['Python', 'PyTorch', 'TensorFlow', 'Pandas', 'Scikit-Learn'],
+                  price: 0,
+                },
+                {
+                  id: 'static_crs_3',
+                  title: 'Google Cloud Platform (GCP) Infrastructure & GKE',
+                  category: 'Computer Science',
+                  level: 'Intermediate',
+                  rating: 5.0,
+                  reviewsCount: 1,
+                  thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
+                  description: 'Build modern serverless and Kubernetes applications on GCP using Compute Engine, GKE, and Cloud Run.',
+                  techStack: ['GCP', 'BigQuery', 'GKE', 'Cloud Run', 'Terraform'],
+                  price: 0,
+                },
+                {
+                  id: 'static_crs_4',
+                  title: 'Modern UI/UX Design Systems with Figma & Prototyping',
+                  category: 'Design',
+                  level: 'Beginner',
+                  rating: 5.0,
+                  reviewsCount: 1,
+                  thumbnail: 'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=800&q=80',
+                  description: 'Craft world-class user interfaces, responsive component libraries, and interactive design prototypes from scratch.',
+                  techStack: ['Figma', 'Design System', 'UI/UX', 'Prototyping', 'Wireframing'],
+                  price: 0,
+                },
+                {
+                  id: 'static_crs_5',
+                  title: 'Cybersecurity Operations & Ethical Hacking Defense',
+                  category: 'Computer Science',
+                  level: 'Advanced',
+                  rating: 5.0,
+                  reviewsCount: 1,
+                  thumbnail: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
+                  description: 'Understand offensive and defensive cybersecurity strategies, vulnerability assessment, and threat mitigation.',
+                  techStack: ['Network Security', 'Wireshark', 'Linux', 'OWASP', 'Penetration Testing'],
+                  price: 0,
+                },
+                {
+                  id: 'static_crs_6',
+                  title: 'Data Structures & Algorithms in Java & C++',
+                  category: 'Computer Science',
+                  level: 'Intermediate',
+                  rating: 5.0,
+                  reviewsCount: 1,
+                  thumbnail: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
+                  description: 'Master algorithmic problem solving, time complexities, dynamic programming, and technical interview coding challenges.',
+                  techStack: ['Java', 'C++', 'Algorithms', 'Data Structures', 'LeetCode'],
+                  price: 0,
+                },
+              ].map((course) => (
+                <div key={course.id} className="col-12 col-md-6 col-lg-4">
+                  <div className="card h-100 border border-outline-variant/30 rounded-4 overflow-hidden shadow-xs hover-card transition-all d-flex flex-column bg-white">
+                    <div className="position-relative" style={{ height: '180px' }}>
+                      <img
+                        src={course.thumbnail}
+                        alt={course.title}
+                        className="w-100 h-100 object-fit-cover"
+                      />
+                    </div>
+                    <div className="card-body p-4 d-flex flex-column flex-grow-1">
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <div className="d-flex align-items-center gap-1.5 flex-wrap">
+                          <span className="badge bg-surface-container-high text-on-surface font-label-caps px-2 py-0.5 rounded-pill" style={{ fontSize: '10px' }}>
+                            {course.level?.toUpperCase()}
+                          </span>
+                          <span className="badge bg-primary-container/40 text-primary font-label-caps px-2 py-0.5 rounded-pill fw-bold" style={{ fontSize: '10px' }}>
+                            {course.category?.toUpperCase()}
+                          </span>
+                        </div>
+                        <span className="font-body-sm fw-bold text-amber-500 d-flex align-items-center gap-1">
+                          ★ 5 (1)
+                        </span>
+                      </div>
+
+                      <h3 className="font-headline-md fs-5 fw-bold text-on-surface mb-2" style={{ lineHeight: '1.3' }}>
+                        {course.title}
+                      </h3>
+
+                      <p className="font-body-sm text-on-surface-variant mb-3 line-clamp-2 flex-grow-1" style={{ fontSize: '13px' }}>
+                        {course.description}
+                      </p>
+
+                      <div className="d-flex flex-wrap gap-1.5 mb-3">
+                        {course.techStack?.map((tech) => (
+                          <span key={tech} className="badge bg-surface-container-low text-on-surface-variant font-label-caps px-2 py-0.5 rounded" style={{ fontSize: '10px' }}>
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="d-flex align-items-center justify-content-between pt-3 border-top border-outline-variant/20 mt-auto">
+                        <span className="fw-bold text-success font-headline-md fs-6">FREE</span>
+                        <button
+                          onClick={() => navigate('/courses')}
+                          className="btn btn-primary font-body-sm px-3.5 py-1.5 rounded-3 d-flex align-items-center gap-1 shadow-xs fw-semibold"
+                        >
+                          Enroll Now <span className="material-symbols-outlined fs-5">arrow_forward</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-5 bg-surface-container-low rounded-4 border border-outline-variant/30 p-4">
-                <span className="material-symbols-outlined fs-1 text-primary mb-2">menu_book</span>
-                <h4 className="fw-bold mb-1">No Courses Published Yet</h4>
-                <p className="text-on-surface-variant font-body-sm max-w-sm mx-auto mb-3">
-                  Courses added by the Admin will appear here live.
-                </p>
-                <Link to="/courses" className="btn btn-primary font-body-sm px-4 py-2 rounded-3">
-                  View Catalog
-                </Link>
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
