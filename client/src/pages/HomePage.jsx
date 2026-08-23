@@ -256,7 +256,11 @@ export default function HomePage() {
                 },
               ].map((course) => (
                 <div key={course.id} className="col-12 col-md-6 col-lg-4">
-                  <div className="card h-100 border border-outline-variant/30 rounded-4 overflow-hidden shadow-xs hover-card transition-all d-flex flex-column bg-white">
+                  <div
+                    onClick={() => navigate('/courses')}
+                    className="card h-100 border border-outline-variant/30 rounded-4 overflow-hidden shadow-xs hover-card transition-all d-flex flex-column bg-white"
+                    style={{ cursor: 'pointer' }}
+                  >
                     <div className="position-relative" style={{ height: '180px' }}>
                       <img
                         src={course.thumbnail}
@@ -298,7 +302,11 @@ export default function HomePage() {
                       <div className="d-flex align-items-center justify-content-between pt-3 border-top border-outline-variant/20 mt-auto">
                         <span className="fw-bold text-success font-headline-md fs-6">FREE</span>
                         <button
-                          onClick={() => navigate('/courses')}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate('/courses');
+                          }}
                           className="btn btn-primary font-body-sm px-3.5 py-1.5 rounded-3 d-flex align-items-center gap-1 shadow-xs fw-semibold"
                         >
                           Enroll Now <span className="material-symbols-outlined fs-5">arrow_forward</span>
