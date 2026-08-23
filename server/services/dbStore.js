@@ -209,10 +209,11 @@ export const dbStore = {
   async getAllUsers(includeDeleted = false) {
     if (isMongoConnected()) {
       const query = includeDeleted ? {} : { isDeleted: { $ne: true } };
-      return await User.find(query).select('-password');
+      return await User.find(query).select('-password').sort({ createdAt: -1, _id: -1 });
     }
-    return memoryStore.users
+    return [...memoryStore.users]
       .filter((u) => includeDeleted || !u.isDeleted)
+      .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
       .map(({ password, ...rest }) => rest);
   },
 
@@ -262,9 +263,11 @@ export const dbStore = {
     let coursesList = [];
     if (isMongoConnected()) {
       const query = includeDeleted ? {} : { isDeleted: { $ne: true } };
-      coursesList = await Course.find(query);
+      coursesList = await Course.find(query).sort({ createdAt: -1, _id: -1 });
     } else {
-      coursesList = memoryStore.courses.filter((c) => includeDeleted || !c.isDeleted);
+      coursesList = [...memoryStore.courses]
+        .filter((c) => includeDeleted || !c.isDeleted)
+        .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
     }
 
     if (filters.category && filters.category !== 'All') {
@@ -446,16 +449,20 @@ export const dbStore = {
 
   async getOrdersByUser(userId) {
     if (isMongoConnected()) {
-      return await Order.find({ userId, isDeleted: { $ne: true } });
+      return await Order.find({ userId, isDeleted: { $ne: true } }).sort({ createdAt: -1, _id: -1 });
     }
-    return memoryStore.orders.filter((o) => o.userId === userId && !o.isDeleted);
+    return [...(memoryStore.orders || [])]
+      .filter((o) => o.userId === userId && !o.isDeleted)
+      .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
   },
 
   async getAllOrders() {
     if (isMongoConnected()) {
-      return await Order.find({ isDeleted: { $ne: true } });
+      return await Order.find({ isDeleted: { $ne: true } }).sort({ createdAt: -1, _id: -1 });
     }
-    return memoryStore.orders.filter((o) => !o.isDeleted);
+    return [...(memoryStore.orders || [])]
+      .filter((o) => !o.isDeleted)
+      .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
   },
 
   // PROGRESS OPERATIONS
@@ -558,14 +565,16 @@ export const dbStore = {
   async getAllEnrollments() {
     if (isMongoConnected()) {
       try {
-        const list = await Enrollment.find({ isDeleted: { $ne: true } }).sort({ createdAt: -1 });
+        const list = await Enrollment.find({ isDeleted: { $ne: true } }).sort({ createdAt: -1, _id: -1 });
         return list;
       } catch (err) {
         console.error('Error fetching enrollments from Mongo:', err);
       }
     }
     if (!memoryStore.enrollments) memoryStore.enrollments = [];
-    return memoryStore.enrollments.filter((e) => !e.isDeleted);
+    return [...memoryStore.enrollments]
+      .filter((e) => !e.isDeleted)
+      .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
   },
 
   // SOFT DELETE ENROLLMENT

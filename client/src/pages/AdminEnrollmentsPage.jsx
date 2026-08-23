@@ -39,7 +39,9 @@ export default function AdminEnrollmentsPage() {
         api.get('/courses').catch(() => ({ data: [] })),
         api.get('/admin/users').catch(() => ({ data: [] })),
       ]);
-      setEnrollments(enrRes.data || []);
+      const enrList = enrRes.data || [];
+      enrList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      setEnrollments(enrList);
       setCourses(crsRes.data || []);
       setUsers(usrRes.data || []);
 

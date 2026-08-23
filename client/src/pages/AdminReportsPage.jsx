@@ -28,10 +28,18 @@ export default function AdminReportsPage() {
         api.get('/admin/users').catch(() => ({ data: [] })),
       ]);
 
+      const enrollList = enrollRes.data || [];
+      const courseList = coursesRes.data || [];
+      const userList = usersRes.data || [];
+
+      enrollList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      courseList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      userList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
       setStats(statsRes.data || {});
-      setEnrollments(enrollRes.data || []);
-      setCourses(coursesRes.data || []);
-      setUsers(usersRes.data || []);
+      setEnrollments(enrollList);
+      setCourses(courseList);
+      setUsers(userList);
     } catch (err) {
       console.error('Failed to fetch analytics reports:', err);
     } finally {
