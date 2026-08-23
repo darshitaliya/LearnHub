@@ -442,7 +442,7 @@ export default function AdminReportsPage() {
           </div>
 
           {/* Screen Executive Header Bar (Hidden during Print) */}
-          <header className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 bg-white p-4 rounded-4 border border-outline-variant/30 shadow-sm no-print">
+          <header className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 bg-white p-4 rounded-4 border border-outline-variant/30 shadow-sm no-print">
             <div>
               <span className="font-label-caps text-primary fw-bold tracking-wider" style={{ fontSize: '11px' }}>
                 EXECUTIVE REPORT GENERATOR & PLATFORM AUDIT • {currentDateFormatted.toUpperCase()}
@@ -453,6 +453,18 @@ export default function AdminReportsPage() {
             </div>
 
             <div className="d-flex flex-wrap align-items-center gap-2">
+              <select
+                value={activeReportType}
+                onChange={(e) => setActiveReportType(e.target.value)}
+                className="form-select font-body-sm rounded-3 py-2 px-3 border-outline-variant/40 fw-bold text-primary w-auto shadow-xs"
+                style={{ minWidth: '250px', cursor: 'pointer' }}
+              >
+                <option value="enrollments">🎓 Student Enrollments ({enrollments.length})</option>
+                <option value="courses">📚 Course Catalog ({courses.length})</option>
+                <option value="users">👥 Registered Users ({users.length})</option>
+                <option value="executive">⚡ Executive Health Summary</option>
+              </select>
+
               <button
                 onClick={handleExportCSV}
                 disabled={exporting}
@@ -480,32 +492,6 @@ export default function AdminReportsPage() {
               </button>
             </div>
           </header>
-
-          {/* Report Type Selector Tabs (Hidden during Print) */}
-          <div className="bg-white rounded-4 border border-outline-variant/30 p-2 shadow-xs d-flex flex-wrap gap-2 no-print">
-            {[
-              { key: 'enrollments', label: 'Student Enrollments Report', icon: 'how_to_reg', count: enrollments.length },
-              { key: 'courses', label: 'Course Catalog & Curriculum', icon: 'menu_book', count: courses.length },
-              { key: 'users', label: 'Registered Accounts & Roles', icon: 'people', count: users.length },
-              { key: 'executive', label: 'Executive Platform Health Summary', icon: 'monitoring', count: 4 },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveReportType(tab.key)}
-                className={`btn font-body-sm px-3.5 py-2 rounded-3 d-flex align-items-center gap-2 transition-colors flex-grow-1 flex-md-grow-0 ${
-                  activeReportType === tab.key
-                    ? 'btn-primary text-white fw-bold shadow-xs'
-                    : 'btn-light text-on-surface hover-bg-low border-0'
-                }`}
-              >
-                <span className="material-symbols-outlined fs-5">{tab.icon}</span>
-                <span>{tab.label}</span>
-                <span className={`badge ${activeReportType === tab.key ? 'bg-white text-primary' : 'bg-surface-container-high text-on-surface'} font-label-caps px-2 py-0.5 rounded-pill`}>
-                  {tab.count}
-                </span>
-              </button>
-            ))}
-          </div>
 
           {/* Top Metrics Summary Cards (Hidden during Print) */}
           <section className="row g-3 no-print">
