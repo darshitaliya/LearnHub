@@ -4,6 +4,10 @@ import path from 'path';
 import User from '../models/User.js';
 import Course from '../models/Course.js';
 import Order from '../models/Order.js';
+import Progress from '../models/Progress.js';
+import Enrollment from '../models/Enrollment.js';
+import Category from '../models/Category.js';
+import Review from '../models/Review.js';
 
 const LOCK_FILE_PATH = path.resolve(process.cwd(), 'data', 'seeded.lock');
 const DB_FILE_PATH = path.resolve(process.cwd(), 'data', 'persistent_db.json');
@@ -3815,9 +3819,121 @@ export const seedInitialData = async () => {
   }
 ];
       await Course.insertMany(coursesToSeed).catch(() => {});
-      try { fs.writeFileSync(LOCK_FILE_PATH, 'seeded', 'utf-8'); } catch (e) {}
       console.log('✅ 50 Courses seeded successfully into MongoDB!');
     }
+
+    // Seed Categories
+    const catCount = await Category.countDocuments().catch(() => 0);
+    if (catCount === 0) {
+      console.log('🌱 Seeding initial categories into MongoDB...');
+      const categoriesToSeed = [
+        { name: 'Computer Science', slug: 'computer-science', description: 'Modern software engineering, backend architectures, full-stack systems, and cybersecurity.', icon: 'code' },
+        { name: 'Data Science', slug: 'data-science', description: 'Machine learning algorithms, deep learning neural nets, LLMs, and big data analysis.', icon: 'query_stats' },
+        { name: 'Design', slug: 'design', description: 'User experience design, Figma systems, interactive prototyping, and responsive styling.', icon: 'palette' },
+        { name: 'Business', slug: 'business', description: 'Product management, agile development, tech entrepreneurship, and software economics.', icon: 'trending_up' },
+      ];
+      await Category.insertMany(categoriesToSeed).catch(() => {});
+      console.log('✅ Categories seeded successfully!');
+    }
+
+    // Seed Initial Enrollments
+    const enrollCount = await Enrollment.countDocuments().catch(() => 0);
+    if (enrollCount === 0) {
+      console.log('🌱 Seeding initial enrollments into MongoDB...');
+      const enrollmentsToSeed = [
+        {
+          _id: 'enr_1001',
+          id: 'enr_1001',
+          userId: 'usr_alex',
+          userName: 'Alex Morgan',
+          userEmail: 'alex@learnhub.com',
+          userPhone: '+91 98765 43212',
+          profession: 'Computer Science Undergraduate',
+          goal: 'Full-Stack Software Engineer Career',
+          courseId: 'web101',
+          courseTitle: 'React 18 & Modern Frontend Architecture',
+          status: 'Active',
+          createdAt: new Date(Date.now() - 86400000 * 2),
+        },
+        {
+          _id: 'enr_1002',
+          id: 'enr_1002',
+          userId: 'usr_alex',
+          userName: 'Alex Morgan',
+          userEmail: 'alex@learnhub.com',
+          userPhone: '+91 98765 43212',
+          profession: 'Computer Science Undergraduate',
+          goal: 'Master Cloud & AI Technologies',
+          courseId: 'ml301',
+          courseTitle: 'Deep Learning & Transformers Architecture',
+          status: 'Active',
+          createdAt: new Date(Date.now() - 86400000 * 4),
+        },
+      ];
+      await Enrollment.insertMany(enrollmentsToSeed).catch(() => {});
+      console.log('✅ Initial enrollments seeded successfully!');
+    }
+
+    // Seed Initial Orders
+    const orderCount = await Order.countDocuments().catch(() => 0);
+    if (orderCount === 0) {
+      console.log('🌱 Seeding initial demo orders into MongoDB...');
+      const ordersToSeed = [
+        {
+          _id: 'ord_1001',
+          id: 'ord_1001',
+          userId: 'usr_alex',
+          userName: 'Alex Morgan',
+          items: [{ courseId: 'web101', title: 'React 18 & Modern Frontend Architecture', price: 0 }],
+          totalAmount: 0,
+          paymentStatus: 'completed',
+          paymentMethod: 'Platform Free Access',
+          createdAt: new Date(Date.now() - 86400000 * 3),
+        },
+      ];
+      await Order.insertMany(ordersToSeed).catch(() => {});
+      console.log('✅ Orders seeded successfully!');
+    }
+
+    // Seed Initial Progress
+    const progCount = await Progress.countDocuments().catch(() => 0);
+    if (progCount === 0) {
+      console.log('🌱 Seeding initial progress into MongoDB...');
+      const progressesToSeed = [
+        {
+          userId: 'usr_alex',
+          courseId: 'web101',
+          completedLessons: ['web101_les1'],
+          lastWatchedLesson: 'web101_les1',
+          percentage: 50,
+          certificateEarned: false,
+        },
+      ];
+      await Progress.insertMany(progressesToSeed).catch(() => {});
+      console.log('✅ Progress seeded successfully!');
+    }
+
+    // Seed Initial Reviews
+    const reviewCount = await Review.countDocuments().catch(() => 0);
+    if (reviewCount === 0) {
+      console.log('🌱 Seeding initial student reviews into MongoDB...');
+      const reviewsToSeed = [
+        {
+          _id: 'rev_1001',
+          courseId: 'web101',
+          userId: 'usr_alex',
+          userName: 'Alex Morgan',
+          userAvatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC',
+          rating: 5,
+          comment: 'Outstanding curriculum! The architecture explanations and hands-on modules made understanding modern full-stack development so intuitive.',
+          createdAt: new Date(Date.now() - 86400000 * 5),
+        },
+      ];
+      await Review.insertMany(reviewsToSeed).catch(() => {});
+      console.log('✅ Reviews seeded successfully!');
+    }
+
+    try { fs.writeFileSync(LOCK_FILE_PATH, 'seeded', 'utf-8'); } catch (e) {}
   } catch (err) {
     console.warn('⚠️ Seeding note:', err.message);
   }

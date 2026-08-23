@@ -7,6 +7,8 @@ import Course from '../models/Course.js';
 import Order from '../models/Order.js';
 import Progress from '../models/Progress.js';
 import Enrollment from '../models/Enrollment.js';
+import Category from '../models/Category.js';
+import Review from '../models/Review.js';
 
 const DB_FILE_PATH = path.resolve(process.cwd(), 'data', 'persistent_db.json');
 
