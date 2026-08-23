@@ -121,6 +121,19 @@
       "wishlist": [],
       "createdAt": "2026-08-23T14:07:53.313Z",
       "_id": "usr_1787494073313"
+    },
+    {
+      "id": "usr_1787494556359",
+      "name": "Production Tester",
+      "email": "prod_test_1787494556203@learnhub.com",
+      "phone": "+91 9876543210",
+      "password": "$2b$10$yVjwuDkg3feG3tRx5SBo/.VziqErmdlFHN.RUsbGiF/MCo78Bw8Yi",
+      "role": "student",
+      "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "enrolledCourses": [],
+      "wishlist": [],
+      "createdAt": "2026-08-23T14:15:56.359Z",
+      "_id": "usr_1787494556359"
     }
   ],
   "courses": [
@@ -4125,6 +4138,13 @@
       "percentage": 100,
       "certificateEarned": true,
       "lastWatchedLesson": "les_1"
+    },
+    "usr_alex_crs_1787488851175": {
+      "userId": "usr_alex",
+      "courseId": "crs_1787488851175",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false
     }
   },
   "enrollments": [

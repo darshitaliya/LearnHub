@@ -61,10 +61,34 @@ app.get(['/api/health', '/health'], (req, res) => {
   res.status(200).json({ status: 'ok', message: 'LearnHub Backend operational', env: process.env.NODE_ENV || 'production' });
 });
 
+// Static Client File Serving for Universal Production Deployments (Render, Railway, Heroku, Docker)
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const clientDistPath = path.resolve(__dirname, '..', 'client', 'dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.get('*', (req, res, next) => {
+    if (
+      req.path.startsWith('/api') ||
+      req.path.startsWith('/auth') ||
+      req.path.startsWith('/courses') ||
+      req.path.startsWith('/orders') ||
+      req.path.startsWith('/progress') ||
+      req.path.startsWith('/admin')
+    ) {
+      return next();
+    }
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
+
 // Centralized Error Handling Middleware
 app.use(errorHandler);
-
-import { fileURLToPath } from 'url';
 
 const isDirectRun = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 
