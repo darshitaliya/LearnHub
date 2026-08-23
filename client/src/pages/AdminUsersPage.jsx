@@ -7,6 +7,8 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   // Add User Modal State
   const [showAddModal, setShowAddModal] = useState(false);
@@ -127,6 +129,18 @@ export default function AdminUsersPage() {
     return matchesSearch && matchesRole;
   });
 
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage) || 1;
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <div className="d-flex min-vh-100 bg-surface overflow-hidden">
       <AdminSidebar />
@@ -153,7 +167,10 @@ export default function AdminUsersPage() {
                 <input
                   type="text"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
                   placeholder="Search student by name, email, or phone..."
                   className="form-control font-body-sm ps-5 py-2.5 input-premium rounded-3"
                 />
@@ -162,7 +179,10 @@ export default function AdminUsersPage() {
               <div className="d-flex align-items-center gap-2">
                 <select
                   value={roleFilter}
-                  onChange={(e) => setRoleFilter(e.target.value)}
+                  onChange={(e) => {
+                    setRoleFilter(e.target.value);
+                    setCurrentPage(1);
+                  }}
                   className="form-select font-body-sm input-premium rounded-3 w-auto"
                 >
                   <option value="All">Filter All Roles</option>
@@ -202,72 +222,113 @@ export default function AdminUsersPage() {
                 <p className="font-body-base text-on-surface-variant m-0">No registered users matched your criteria.</p>
               </div>
             ) : (
-              <div className="table-responsive">
-                <table className="table align-middle table-hover mb-0">
-                  <thead className="bg-surface-container-low">
-                    <tr className="font-label-caps text-on-surface-variant">
-                      <th className="py-3 px-3">User Profile</th>
-                      <th className="py-3 px-3">Email Address</th>
-                      <th className="py-3 px-3">Phone Number</th>
-                      <th className="py-3 px-3">Current Role</th>
-                      <th className="py-3 px-3 text-end">Actions (Edit / Delete)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredUsers.map((u) => (
-                      <tr key={u.id || u._id}>
-                        <td className="py-3 px-3">
-                          <div className="d-flex align-items-center gap-3">
-                            <img
-                              src={
-                                u.avatar ||
-                                'https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC'
-                              }
-                              alt={u.name}
-                              className="rounded-circle object-fit-cover border border-2 border-surface-container"
-                              style={{ width: '40px', height: '40px' }}
-                            />
-                            <div>
-                              <span className="font-body-base fw-bold text-on-surface d-block">{u.name}</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3 px-3 font-body-sm text-on-surface">{u.email}</td>
-                        <td className="py-3 px-3 font-body-sm text-on-surface">{u.phone || '+91 98765 43210'}</td>
-                        <td className="py-3 px-3">
-                          <span
-                            className={`badge font-label-caps px-3 py-1.5 rounded-pill fw-bold ${
-                              u.role === 'admin'
-                                ? 'bg-primary text-white'
-                                : u.role === 'instructor'
-                                ? 'bg-secondary text-white'
-                                : 'bg-secondary-container text-secondary'
-                            }`}
-                          >
-                            {(u.role || 'STUDENT').toUpperCase()}
-                          </span>
-                        </td>
-                        <td className="py-3 px-3 text-end">
-                          <div className="d-flex align-items-center justify-content-end gap-2">
-                            <button
-                              onClick={() => handleOpenEditModal(u)}
-                              className="btn btn-sm btn-outline-primary font-body-sm px-3 rounded-3 d-flex align-items-center gap-1"
-                            >
-                              <span className="material-symbols-outlined fs-6">edit</span> Edit
-                            </button>
-                            <button
-                              onClick={() => handleDeleteUser(u.id || u._id, u.name)}
-                              className="btn btn-sm btn-outline-danger font-body-sm px-3 rounded-3 d-flex align-items-center gap-1"
-                            >
-                              <span className="material-symbols-outlined fs-6">delete</span> Delete
-                            </button>
-                          </div>
-                        </td>
+              <>
+                <div className="table-responsive">
+                  <table className="table align-middle table-hover mb-0">
+                    <thead className="bg-surface-container-low">
+                      <tr className="font-label-caps text-on-surface-variant">
+                        <th className="py-3 px-3">User Profile</th>
+                        <th className="py-3 px-3">Email Address</th>
+                        <th className="py-3 px-3">Phone Number</th>
+                        <th className="py-3 px-3">Current Role</th>
+                        <th className="py-3 px-3 text-end">Actions (Edit / Delete)</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {paginatedUsers.map((u) => (
+                        <tr key={u.id || u._id}>
+                          <td className="py-3 px-3">
+                            <div className="d-flex align-items-center gap-3">
+                              <img
+                                src={
+                                  u.avatar ||
+                                  'https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC'
+                                }
+                                alt={u.name}
+                                className="rounded-circle object-fit-cover border border-2 border-surface-container"
+                                style={{ width: '40px', height: '40px' }}
+                              />
+                              <div>
+                                <span className="font-body-base fw-bold text-on-surface d-block">{u.name}</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-3 px-3 font-body-sm text-on-surface">{u.email}</td>
+                          <td className="py-3 px-3 font-body-sm text-on-surface">{u.phone || '+91 98765 43210'}</td>
+                          <td className="py-3 px-3">
+                            <span
+                              className={`badge font-label-caps px-3 py-1.5 rounded-pill fw-bold ${
+                                u.role === 'admin'
+                                  ? 'bg-primary text-white'
+                                  : u.role === 'instructor'
+                                  ? 'bg-secondary text-white'
+                                  : 'bg-secondary-container text-secondary'
+                              }`}
+                            >
+                              {(u.role || 'STUDENT').toUpperCase()}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 text-end">
+                            <div className="d-flex align-items-center justify-content-end gap-2">
+                              <button
+                                onClick={() => handleOpenEditModal(u)}
+                                className="btn btn-sm btn-outline-primary font-body-sm px-3 rounded-3 d-flex align-items-center gap-1"
+                              >
+                                <span className="material-symbols-outlined fs-6">edit</span> Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeleteUser(u.id || u._id, u.name)}
+                                className="btn btn-sm btn-outline-danger font-body-sm px-3 rounded-3 d-flex align-items-center gap-1"
+                              >
+                                <span className="material-symbols-outlined fs-6">delete</span> Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Users Table Pagination */}
+                {totalPages > 1 && (
+                  <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 pt-4 mt-2 border-top border-outline-variant/20">
+                    <span className="font-body-sm text-on-surface-variant">
+                      Showing <strong>{(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredUsers.length)}</strong> of <strong>{filteredUsers.length}</strong> users
+                    </span>
+
+                    <div className="d-flex align-items-center gap-1">
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="btn btn-sm btn-outline-secondary px-2.5 py-1 rounded-2"
+                      >
+                        &laquo; Prev
+                      </button>
+
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                        <button
+                          key={pageNum}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`btn btn-sm px-2.5 py-1 rounded-2 ${
+                            currentPage === pageNum ? 'btn-primary fw-bold' : 'btn-light'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      ))}
+
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="btn btn-sm btn-outline-secondary px-2.5 py-1 rounded-2"
+                      >
+                        Next &raquo;
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

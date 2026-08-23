@@ -8,6 +8,13 @@ export default function AdminCoursesPage() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Search, Filter & Pagination State
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('All');
+  const [levelFilter, setLevelFilter] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
   // Modal State
   const [showModal, setShowModal] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -179,6 +186,32 @@ export default function AdminCoursesPage() {
     }
   };
 
+  // Filter & Search Logic
+  const filteredCourses = courses.filter((c) => {
+    const matchesSearch =
+      !searchTerm.trim() ||
+      c.title?.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+      c.description?.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+      c.techStack?.some((t) => t.toLowerCase().includes(searchTerm.toLowerCase().trim()));
+
+    const matchesCategory = categoryFilter === 'All' || c.category?.toLowerCase() === categoryFilter.toLowerCase();
+    const matchesLevel = levelFilter === 'All' || c.level?.toLowerCase() === levelFilter.toLowerCase();
+
+    return matchesSearch && matchesCategory && matchesLevel;
+  });
+
+  const totalPages = Math.ceil(filteredCourses.length / itemsPerPage) || 1;
+  const paginatedCourses = filteredCourses.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <div className="d-flex min-vh-100 bg-surface overflow-hidden">
       <AdminSidebar />
@@ -212,82 +245,198 @@ export default function AdminCoursesPage() {
             </div>
           </div>
 
+          {/* Search and Filters Bar */}
+          <div className="bg-white rounded-4 border border-outline-variant/30 p-3 shadow-xs">
+            <div className="row g-3 align-items-center">
+              <div className="col-12 col-md-5">
+                <div className="position-relative">
+                  <span className="material-symbols-outlined position-absolute top-50 start-0 translate-middle-y ms-3 text-muted fs-5">
+                    search
+                  </span>
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    placeholder="Search courses by title, tech stack..."
+                    className="form-control font-body-sm rounded-3 input-premium py-2 ps-5 pe-4"
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => {
+                        setSearchTerm('');
+                        setCurrentPage(1);
+                      }}
+                      className="btn position-absolute top-50 end-0 translate-middle-y border-0 text-muted p-1 me-2"
+                    >
+                      <span className="material-symbols-outlined fs-6">close</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-6 col-md-3">
+                <select
+                  value={categoryFilter}
+                  onChange={(e) => {
+                    setCategoryFilter(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="form-select font-body-sm rounded-3 border-outline-variant/30 input-premium"
+                >
+                  <option value="All">All Categories</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="Design">Design</option>
+                  <option value="Business">Business</option>
+                </select>
+              </div>
+
+              <div className="col-6 col-md-2">
+                <select
+                  value={levelFilter}
+                  onChange={(e) => {
+                    setLevelFilter(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="form-select font-body-sm rounded-3 border-outline-variant/30 input-premium"
+                >
+                  <option value="All">All Levels</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+              </div>
+
+              <div className="col-12 col-md-2 text-md-end">
+                <span className="badge bg-surface-container-high text-on-surface font-label-caps px-3 py-2">
+                  Showing {filteredCourses.length} of {courses.length}
+                </span>
+              </div>
+            </div>
+          </div>
+
           <div className="bg-white rounded-4 border border-outline-variant/30 p-4 shadow-sm">
             {loading ? (
               <div className="text-center py-5">
                 <div className="spinner-border text-primary" role="status"></div>
               </div>
-            ) : courses.length === 0 ? (
+            ) : filteredCourses.length === 0 ? (
               <div className="text-center py-5 bg-surface-container-low rounded-3 p-4">
-                <span className="material-symbols-outlined text-outline mb-2" style={{ fontSize: '48px' }}>auto_stories</span>
-                <h4 className="font-headline-md fw-bold text-on-surface mb-2">No Courses Currently in Database</h4>
+                <span className="material-symbols-outlined text-outline mb-2" style={{ fontSize: '48px' }}>search_off</span>
+                <h4 className="font-headline-md fw-bold text-on-surface mb-2">No Matching Courses Found</h4>
                 <p className="font-body-base text-on-surface-variant max-w-md mx-auto mb-4">
-                  The course catalog has been cleared. Choose any course from the templates dropdown or build custom modules to publish live to the student client side.
+                  No courses matched your current filter criteria. Try resetting your search term or filters.
                 </p>
                 <button
                   onClick={() => {
-                    setShowModal(true);
-                    handleApplyPresetByKey('web_react_node');
+                    setSearchTerm('');
+                    setCategoryFilter('All');
+                    setLevelFilter('All');
+                    setCurrentPage(1);
                   }}
-                  className="btn btn-primary font-body-sm px-4 py-2.5 rounded-3 shadow-sm d-inline-flex align-items-center gap-2"
+                  className="btn btn-outline-primary font-body-sm px-4 py-2 rounded-3"
                 >
-                  <span className="material-symbols-outlined fs-5">add_circle</span> Add Course
+                  Reset Filters
                 </button>
               </div>
             ) : (
-              <div className="table-responsive">
-                <table className="table align-middle table-hover mb-0">
-                  <thead className="bg-surface-container-low">
-                    <tr className="font-label-caps text-on-surface-variant">
-                      <th className="py-3 px-3">Course Title & Tech Stack</th>
-                      <th className="py-3 px-3">Category</th>
-                      <th className="py-3 px-3">Modules Count</th>
-                      <th className="py-3 px-3">Pricing</th>
-                      <th className="py-3 px-3 text-end">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {courses.map((crs) => (
-                      <tr key={crs.id || crs._id}>
-                        <td className="py-3 px-3">
-                          <div className="d-flex align-items-center gap-3">
-                            <img src={crs.thumbnail} alt={crs.title} className="rounded object-fit-cover shadow-xs" style={{ width: '56px', height: '40px' }} />
-                            <div>
-                              <span className="font-body-base fw-bold text-on-surface d-block">{crs.title}</span>
-                              <div className="d-flex flex-wrap gap-1 mt-1">
-                                {crs.techStack?.map((t, idx) => (
-                                  <span key={idx} className="badge bg-surface-container text-on-surface-variant font-label-caps px-2 py-0.5" style={{ fontSize: '10px' }}>
-                                    {t}
-                                  </span>
-                                ))}
+              <>
+                <div className="table-responsive">
+                  <table className="table align-middle table-hover mb-0">
+                    <thead className="bg-surface-container-low">
+                      <tr className="font-label-caps text-on-surface-variant">
+                        <th className="py-3 px-3">Course Title & Tech Stack</th>
+                        <th className="py-3 px-3">Category</th>
+                        <th className="py-3 px-3">Modules Count</th>
+                        <th className="py-3 px-3">Pricing</th>
+                        <th className="py-3 px-3 text-end">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paginatedCourses.map((crs) => (
+                        <tr key={crs.id || crs._id}>
+                          <td className="py-3 px-3">
+                            <div className="d-flex align-items-center gap-3">
+                              <img src={crs.thumbnail} alt={crs.title} className="rounded object-fit-cover shadow-xs" style={{ width: '56px', height: '40px' }} />
+                              <div>
+                                <span className="font-body-base fw-bold text-on-surface d-block">{crs.title}</span>
+                                <div className="d-flex flex-wrap gap-1 mt-1">
+                                  {crs.techStack?.map((t, idx) => (
+                                    <span key={idx} className="badge bg-surface-container text-on-surface-variant font-label-caps px-2 py-0.5" style={{ fontSize: '10px' }}>
+                                      {t}
+                                    </span>
+                                  ))}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="py-3 px-3 font-body-sm">{crs.category}</td>
-                        <td className="py-3 px-3">
-                          <span className="badge bg-primary-container text-on-primary-container font-label-caps px-2.5 py-1">
-                            {crs.modules?.length || 1} Modules ({crs.modules?.reduce((acc, m) => acc + (m.lessons?.length || 0), 0) || 2} Lessons)
-                          </span>
-                        </td>
-                        <td className="py-3 px-3">
-                          <span className="badge bg-success-container text-success font-label-caps px-3 py-1 fw-bold">100% FREE</span>
-                        </td>
-                        <td className="py-3 px-3 text-end">
-                          <div className="d-flex align-items-center justify-content-end gap-2">
-                            <Link to={`/course/${crs.id}`} className="btn btn-sm btn-outline-primary font-body-sm px-3 py-1.5 rounded-3 text-nowrap whitespace-nowrap">
-                              View Course
-                            </Link>
-                            <button onClick={() => handleDeleteCourse(crs.id)} className="btn btn-sm btn-outline-danger font-body-sm px-3 py-1.5 rounded-3 text-nowrap whitespace-nowrap">
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                          </td>
+                          <td className="py-3 px-3 font-body-sm">{crs.category}</td>
+                          <td className="py-3 px-3">
+                            <span className="badge bg-primary-container text-on-primary-container font-label-caps px-2.5 py-1">
+                              {crs.modules?.length || 1} Modules ({crs.modules?.reduce((acc, m) => acc + (m.lessons?.length || 0), 0) || 2} Lessons)
+                            </span>
+                          </td>
+                          <td className="py-3 px-3">
+                            <span className="badge bg-success-container text-success font-label-caps px-3 py-1 fw-bold">100% FREE</span>
+                          </td>
+                          <td className="py-3 px-3 text-end">
+                            <div className="d-flex align-items-center justify-end gap-2">
+                              <Link to={`/course/${crs.id}`} className="btn btn-sm btn-outline-primary font-body-sm px-3 py-1.5 rounded-3 text-nowrap whitespace-nowrap">
+                                View Course
+                              </Link>
+                              <button onClick={() => handleDeleteCourse(crs.id)} className="btn btn-sm btn-outline-danger font-body-sm px-3 py-1.5 rounded-3 text-nowrap whitespace-nowrap">
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Table Pagination Controls */}
+                {totalPages > 1 && (
+                  <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 pt-4 mt-2 border-top border-outline-variant/20">
+                    <span className="font-body-sm text-on-surface-variant">
+                      Showing <strong>{(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredCourses.length)}</strong> of <strong>{filteredCourses.length}</strong> courses
+                    </span>
+
+                    <div className="d-flex align-items-center gap-1">
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="btn btn-sm btn-outline-secondary px-2.5 py-1 rounded-2"
+                      >
+                        &laquo; Prev
+                      </button>
+
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                        <button
+                          key={pageNum}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`btn btn-sm px-2.5 py-1 rounded-2 ${
+                            currentPage === pageNum ? 'btn-primary fw-bold' : 'btn-light'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      ))}
+
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="btn btn-sm btn-outline-secondary px-2.5 py-1 rounded-2"
+                      >
+                        Next &raquo;
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

@@ -12,6 +12,8 @@ export default function AdminEnrollmentsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [courseFilter, setCourseFilter] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   // Manual Enroll Modal State
   const [showManualEnrollModal, setShowManualEnrollModal] = useState(false);
@@ -128,6 +130,18 @@ export default function AdminEnrollmentsPage() {
     return matchesSearch && matchesCourse;
   });
 
+  const totalPages = Math.ceil(filteredEnrollments.length / itemsPerPage) || 1;
+  const paginatedEnrollments = filteredEnrollments.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <div className="d-flex min-vh-100 bg-surface overflow-hidden">
       <AdminSidebar />
@@ -182,31 +196,39 @@ export default function AdminEnrollmentsPage() {
 
           {/* Student Enrollments Table Section */}
           <section className="bg-surface-container-lowest border border-outline-variant/30 rounded-4 p-4 shadow-sm">
-            <div className="d-flex align-items-center justify-content-end gap-3 mb-4">
-              <div className="position-relative" style={{ width: '260px', flexShrink: 0 }}>
-                <span className="material-symbols-outlined position-absolute text-on-surface-variant" style={{ left: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '18px' }}>search</span>
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search name, email, course..."
-                  className="form-control font-body-sm ps-5 py-2 input-premium rounded-3 w-100"
-                />
-              </div>
+            <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+              <div className="d-flex flex-wrap align-items-center gap-3">
+                <div className="position-relative" style={{ width: '260px', flexShrink: 0 }}>
+                  <span className="material-symbols-outlined position-absolute text-on-surface-variant" style={{ left: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '18px' }}>search</span>
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    placeholder="Search name, email, course..."
+                    className="form-control font-body-sm ps-5 py-2 input-premium rounded-3 w-100"
+                  />
+                </div>
 
-              <div style={{ width: '220px', flexShrink: 0 }}>
-                <select
-                  value={courseFilter}
-                  onChange={(e) => setCourseFilter(e.target.value)}
-                  className="form-select font-body-sm py-2 input-premium rounded-3 w-100"
-                >
-                  <option value="All">All Enrolled Courses</option>
-                  {courses.map((c) => (
-                    <option key={c.id || c._id} value={c.id || c._id}>
-                      {c.title}
-                    </option>
-                  ))}
-                </select>
+                <div style={{ width: '220px', flexShrink: 0 }}>
+                  <select
+                    value={courseFilter}
+                    onChange={(e) => {
+                      setCourseFilter(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    className="form-select font-body-sm py-2 input-premium rounded-3 w-100"
+                  >
+                    <option value="All">All Enrolled Courses</option>
+                    {courses.map((c) => (
+                      <option key={c.id || c._id} value={c.id || c._id}>
+                        {c.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <button
@@ -242,65 +264,106 @@ export default function AdminEnrollmentsPage() {
                 </button>
               </div>
             ) : (
-              <div className="table-responsive border-0 overflow-x-hidden">
-                <table className="table align-middle table-hover mb-0 w-100">
-                  <thead className="bg-surface-container-low">
-                    <tr className="font-label-caps text-on-surface-variant text-nowrap whitespace-nowrap" style={{ fontSize: '11px' }}>
-                      <th className="py-2.5 px-2">Student Name</th>
-                      <th className="py-2.5 px-2">Email Address & Phone</th>
-                      <th className="py-2.5 px-2">Enrolled Course</th>
-                      <th className="py-2.5 px-2">Profession / Role</th>
-                      <th className="py-2.5 px-2">Learning Goal</th>
-                      <th className="py-2.5 px-2">Date</th>
-                      <th className="py-2.5 px-2">Status</th>
-                      <th className="py-2.5 px-2 text-end">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredEnrollments.map((enr) => (
-                      <tr key={enr.id || enr._id}>
-                        <td className="py-2.5 px-2 text-nowrap whitespace-nowrap">
-                          <div className="d-flex align-items-center gap-2">
-                            <div className="rounded-circle bg-primary-container text-white d-flex align-items-center justify-content-center fw-bold" style={{ width: '32px', height: '32px', fontSize: '13px', flexShrink: 0 }}>
-                              {enr.userName?.charAt(0)?.toUpperCase() || 'S'}
-                            </div>
-                            <span className="font-body-sm fw-bold text-on-surface text-nowrap whitespace-nowrap">{enr.userName}</span>
-                          </div>
-                        </td>
-                        <td className="py-2.5 px-2 font-body-sm text-nowrap whitespace-nowrap">
-                          <span className="d-block text-on-surface fw-medium text-nowrap whitespace-nowrap" style={{ fontSize: '12px' }}>{enr.userEmail}</span>
-                          <span className="font-body-sm text-on-surface-variant text-nowrap whitespace-nowrap" style={{ fontSize: '11px' }}>{enr.userPhone}</span>
-                        </td>
-                        <td className="py-2.5 px-2 font-body-sm fw-bold text-primary" style={{ fontSize: '12px', lineHeight: '1.3' }}>
-                          {enr.courseTitle}
-                        </td>
-                        <td className="py-2.5 px-2 text-nowrap whitespace-nowrap">
-                          <span className="badge bg-secondary-container text-secondary font-label-caps px-2 py-0.5 rounded-pill text-nowrap whitespace-nowrap" style={{ fontSize: '10px' }}>{enr.profession}</span>
-                        </td>
-                        <td className="py-2.5 px-2 font-body-sm text-on-surface-variant" style={{ fontSize: '11px', lineHeight: '1.3' }}>
-                          {enr.goal}
-                        </td>
-                        <td className="py-2.5 px-2 font-body-sm text-on-surface-variant text-nowrap whitespace-nowrap" style={{ fontSize: '11px' }}>
-                          {new Date(enr.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </td>
-                        <td className="py-2.5 px-2 text-nowrap whitespace-nowrap">
-                          <span className="badge bg-success text-white font-label-caps px-2 py-0.5 rounded-pill text-nowrap whitespace-nowrap" style={{ fontSize: '10px' }}>ACTIVE</span>
-                        </td>
-                        <td className="py-2.5 px-2 text-end text-nowrap whitespace-nowrap">
-                          <button
-                            onClick={() => handleDeleteEnrollment(enr.id || enr._id, enr.userName, enr.courseTitle)}
-                            className="btn btn-sm btn-outline-danger font-body-sm px-2.5 py-1 rounded-3 d-flex align-items-center gap-1 ms-auto text-nowrap whitespace-nowrap"
-                            style={{ fontSize: '11px' }}
-                            title="Cancel / Delete Enrollment"
-                          >
-                            <span className="material-symbols-outlined fs-6">delete</span> <span>Cancel</span>
-                          </button>
-                        </td>
+              <>
+                <div className="table-responsive border-0 overflow-x-hidden">
+                  <table className="table align-middle table-hover mb-0 w-100">
+                    <thead className="bg-surface-container-low">
+                      <tr className="font-label-caps text-on-surface-variant text-nowrap whitespace-nowrap" style={{ fontSize: '11px' }}>
+                        <th className="py-2.5 px-2">Student Name</th>
+                        <th className="py-2.5 px-2">Email Address & Phone</th>
+                        <th className="py-2.5 px-2">Enrolled Course</th>
+                        <th className="py-2.5 px-2">Profession / Role</th>
+                        <th className="py-2.5 px-2">Learning Goal</th>
+                        <th className="py-2.5 px-2">Date</th>
+                        <th className="py-2.5 px-2">Status</th>
+                        <th className="py-2.5 px-2 text-end">Action</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {paginatedEnrollments.map((enr) => (
+                        <tr key={enr.id || enr._id}>
+                          <td className="py-2.5 px-2 text-nowrap whitespace-nowrap">
+                            <div className="d-flex align-items-center gap-2">
+                              <div className="rounded-circle bg-primary-container text-white d-flex align-items-center justify-content-center fw-bold" style={{ width: '32px', height: '32px', fontSize: '13px', flexShrink: 0 }}>
+                                {enr.userName?.charAt(0)?.toUpperCase() || 'S'}
+                              </div>
+                              <span className="font-body-sm fw-bold text-on-surface text-nowrap whitespace-nowrap">{enr.userName}</span>
+                            </div>
+                          </td>
+                          <td className="py-2.5 px-2 font-body-sm text-nowrap whitespace-nowrap">
+                            <span className="d-block text-on-surface fw-medium text-nowrap whitespace-nowrap" style={{ fontSize: '12px' }}>{enr.userEmail}</span>
+                            <span className="font-body-sm text-on-surface-variant text-nowrap whitespace-nowrap" style={{ fontSize: '11px' }}>{enr.userPhone}</span>
+                          </td>
+                          <td className="py-2.5 px-2 font-body-sm fw-bold text-primary" style={{ fontSize: '12px', lineHeight: '1.3' }}>
+                            {enr.courseTitle}
+                          </td>
+                          <td className="py-2.5 px-2 text-nowrap whitespace-nowrap">
+                            <span className="badge bg-secondary-container text-secondary font-label-caps px-2 py-0.5 rounded-pill text-nowrap whitespace-nowrap" style={{ fontSize: '10px' }}>{enr.profession}</span>
+                          </td>
+                          <td className="py-2.5 px-2 font-body-sm text-on-surface-variant" style={{ fontSize: '11px', lineHeight: '1.3' }}>
+                            {enr.goal}
+                          </td>
+                          <td className="py-2.5 px-2 font-body-sm text-on-surface-variant text-nowrap whitespace-nowrap" style={{ fontSize: '11px' }}>
+                            {new Date(enr.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </td>
+                          <td className="py-2.5 px-2 text-nowrap whitespace-nowrap">
+                            <span className="badge bg-success text-white font-label-caps px-2 py-0.5 rounded-pill text-nowrap whitespace-nowrap" style={{ fontSize: '10px' }}>ACTIVE</span>
+                          </td>
+                          <td className="py-2.5 px-2 text-end text-nowrap whitespace-nowrap">
+                            <button
+                              onClick={() => handleDeleteEnrollment(enr.id || enr._id, enr.userName, enr.courseTitle)}
+                              className="btn btn-sm btn-outline-danger font-body-sm px-2.5 py-1 rounded-3 d-flex align-items-center gap-1 ms-auto text-nowrap whitespace-nowrap"
+                              style={{ fontSize: '11px' }}
+                              title="Cancel / Delete Enrollment"
+                            >
+                              <span className="material-symbols-outlined fs-6">delete</span> <span>Cancel</span>
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Table Pagination */}
+                {totalPages > 1 && (
+                  <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3 pt-4 mt-2 border-top border-outline-variant/20">
+                    <span className="font-body-sm text-on-surface-variant">
+                      Showing <strong>{(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredEnrollments.length)}</strong> of <strong>{filteredEnrollments.length}</strong> enrollments
+                    </span>
+
+                    <div className="d-flex align-items-center gap-1">
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="btn btn-sm btn-outline-secondary px-2.5 py-1 rounded-2"
+                      >
+                        &laquo; Prev
+                      </button>
+
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                        <button
+                          key={pageNum}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`btn btn-sm px-2.5 py-1 rounded-2 ${
+                            currentPage === pageNum ? 'btn-primary fw-bold' : 'btn-light'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      ))}
+
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="btn btn-sm btn-outline-secondary px-2.5 py-1 rounded-2"
+                      >
+                        Next &raquo;
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </section>
         </div>
