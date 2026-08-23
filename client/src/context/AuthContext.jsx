@@ -32,8 +32,12 @@ export function AuthProvider({ children }) {
     return res.data.user;
   };
 
-  const register = async (userData) => {
-    const res = await api.post('/auth/register', userData);
+  const register = async (nameOrData, email, phone, password) => {
+    const payload =
+      typeof nameOrData === 'object' && nameOrData !== null
+        ? nameOrData
+        : { name: nameOrData, email, phone, password };
+    const res = await api.post('/auth/register', payload);
     localStorage.setItem('learnhub_token', res.data.token);
     setToken(res.data.token);
     setUser(res.data.user);

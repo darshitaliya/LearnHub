@@ -85,7 +85,12 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      await register(formData.name, formData.email, formData.phone, formData.password);
+      await register({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        password: formData.password,
+      });
       navigate('/dashboard');
     } catch (err) {
       const serverErr = err.response?.data?.error || 'Registration failed.';
