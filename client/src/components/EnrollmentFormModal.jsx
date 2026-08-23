@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function EnrollmentFormModal({ course, user, onClose, onSuccess }) {
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
 
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -43,6 +45,7 @@ export default function EnrollmentFormModal({ course, user, onClose, onSuccess }
 
       setCreatedEnrollment(res.data?.enrollment);
       setEnrolledSuccess(true);
+      if (refreshUser) refreshUser();
       if (onSuccess) onSuccess(res.data);
     } catch (err) {
       console.error('Enrollment failed:', err);

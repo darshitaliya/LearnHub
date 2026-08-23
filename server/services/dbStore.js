@@ -6,6 +6,7 @@ import User from '../models/User.js';
 import Course from '../models/Course.js';
 import Order from '../models/Order.js';
 import Progress from '../models/Progress.js';
+import Enrollment from '../models/Enrollment.js';
 
 const DB_FILE_PATH = path.resolve(process.cwd(), 'data', 'persistent_db.json');
 
@@ -4194,24 +4195,29 @@ export const dbStore = {
     let totalUsers = 0;
     let totalCourses = 0;
     let totalOrders = 0;
+    let totalEnrollments = 0;
 
     if (isMongoConnected()) {
       totalUsers = await User.countDocuments();
       totalCourses = await Course.countDocuments();
       totalOrders = await Order.countDocuments();
+      totalEnrollments = await Enrollment.countDocuments();
     } else {
       totalUsers = memoryStore.users.length;
       totalCourses = memoryStore.courses.length;
       totalOrders = memoryStore.orders.length;
+      totalEnrollments = (memoryStore.enrollments || []).length;
     }
 
-    return { totalUsers, totalCourses, totalOrders, totalEnrollments: (memoryStore.enrollments || []).length, totalRevenue: 0 };
+    return { totalUsers, totalCourses, totalOrders, totalEnrollments, totalRevenue: 0 };
   },
 
   // ENROLLMENT OPERATIONS
   async createEnrollment(data) {
+    const enrId = `enr_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
     const newEnrollment = {
-      id: `enr_${Date.now()}`,
+      _id: enrId,
+      id: enrId,
       userId: data.userId,
       userName: data.userName || data.name || 'Student User',
       userEmail: data.userEmail || data.email || 'student@example.com',
@@ -4224,6 +4230,15 @@ export const dbStore = {
       status: 'Active',
     };
 
+    if (isMongoConnected()) {
+      try {
+        const created = await Enrollment.create(newEnrollment);
+        return created;
+      } catch (err) {
+        console.error('Error creating enrollment in Mongo:', err);
+      }
+    }
+
     if (!memoryStore.enrollments) memoryStore.enrollments = [];
     memoryStore.enrollments.unshift(newEnrollment);
     saveStateToFile();
@@ -4231,11 +4246,27 @@ export const dbStore = {
   },
 
   async getAllEnrollments() {
+    if (isMongoConnected()) {
+      try {
+        const list = await Enrollment.find({}).sort({ createdAt: -1 });
+        return list;
+      } catch (err) {
+        console.error('Error fetching enrollments from Mongo:', err);
+      }
+    }
     if (!memoryStore.enrollments) memoryStore.enrollments = [];
     return memoryStore.enrollments;
   },
 
   async deleteEnrollment(id) {
+    if (isMongoConnected()) {
+      try {
+        const deleted = await Enrollment.findOneAndDelete({ $or: [{ _id: id }, { id }] });
+        return deleted;
+      } catch (err) {
+        console.error('Error deleting enrollment from Mongo:', err);
+      }
+    }
     if (!memoryStore.enrollments) memoryStore.enrollments = [];
     const idx = memoryStore.enrollments.findIndex((e) => e.id === id || e._id === id);
     if (idx !== -1) {

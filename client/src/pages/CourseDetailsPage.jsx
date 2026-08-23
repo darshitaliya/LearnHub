@@ -45,7 +45,9 @@ export default function CourseDetailsPage() {
   };
 
   const courseId = course?.id || course?._id;
-  const isEnrolled = user?.enrolledCourses?.includes(courseId);
+  const isEnrolled =
+    Boolean(user?.enrolledCourses?.includes(course?.id)) ||
+    Boolean(user?.enrolledCourses?.includes(course?._id));
 
   const handleEnrollOrStart = () => {
     if (!user) {

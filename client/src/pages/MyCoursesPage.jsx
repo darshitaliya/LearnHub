@@ -46,7 +46,8 @@ export default function MyCoursesPage() {
       const coursesWithProgress = await Promise.all(
         studentCourses.map(async (crs) => {
           try {
-            const progRes = await api.get(`/progress/${crs.id}`);
+            const courseId = crs.id || crs._id;
+            const progRes = await api.get(`/progress/${courseId}`);
             const completedCount = progRes.data?.completedLessons?.length || 0;
             const totalLessonsCount = crs.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 1;
             const calcPercentage = Math.min(100, Math.round((completedCount / totalLessonsCount) * 100));

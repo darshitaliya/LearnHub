@@ -15,6 +15,18 @@ export default function StudentProfilePage() {
     newPassword: '',
   });
 
+  React.useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: user.name || '',
+        phone: user.phone || '',
+        avatar: user.avatar || '',
+        bio: user.bio || '',
+      }));
+    }
+  }, [user]);
+
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
