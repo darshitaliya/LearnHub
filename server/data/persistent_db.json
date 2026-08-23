@@ -1,0 +1,818 @@
+{
+  "users": [
+    {
+      "_id": "usr_admin",
+      "id": "usr_admin",
+      "name": "System Admin",
+      "email": "admin@learnhub.com",
+      "phone": "+91 98765 43210",
+      "password": "$2b$10$ku/n9k1b1ZJeSsrSH7oNvu6EZgl9BWk4Fn/yJjP2gH17PA6CBjAAi",
+      "role": "admin",
+      "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "enrolledCourses": [
+        "ml301",
+        "cs201",
+        "web101",
+        "crs_1787468529801",
+        "crs_1787469340460",
+        "crs_1787477280878",
+        "crs_1787474026830",
+        "crs_1787480497023"
+      ],
+      "wishlist": [],
+      "createdAt": "2026-08-23T07:00:48.838Z"
+    },
+    {
+      "id": "usr_1787468850684",
+      "name": "krish",
+      "email": "krish@gmail.com",
+      "phone": "+919874562010",
+      "password": "$2b$10$yyMq0k8/Oxc36k5x63pMXeCmXDSoWtK1jR1Fdcym4oNNy6iDAVjKq",
+      "role": "student",
+      "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "enrolledCourses": [
+        "web101",
+        "cs201",
+        "crs_1787468529801"
+      ],
+      "wishlist": [],
+      "createdAt": "2026-08-23T07:07:30.684Z",
+      "_id": "usr_1787468850684"
+    },
+    {
+      "id": "usr_1787473386811",
+      "name": "Darsh Italiya",
+      "email": "darshitaliya3@gmail.com",
+      "phone": "+919409970864",
+      "password": "$2b$10$SEBH9.CRazygdVNIOWpbRuXIBDIYeLIBBTUo0SlSv.91CprCaYcnW",
+      "role": "student",
+      "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "enrolledCourses": [
+        "web101",
+        "cs201",
+        "crs_1787474026830",
+        "crs_1787469340460",
+        "crs_1787468529801",
+        "crs_1787477280878"
+      ],
+      "wishlist": [],
+      "createdAt": "2026-08-23T08:23:06.811Z",
+      "_id": "usr_1787473386811"
+    },
+    {
+      "id": "usr_1787480175136",
+      "name": "Alex",
+      "email": "alex@learnhub.com",
+      "phone": "8989856418",
+      "password": "$2b$10$AlsvJEL1T6qMzM25/4CHguf3GSbuzmL74QM1sIxeK/yRRsMujfUYG",
+      "role": "student",
+      "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "enrolledCourses": [
+        "web101",
+        "cs201",
+        "crs_1787480410655",
+        "crs_1787480497023"
+      ],
+      "wishlist": [],
+      "createdAt": "2026-08-23T10:16:15.136Z",
+      "_id": "usr_1787480175136"
+    }
+  ],
+  "courses": [
+    {
+      "id": "crs_1787480497023",
+      "title": "Automated CI/CD Pipelines with GitHub Actions & Docker",
+      "subtitle": "Build automated continuous integration and continuous deployment pipelines: automated testing, Docke",
+      "description": "Build automated continuous integration and continuous deployment pipelines: automated testing, Docker build & push, and zero-downtime production releases.",
+      "category": "Computer Science",
+      "level": "Intermediate",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 4.9,
+      "reviewsCount": 150,
+      "hours": 12,
+      "lessonsCount": 1,
+      "languages": [
+        "English",
+        "Hindi"
+      ],
+      "techStack": [
+        "GitHub Actions",
+        "CI/CD",
+        "YAML",
+        "Docker",
+        "DevOps"
+      ],
+      "instructorName": "System Admin",
+      "instructorRole": "Lead Educator",
+      "instructorBio": "Expert industry educator building modern educational content.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&w=1200&q=80",
+      "status": "published",
+      "featured": false,
+      "modules": [
+        {
+          "id": "mod_1787480497013_0",
+          "title": "Module 1: Writing GitHub Actions Workflows",
+          "lessons": [
+            {
+              "id": "les_1787480497013_0_0",
+              "title": "CI/CD Pipeline Setup with GitHub Actions",
+              "duration": "24:45",
+              "videoUrl": "https://www.youtube.com/watch?v=R8_veQiYBjU",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full video lessons",
+        "Certificate of completion",
+        "Lifetime access"
+      ],
+      "createdAt": "2026-08-23T10:21:37.024Z",
+      "_id": "crs_1787480497023"
+    },
+    {
+      "id": "crs_1787480410655",
+      "title": "Artificial Intelligence & Machine Learning Masterclass",
+      "subtitle": "Comprehensive hands-on training in Artificial Intelligence, Supervised & Unsupervised Machine Learni",
+      "description": "Comprehensive hands-on training in Artificial Intelligence, Supervised & Unsupervised Machine Learning, PyTorch deep learning, and Scikit-Learn pipelines.",
+      "category": "Data Science",
+      "level": "Advanced",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 4.9,
+      "reviewsCount": 150,
+      "hours": 12,
+      "lessonsCount": 2,
+      "languages": [
+        "English",
+        "Hindi"
+      ],
+      "techStack": [
+        "Python",
+        "PyTorch",
+        "Scikit-Learn",
+        "Machine Learning",
+        "Data Science"
+      ],
+      "instructorName": "System Admin",
+      "instructorRole": "Lead Educator",
+      "instructorBio": "Expert industry educator building modern educational content.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+      "status": "published",
+      "featured": false,
+      "modules": [
+        {
+          "id": "mod_1787480410634_0",
+          "title": "Module 1: Supervised & Unsupervised Learning",
+          "lessons": [
+            {
+              "id": "les_1787480410634_0_0",
+              "title": "Machine Learning Algorithms Overview",
+              "duration": "25:00",
+              "videoUrl": "https://www.youtube.com/watch?v=Gv9_4yMHFhI",
+              "isLocked": false,
+              "type": "video"
+            },
+            {
+              "id": "les_1787480410634_0_1",
+              "title": "Linear & Logistic Regression in Python",
+              "duration": "22:30",
+              "videoUrl": "https://www.youtube.com/watch?v=vmEHCJofslg",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full video lessons",
+        "Certificate of completion",
+        "Lifetime access"
+      ],
+      "createdAt": "2026-08-23T10:20:10.655Z",
+      "_id": "crs_1787480410655"
+    },
+    {
+      "id": "crs_1787477280878",
+      "title": "Google Cloud Platform (GCP) Infrastructure & GKE",
+      "subtitle": "Build modern serverless and Kubernetes applications on GCP using Compute Engine, Google Kubernetes E",
+      "description": "Build modern serverless and Kubernetes applications on GCP using Compute Engine, Google Kubernetes Engine (GKE), BigQuery, and Cloud Run.",
+      "category": "Computer Science",
+      "level": "Intermediate",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 4.9,
+      "reviewsCount": 150,
+      "hours": 12,
+      "lessonsCount": 1,
+      "languages": [
+        "English",
+        "Hindi"
+      ],
+      "techStack": [
+        "GCP",
+        "BigQuery",
+        "GKE",
+        "Cloud Run",
+        "Terraform"
+      ],
+      "instructorName": "System Admin",
+      "instructorRole": "Lead Educator",
+      "instructorBio": "Expert industry educator building modern educational content.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+      "status": "published",
+      "featured": false,
+      "modules": [
+        {
+          "id": "mod_1787477280867_0",
+          "title": "Module 1: GCP Core Infrastructure Services",
+          "lessons": [
+            {
+              "id": "les_1787477280867_0_0",
+              "title": "Google Cloud Platform Architecture Overview",
+              "duration": "27:10",
+              "videoUrl": "https://www.youtube.com/watch?v=jpno9AtS2wU",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full video lessons",
+        "Certificate of completion",
+        "Lifetime access"
+      ],
+      "createdAt": "2026-08-23T09:28:00.878Z",
+      "_id": "crs_1787477280878"
+    },
+    {
+      "id": "crs_1787474026830",
+      "title": "Applied Cryptography: AES, RSA & TLS 1.3 Architecture",
+      "subtitle": "Understand modern cryptography primitives: symmetric AES encryption, asymmetric RSA/ECC keys, hashin",
+      "description": "Understand modern cryptography primitives: symmetric AES encryption, asymmetric RSA/ECC keys, hashing algorithms (SHA-256), and TLS 1.3 handshake.",
+      "category": "Computer Science",
+      "level": "Advanced",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 4.9,
+      "reviewsCount": 150,
+      "hours": 12,
+      "lessonsCount": 1,
+      "languages": [
+        "English",
+        "Hindi"
+      ],
+      "techStack": [
+        "Cryptography",
+        "AES",
+        "RSA",
+        "TLS",
+        "OpenSSL"
+      ],
+      "instructorName": "System Admin",
+      "instructorRole": "Lead Educator",
+      "instructorBio": "Expert industry educator building modern educational content.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80",
+      "status": "published",
+      "featured": false,
+      "modules": [
+        {
+          "id": "mod_1787474026815_0",
+          "title": "Module 1: Asymmetric & Symmetric Encryption",
+          "lessons": [
+            {
+              "id": "les_1787474026815_0_0",
+              "title": "AES vs RSA Cryptographic Mechanics",
+              "duration": "29:40",
+              "videoUrl": "https://www.youtube.com/watch?v=NuyzuNBFWxQ",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full video lessons",
+        "Certificate of completion",
+        "Lifetime access"
+      ],
+      "createdAt": "2026-08-23T08:33:46.830Z",
+      "_id": "crs_1787474026830"
+    },
+    {
+      "id": "crs_1787469340460",
+      "title": "Flutter 3 & Dart: Building Beautiful Cross-Platform Apps",
+      "subtitle": "Create fast, responsive mobile apps for iOS and Android using Flutter 3 widgets, Dart state manageme",
+      "description": "Create fast, responsive mobile apps for iOS and Android using Flutter 3 widgets, Dart state management (Bloc/Provider), and REST API integration.",
+      "category": "Computer Science",
+      "level": "Intermediate",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 4.9,
+      "reviewsCount": 150,
+      "hours": 12,
+      "lessonsCount": 1,
+      "languages": [
+        "English",
+        "Hindi"
+      ],
+      "techStack": [
+        "Flutter",
+        "Dart",
+        "Mobile Apps",
+        "iOS",
+        "Android"
+      ],
+      "instructorName": "System Admin",
+      "instructorRole": "Lead Educator",
+      "instructorBio": "Expert industry educator building modern educational content.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1200&q=80",
+      "status": "published",
+      "featured": false,
+      "modules": [
+        {
+          "id": "mod_1787469340442_0",
+          "title": "Module 1: Flutter Widgets & State Management",
+          "lessons": [
+            {
+              "id": "les_1787469340442_0_0",
+              "title": "Flutter 3 App Architecture & Dart Essentials",
+              "duration": "30:00",
+              "videoUrl": "https://www.youtube.com/watch?v=VPvVD8t0208",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full video lessons",
+        "Certificate of completion",
+        "Lifetime access"
+      ],
+      "createdAt": "2026-08-23T07:15:40.460Z",
+      "_id": "crs_1787469340460"
+    },
+    {
+      "id": "crs_1787468529801",
+      "title": "Web Application Security & OWASP Vulnerabilities",
+      "subtitle": "Identify and mitigate top web security flaws: SQL Injection (SQLi), Cross-Site Scripting (XSS), CSRF",
+      "description": "Identify and mitigate top web security flaws: SQL Injection (SQLi), Cross-Site Scripting (XSS), CSRF, broken authentication, and secure header enforcement.",
+      "category": "Computer Science",
+      "level": "Intermediate",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 4.9,
+      "reviewsCount": 150,
+      "hours": 12,
+      "lessonsCount": 1,
+      "languages": [
+        "English",
+        "Hindi"
+      ],
+      "techStack": [
+        "OWASP",
+        "Burp Suite",
+        "Web Security",
+        "SQL Injection",
+        "XSS"
+      ],
+      "instructorName": "System Admin",
+      "instructorRole": "Lead Educator",
+      "instructorBio": "Expert industry educator building modern educational content.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80",
+      "status": "published",
+      "featured": false,
+      "modules": [
+        {
+          "id": "mod_1787468529784_0",
+          "title": "Module 1: OWASP Top 10 Exploit Prevention",
+          "lessons": [
+            {
+              "id": "les_1787468529784_0_0",
+              "title": "Preventing SQL Injection & XSS Vulnerabilities",
+              "duration": "28:10",
+              "videoUrl": "https://www.youtube.com/watch?v=2e6i_YgXW_A",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full video lessons",
+        "Certificate of completion",
+        "Lifetime access"
+      ],
+      "createdAt": "2026-08-23T07:02:09.801Z",
+      "_id": "crs_1787468529801"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord_1787469777099",
+      "userId": "usr_1787469776493",
+      "userName": "John Connor",
+      "items": [
+        {
+          "courseId": "ml301",
+          "title": "Advanced Machine Learning Architectures",
+          "price": 0
+        }
+      ],
+      "totalAmount": 0,
+      "paymentStatus": "completed",
+      "paymentMethod": "Credit Card (Simulated)",
+      "createdAt": "2026-08-23T07:22:57.099Z",
+      "_id": "ord_1787469777099"
+    },
+    {
+      "id": "ord_1787469520248",
+      "userId": "usr_1787469519533",
+      "userName": "John Connor",
+      "items": [
+        {
+          "courseId": "ml301",
+          "title": "Advanced Machine Learning Architectures",
+          "price": 0
+        }
+      ],
+      "totalAmount": 0,
+      "paymentStatus": "completed",
+      "paymentMethod": "Credit Card (Simulated)",
+      "createdAt": "2026-08-23T07:18:40.249Z",
+      "_id": "ord_1787469520248"
+    },
+    {
+      "id": "ord_1787468874240",
+      "userId": "usr_1787468850684",
+      "userName": "krish",
+      "items": [
+        {
+          "courseId": "crs_1787468529801",
+          "title": "Web Application Security & OWASP Vulnerabilities",
+          "price": 0
+        }
+      ],
+      "totalAmount": 0,
+      "paymentStatus": "completed",
+      "paymentMethod": "Simulated Credit Card",
+      "createdAt": "2026-08-23T07:07:54.240Z",
+      "_id": "ord_1787468874240"
+    },
+    {
+      "id": "ord_1787468842259",
+      "userId": "usr_1787468841248",
+      "userName": "John Connor",
+      "items": [
+        {
+          "courseId": "ml301",
+          "title": "Advanced Machine Learning Architectures",
+          "price": 0
+        }
+      ],
+      "totalAmount": 0,
+      "paymentStatus": "completed",
+      "paymentMethod": "Credit Card (Simulated)",
+      "createdAt": "2026-08-23T07:07:22.259Z",
+      "_id": "ord_1787468842259"
+    },
+    {
+      "id": "ord_1787468686762",
+      "userId": "usr_admin",
+      "userName": "System Admin",
+      "items": [
+        {
+          "courseId": "crs_1787468529801",
+          "title": "Web Application Security & OWASP Vulnerabilities",
+          "price": 0
+        }
+      ],
+      "totalAmount": 0,
+      "paymentStatus": "completed",
+      "paymentMethod": "Simulated Credit Card",
+      "createdAt": "2026-08-23T07:04:46.762Z",
+      "_id": "ord_1787468686762"
+    },
+    {
+      "id": "ord_1787468647826",
+      "userId": "usr_1787468647074",
+      "userName": "John Connor",
+      "items": [
+        {
+          "courseId": "ml301",
+          "title": "Advanced Machine Learning Architectures",
+          "price": 0
+        }
+      ],
+      "totalAmount": 0,
+      "paymentStatus": "completed",
+      "paymentMethod": "Credit Card (Simulated)",
+      "createdAt": "2026-08-23T07:04:07.827Z",
+      "_id": "ord_1787468647826"
+    },
+    {
+      "id": "ord_1787468454455",
+      "userId": "usr_1787468453722",
+      "userName": "John Connor",
+      "items": [
+        {
+          "courseId": "ml301",
+          "title": "Advanced Machine Learning Architectures",
+          "price": 0
+        }
+      ],
+      "totalAmount": 0,
+      "paymentStatus": "completed",
+      "paymentMethod": "Credit Card (Simulated)",
+      "createdAt": "2026-08-23T07:00:54.455Z",
+      "_id": "ord_1787468454455"
+    },
+    {
+      "_id": "ord_1001",
+      "id": "ord_1001",
+      "userId": "usr_alex",
+      "userName": "Alex Morgan",
+      "items": [
+        {
+          "courseId": "cs201",
+          "title": "Advanced Data Structures & Algorithms",
+          "price": 0
+        }
+      ],
+      "totalAmount": 0,
+      "paymentStatus": "completed",
+      "paymentMethod": "Credit Card (Simulated)",
+      "createdAt": "2026-08-20T07:00:49.494Z"
+    }
+  ],
+  "progress": {
+    "usr_admin_web101": {
+      "userId": "usr_admin",
+      "courseId": "web101",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false
+    },
+    "usr_admin_cs201": {
+      "userId": "usr_admin",
+      "courseId": "cs201",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false
+    },
+    "usr_admin_ml301": {
+      "userId": "usr_admin",
+      "courseId": "ml301",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false
+    },
+    "usr_1787468453722_ml301": {
+      "userId": "usr_1787468453722",
+      "courseId": "ml301",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false
+    },
+    "usr_1787468647074_ml301": {
+      "userId": "usr_1787468647074",
+      "courseId": "ml301",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false
+    },
+    "usr_admin_crs_1787468529801": {
+      "userId": "usr_admin",
+      "courseId": "crs_1787468529801",
+      "completedLessons": [
+        "les_1787468529784_0_0"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1787468529784_0_0"
+    },
+    "usr_1787468841248_ml301": {
+      "userId": "usr_1787468841248",
+      "courseId": "ml301",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false
+    },
+    "usr_1787468850684_crs_1787468529801": {
+      "userId": "usr_1787468850684",
+      "courseId": "crs_1787468529801",
+      "completedLessons": [
+        "les_1787468529784_0_0"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1787468529784_0_0"
+    },
+    "usr_1787469519533_ml301": {
+      "userId": "usr_1787469519533",
+      "courseId": "ml301",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false
+    },
+    "usr_admin_crs_1787469340460": {
+      "userId": "usr_admin",
+      "courseId": "crs_1787469340460",
+      "completedLessons": [
+        "les_1787469340442_0_0"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1787469340442_0_0"
+    },
+    "usr_1787469776493_ml301": {
+      "userId": "usr_1787469776493",
+      "courseId": "ml301",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false
+    },
+    "usr_1787473386811_crs_1787474026830": {
+      "userId": "usr_1787473386811",
+      "courseId": "crs_1787474026830",
+      "completedLessons": [
+        "les_1787474026815_0_0"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1787474026815_0_0"
+    },
+    "usr_1787473386811_crs_1787469340460": {
+      "userId": "usr_1787473386811",
+      "courseId": "crs_1787469340460",
+      "completedLessons": [
+        "les_1787469340442_0_0"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1787469340442_0_0"
+    },
+    "usr_1787473386811_crs_1787468529801": {
+      "userId": "usr_1787473386811",
+      "courseId": "crs_1787468529801",
+      "completedLessons": [
+        "les_1787468529784_0_0"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1787468529784_0_0"
+    },
+    "usr_1787473386811_crs_1787477280878": {
+      "userId": "usr_1787473386811",
+      "courseId": "crs_1787477280878",
+      "completedLessons": [
+        "les_1787477280867_0_0"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1787477280867_0_0"
+    },
+    "usr_admin_crs_1787477280878": {
+      "userId": "usr_admin",
+      "courseId": "crs_1787477280878",
+      "completedLessons": [
+        "les_1787477280867_0_0"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1787477280867_0_0"
+    },
+    "usr_admin_crs_1787474026830": {
+      "userId": "usr_admin",
+      "courseId": "crs_1787474026830",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false
+    },
+    "usr_1787480175136_crs_1787480410655": {
+      "userId": "usr_1787480175136",
+      "courseId": "crs_1787480410655",
+      "completedLessons": [
+        "les_1787480410634_0_0",
+        "les_1787480410634_0_1"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1787480410634_0_1"
+    },
+    "usr_admin_crs_1787480497023": {
+      "userId": "usr_admin",
+      "courseId": "crs_1787480497023",
+      "completedLessons": [
+        "les_1787480497013_0_0"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "lastWatchedLesson": "les_1787480497013_0_0"
+    }
+  },
+  "enrollments": [
+    {
+      "id": "enr_1787480996116",
+      "userId": "usr_1787480175136",
+      "userName": "Alex",
+      "userEmail": "alex@learnhub.com",
+      "userPhone": "8989856418",
+      "profession": "Student",
+      "goal": "Skill Upgrade & Professional Certification",
+      "courseId": "crs_1787480497023",
+      "courseTitle": "Automated CI/CD Pipelines with GitHub Actions & Docker",
+      "createdAt": "2026-08-23T10:29:56.116Z",
+      "status": "Active"
+    },
+    {
+      "id": "enr_1787480511995",
+      "userId": "usr_admin",
+      "userName": "System Admin",
+      "userEmail": "admin@learnhub.com",
+      "userPhone": "+91 98765 43210",
+      "profession": "Student",
+      "goal": "Skill Upgrade & Professional Certification",
+      "courseId": "crs_1787480497023",
+      "courseTitle": "Automated CI/CD Pipelines with GitHub Actions & Docker",
+      "createdAt": "2026-08-23T10:21:51.995Z",
+      "status": "Active"
+    },
+    {
+      "id": "enr_1787480435351",
+      "userId": "usr_1787480175136",
+      "userName": "Alex",
+      "userEmail": "alex@learnhub.com",
+      "userPhone": "8989856418",
+      "profession": "Student",
+      "goal": "Skill Upgrade & Professional Certification",
+      "courseId": "crs_1787480410655",
+      "courseTitle": "Artificial Intelligence & Machine Learning Masterclass",
+      "createdAt": "2026-08-23T10:20:35.351Z",
+      "status": "Active"
+    },
+    {
+      "id": "enr_1787477194105",
+      "userId": "usr_1787473386811",
+      "userName": "Darsh Italiya",
+      "userEmail": "darshitaliya3@gmail.com",
+      "userPhone": "+919409970864",
+      "profession": "Student",
+      "goal": "Skill Upgrade & Professional Certification",
+      "courseId": "crs_1787468529801",
+      "courseTitle": "Web Application Security & OWASP Vulnerabilities",
+      "createdAt": "2026-08-23T09:26:34.105Z",
+      "status": "Active"
+    },
+    {
+      "id": "enr_1787477174871",
+      "userId": "usr_1787473386811",
+      "userName": "Darsh Italiya",
+      "userEmail": "darshitaliya3@gmail.com",
+      "userPhone": "+919409970864",
+      "profession": "Student",
+      "goal": "Skill Upgrade & Professional Certification",
+      "courseId": "crs_1787469340460",
+      "courseTitle": "Flutter 3 & Dart: Building Beautiful Cross-Platform Apps",
+      "createdAt": "2026-08-23T09:26:14.871Z",
+      "status": "Active"
+    },
+    {
+      "id": "enr_1787474192559",
+      "userId": "usr_1787473386811",
+      "userName": "Darsh Italiya",
+      "userEmail": "darshitaliya3@gmail.com",
+      "userPhone": "+919409970864",
+      "profession": "Freelancer",
+      "goal": "Career Transition to Tech Industry",
+      "courseId": "crs_1787474026830",
+      "courseTitle": "Applied Cryptography: AES, RSA & TLS 1.3 Architecture",
+      "createdAt": "2026-08-23T08:36:32.560Z",
+      "status": "Active"
+    },
+    {
+      "id": "enr_1787469524127",
+      "userId": "usr_admin",
+      "userName": "System Admin",
+      "userEmail": "admin@learnhub.com",
+      "userPhone": "+91 98765 43210",
+      "profession": "Student",
+      "goal": "Skill Upgrade & Professional Certification",
+      "courseId": "crs_1787469340460",
+      "courseTitle": "Flutter 3 & Dart: Building Beautiful Cross-Platform Apps",
+      "createdAt": "2026-08-23T07:18:44.127Z",
+      "status": "Active"
+    }
+  ]
+}

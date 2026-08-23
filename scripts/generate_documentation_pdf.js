@@ -1,0 +1,1352 @@
+import puppeteer from 'puppeteer-core';
+import fs from 'fs';
+import path from 'path';
+
+const EDGE_PATH = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+const DOCS_DIR = path.resolve(process.cwd(), 'docs');
+const OUTPUT_HTML = path.join(DOCS_DIR, 'LearnHub_System_Documentation.html');
+const OUTPUT_PDF = path.join(DOCS_DIR, 'LearnHub_System_Documentation.pdf');
+
+const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LearnHub - Comprehensive System Documentation & Technical Specification</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --primary-light: #eef2ff;
+      --secondary: #0ea5e9;
+      --accent: #8b5cf6;
+      --dark: #0f172a;
+      --dark-light: #1e293b;
+      --text: #334155;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --bg-alt: #f8fafc;
+      --card-bg: #ffffff;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background-color: #ffffff;
+      line-height: 1.65;
+      font-size: 13px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+
+    .no-break {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Cover Page */
+    .cover-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 60px 50px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #31104b 100%);
+      color: #ffffff;
+      box-sizing: border-box;
+    }
+
+    .cover-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 25px;
+    }
+
+    .cover-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+    }
+
+    .cover-brand-badge {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .cover-body {
+      margin: 60px 0;
+    }
+
+    .cover-tag {
+      display: inline-block;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #818cf8;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .cover-title {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.18;
+      margin-bottom: 18px;
+      color: #ffffff;
+    }
+
+    .cover-subtitle {
+      font-size: 17px;
+      color: #cbd5e1;
+      max-width: 650px;
+      font-weight: 400;
+      line-height: 1.55;
+      margin-bottom: 35px;
+    }
+
+    .cover-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .cover-meta-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+
+    .cover-meta-label {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #94a3b8;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .cover-meta-val {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .cover-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: #94a3b8;
+    }
+
+    /* Content Layout */
+    .document-body {
+      padding: 45px 50px;
+    }
+
+    h1, h2, h3, h4, h5 {
+      color: var(--dark);
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 .section-num {
+      background: var(--primary);
+      color: white;
+      font-size: 13px;
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      color: var(--dark-light);
+    }
+
+    h3 {
+      font-size: 15px;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    /* Table of Contents */
+    .toc-container {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 35px;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 24px;
+    }
+
+    .toc-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      padding: 5px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .toc-title {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .toc-num {
+      color: var(--primary);
+      font-weight: 700;
+      margin-right: 6px;
+    }
+
+    /* Cards & Callouts */
+    .callout {
+      border-left: 4px solid var(--primary);
+      background: var(--primary-light);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 14px 0 18px 0;
+      font-size: 12.5px;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 3px;
+    }
+
+    .callout-success {
+      border-left-color: var(--success);
+      background: #ecfdf5;
+    }
+    .callout-success .callout-title {
+      color: #065f46;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .card-highlight {
+      border-top: 3px solid var(--primary);
+    }
+
+    .card-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 20px 0;
+      font-size: 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: var(--dark);
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 2px solid var(--border);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    /* Badges & Tags */
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .badge-get { background: #e0f2fe; color: #0369a1; }
+    .badge-post { background: #dcfce7; color: #15803d; }
+    .badge-put { background: #fef3c7; color: #b45309; }
+    .badge-delete { background: #fee2e2; color: #b91c1c; }
+    .badge-auth { background: #ede9fe; color: #6d28d9; }
+    .badge-role { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+
+    /* Code & Architecture */
+    code, pre {
+      font-family: Consolas, Monaco, "Courier New", monospace;
+    }
+
+    code {
+      background: #f1f5f9;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #be185d;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 11px;
+      overflow-x: auto;
+      margin: 10px 0 14px 0;
+      line-height: 1.45;
+    }
+
+    /* Diagrams */
+    .diagram-container {
+      background: #0f172a;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 16px 0;
+      color: #f8fafc;
+    }
+
+    .diagram-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      margin: 10px 0;
+    }
+
+    .diagram-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-align: center;
+      min-width: 130px;
+    }
+
+    .diagram-box-primary {
+      border-color: #6366f1;
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    .diagram-box-secondary {
+      border-color: #0ea5e9;
+      background: rgba(14, 165, 233, 0.15);
+    }
+
+    .diagram-box-accent {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.15);
+    }
+
+    .diagram-title {
+      font-weight: 700;
+      font-size: 12px;
+      color: #ffffff;
+      margin-bottom: 3px;
+    }
+
+    .diagram-subtitle {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+
+    .diagram-arrow {
+      color: #64748b;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    /* Screenshot Containers */
+    .screenshot-figure {
+      margin: 18px 0 24px 0;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    .screenshot-header {
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .browser-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .browser-address {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      padding: 2px 10px;
+      font-size: 10px;
+      font-family: monospace;
+      color: #64748b;
+      min-width: 240px;
+      text-align: center;
+    }
+
+    .screenshot-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-height: 440px;
+      object-fit: contain;
+      background: #f1f5f9;
+    }
+
+    .screenshot-caption {
+      padding: 8px 14px;
+      background: white;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .screenshot-caption strong {
+      color: var(--dark);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== COVER PAGE ==================== -->
+  <div class="cover-container">
+    <div class="cover-header">
+      <div class="cover-brand">
+        📚 LearnHub
+      </div>
+      <div class="cover-brand-badge">Enterprise EdTech Platform</div>
+    </div>
+
+    <div class="cover-body">
+      <div class="cover-tag">COMPLETE SOFTWARE SPECIFICATION & SYSTEM MANUAL</div>
+      <h1 class="cover-title">Full-Stack System Architecture,<br>API Reference & User Guide</h1>
+      <p class="cover-subtitle">An end-to-end technical documentation manual for LearnHub: modern full-stack MERN EdTech LMS featuring dynamic cataloging, JWT authentication, role-based administration, interactive video learning player, and real-time student analytics.</p>
+
+      <div class="cover-meta-grid">
+        <div class="cover-meta-card">
+          <div class="cover-meta-label">System Version</div>
+          <div class="cover-meta-val">v1.0.0 Production</div>
+        </div>
+        <div class="cover-meta-card">
+          <div class="cover-meta-label">Architecture</div>
+          <div class="cover-meta-val">MERN Stack (Vite + Node)</div>
+        </div>
+        <div class="cover-meta-card">
+          <div class="cover-meta-label">Security Tier</div>
+          <div class="cover-meta-val">JWT + BCrypt RBAC</div>
+        </div>
+        <div class="cover-meta-card">
+          <div class="cover-meta-label">Documentation Date</div>
+          <div class="cover-meta-val">August 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div>Platform Engineering Team &copy; LearnHub EdTech Systems</div>
+      <div>Confidential & Enterprise Reference Document</div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== DOCUMENT BODY ==================== -->
+  <div class="document-body">
+
+    <!-- Table of Contents -->
+    <div class="toc-container no-break">
+      <h2 style="margin-top:0; margin-bottom:14px; font-size:17px; color:var(--dark);">📋 Table of Contents</h2>
+      <div class="toc-list">
+        <div class="toc-item"><span class="toc-title"><span class="toc-num">01.</span> Executive Overview & Platform Summary</span></div>
+        <div class="toc-item"><span class="toc-title"><span class="toc-num">02.</span> System Architecture & Ecosystem Stack</span></div>
+        <div class="toc-item"><span class="toc-title"><span class="toc-num">03.</span> Database Schema & Data Models</span></div>
+        <div class="toc-item"><span class="toc-title"><span class="toc-num">04.</span> RESTful API Reference Specification</span></div>
+        <div class="toc-item"><span class="toc-title"><span class="toc-num">05.</span> Security & Role-Based Access Control (RBAC)</span></div>
+        <div class="toc-item"><span class="toc-title"><span class="toc-num">06.</span> Comprehensive Visual UI & Workflow Walkthrough</span></div>
+        <div class="toc-item"><span class="toc-title"><span class="toc-num">07.</span> User Guides (Student, Instructor, Admin)</span></div>
+        <div class="toc-item"><span class="toc-title"><span class="toc-num">08.</span> Installation, Deployment & Operations Guide</span></div>
+      </div>
+    </div>
+
+    <!-- Section 1 -->
+    <section>
+      <h1><span class="section-num">1</span> Executive Overview & Platform Summary</h1>
+      <p><strong>LearnHub</strong> is a next-generation, cloud-native Learning Management System (LMS) and e-learning platform designed to deliver an engaging, high-performance education experience for students, educators, and enterprise administrators.</p>
+      
+      <div class="grid-3 no-break">
+        <div class="card card-highlight">
+          <div class="card-title">🎓 For Students</div>
+          <p style="font-size: 11.5px; margin-bottom:0; color: var(--text-muted);">Self-paced video classroom, multi-factor course filtering, direct enrollment, interactive curriculum progression, certificate tracking, and personal profile management.</p>
+        </div>
+        <div class="card card-highlight">
+          <div class="card-title">👨‍🏫 For Instructors</div>
+          <p style="font-size: 11.5px; margin-bottom:0; color: var(--text-muted);">Comprehensive course authoring tools, dynamic curriculum builder, lesson video embedding, enrolled student monitoring, and rating analytics.</p>
+        </div>
+        <div class="card card-highlight">
+          <div class="card-title">🛡️ For Platform Admins</div>
+          <p style="font-size: 11.5px; margin-bottom:0; color: var(--text-muted);">Centralized command center with real-time KPI metrics, global user management (roles & permissions), course publishing moderation, enrollment audits, and revenue reports.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-success no-break">
+        <div class="callout-title">⚡ Zero-Latency Fallback Architecture</div>
+        <p style="margin-bottom:0;">LearnHub includes an automated dual-mode storage engine: when local MongoDB server instances are active, it connects seamlessly; in environments where MongoDB is offline, it activates an <strong>Adaptive In-Memory Database Store</strong> with JSON disk synchronization to guarantee 100% continuous uptime without configuration barriers.</p>
+      </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- Section 2 -->
+    <section>
+      <h1><span class="section-num">2</span> System Architecture & Ecosystem Stack</h1>
+      <p>LearnHub is structured following the modern <strong>MERN</strong> (MongoDB, Express.js, React.js, Node.js) architectural paradigm with client-side SPA routing via Vite and stateless JSON Web Token (JWT) API communication.</p>
+
+      <div class="diagram-container no-break">
+        <div style="text-align:center; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#818cf8; margin-bottom:12px; font-weight:700;">LearnHub Full-Stack Architecture Diagram</div>
+        
+        <div class="diagram-row">
+          <div class="diagram-box diagram-box-secondary" style="flex:1;">
+            <div class="diagram-title">Client Layer (React 18 + Vite 5)</div>
+            <div class="diagram-subtitle">Bootstrap 5 + Custom Design System + Lucide Icons + React Router v7</div>
+          </div>
+        </div>
+
+        <div class="diagram-row">
+          <div class="diagram-arrow">⇅</div>
+        </div>
+
+        <div class="diagram-row">
+          <div class="diagram-box diagram-box-primary" style="flex:1;">
+            <div class="diagram-title">API Gateway & Middleware Layer (Express.js / Node.js 24)</div>
+            <div class="diagram-subtitle">CORS + JSON BodyParser + JWT Auth Guards + Role-Based Access Control (RBAC)</div>
+          </div>
+        </div>
+
+        <div class="diagram-row">
+          <div class="diagram-arrow">⇅</div>
+        </div>
+
+        <div class="diagram-row">
+          <div class="diagram-box" style="flex:1;">
+            <div class="diagram-title">Controllers & Business Logic</div>
+            <div class="diagram-subtitle">Auth, Courses, Orders, Progress, Admin Analytics</div>
+          </div>
+          <div class="diagram-arrow">⇄</div>
+          <div class="diagram-box diagram-box-accent" style="flex:1;">
+            <div class="diagram-title">Adaptive Data Tier</div>
+            <div class="diagram-subtitle">Mongoose ODM (MongoDB) ⇄ Fallback In-Memory Persistent Store</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Technology Ecosystem Matrix</h2>
+      <table class="no-break">
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Technology</th>
+            <th>Version</th>
+            <th>Primary Function & Rationale</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Frontend Framework</strong></td>
+            <td>React.js</td>
+            <td>18.2.0</td>
+            <td>Component-driven virtual DOM rendering for responsive, interactive state management.</td>
+          </tr>
+          <tr>
+            <td><strong>Build Tool & Bundler</strong></td>
+            <td>Vite</td>
+            <td>5.1.6</td>
+            <td>Lightning-fast HMR (Hot Module Replacement) and optimized tree-shaken production bundles.</td>
+          </tr>
+          <tr>
+            <td><strong>Styling & Design System</strong></td>
+            <td>Bootstrap 5 + Custom CSS</td>
+            <td>5.3.3</td>
+            <td>Tailored design tokens, glassmorphism effects, modern gradients, and responsive grid layouts.</td>
+          </tr>
+          <tr>
+            <td><strong>Routing System</strong></td>
+            <td>React Router DOM</td>
+            <td>7.18.2</td>
+            <td>Client-side declarative routing with nested protected route wrappers for RBAC.</td>
+          </tr>
+          <tr>
+            <td><strong>Backend Engine</strong></td>
+            <td>Node.js & Express.js</td>
+            <td>Node 24 / Express 4.22</td>
+            <td>High-throughput asynchronous REST API server with modular controllers and routes.</td>
+          </tr>
+          <tr>
+            <td><strong>Authentication</strong></td>
+            <td>JWT & BCrypt.js</td>
+            <td>JWT 9.0 / BCrypt 3.0</td>
+            <td>Stateless cryptographic tokens with 7-day expiration and 10-round salted password hashing.</td>
+          </tr>
+          <tr>
+            <td><strong>Persistence Tier</strong></td>
+            <td>MongoDB / Mongoose</td>
+            <td>Mongoose 8.24</td>
+            <td>Schema-enforced NoSQL document database with fallback adaptive local memory store.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- Section 3 -->
+    <section>
+      <h1><span class="section-num">3</span> Database Schema & Data Models</h1>
+      <p>The database architecture is designed with high normalization for transactional integrity combined with embedded sub-documents for nested curriculum components.</p>
+
+      <div class="grid-2 no-break">
+        <div class="card">
+          <div class="card-title">👤 User Model (<code>models/User.js</code>)</div>
+          <pre><code>{
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  phone: { type: String, default: '' },
+  password: { type: String, required: true }, // Bcrypt hash
+  role: { type: String, enum: ['student', 'instructor', 'admin'], default: 'student' },
+  avatar: { type: String, default: 'avatar_url' },
+  bio: { type: String, default: '' },
+  enrolledCourses: [{ type: String }],
+  wishlist: [{ type: String }],
+  timestamps: true
+}</code></pre>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📚 Course Model (<code>models/Course.js</code>)</div>
+          <pre><code>{
+  id: { type: String, required: true, unique: true },
+  title: { type: String, required: true },
+  subtitle: { type: String },
+  description: { type: String },
+  category: { type: String, required: true },
+  level: { type: String, enum: ['Beginner', 'Intermediate', 'Advanced'] },
+  price: { type: Number, required: true },
+  originalPrice: { type: Number },
+  rating: { type: Number, default: 4.8 },
+  reviewsCount: { type: Number, default: 0 },
+  hours: { type: Number },
+  instructorName: { type: String },
+  modules: [
+    {
+      id: String,
+      title: String,
+      lessons: [{ id: String, title: String, duration: String, videoUrl: String, isLocked: Boolean }]
+    }
+  ],
+  status: { type: String, enum: ['published', 'draft', 'pending'], default: 'published' }
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="grid-2 no-break">
+        <div class="card">
+          <div class="card-title">💳 Order Model (<code>models/Order.js</code>)</div>
+          <pre><code>{
+  id: { type: String, required: true, unique: true },
+  userId: { type: String, required: true, index: true },
+  userName: { type: String, required: true },
+  items: [
+    {
+      courseId: { type: String, required: true },
+      title: { type: String, required: true },
+      price: { type: Number, required: true }
+    }
+  ],
+  totalAmount: { type: Number, required: true },
+  paymentStatus: { type: String, enum: ['completed', 'pending', 'failed'], default: 'completed' },
+  paymentMethod: { type: String, default: 'Online Enrollment' },
+  timestamps: true
+}</code></pre>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📈 Progress Model (<code>models/Progress.js</code>)</div>
+          <pre><code>{
+  key: { type: String, required: true, unique: true }, // userId_courseId
+  userId: { type: String, required: true, index: true },
+  courseId: { type: String, required: true, index: true },
+  completedLessons: [{ type: String }],
+  percentage: { type: Number, default: 0 },
+  lastWatchedLesson: { type: String, default: '' },
+  certificateEarned: { type: Boolean, default: false },
+  timestamps: true
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- Section 4 -->
+    <section>
+      <h1><span class="section-num">4</span> RESTful API Reference Specification</h1>
+      <p>The LearnHub backend provides a clean, predictable REST API that returns standardized JSON structures. All requests requiring authentication must pass the bearer token in the <code>Authorization: Bearer &lt;token&gt;</code> header.</p>
+
+      <h2>Authentication & Profile Endpoints</h2>
+      <table class="no-break">
+        <thead>
+          <tr>
+            <th style="width: 80px;">Method</th>
+            <th>Endpoint</th>
+            <th style="width: 120px;">Access Level</th>
+            <th>Description & Payload</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-post">POST</span></td>
+            <td><code>/api/auth/register</code></td>
+            <td><span class="badge badge-role">Public</span></td>
+            <td>Registers a new student account. Body: <code>{ name, email, password, phone }</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-post">POST</span></td>
+            <td><code>/api/auth/login</code></td>
+            <td><span class="badge badge-role">Public</span></td>
+            <td>Authenticates user and returns JWT token & user profile. Body: <code>{ email, password }</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-get">GET</span></td>
+            <td><code>/api/auth/me</code></td>
+            <td><span class="badge badge-auth">JWT Auth</span></td>
+            <td>Fetches current authenticated user's session profile, wishlist, and enrollments.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-put">PUT</span></td>
+            <td><code>/api/auth/profile</code></td>
+            <td><span class="badge badge-auth">JWT Auth</span></td>
+            <td>Updates user personal details (name, phone, bio, avatar URL).</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-post">POST</span></td>
+            <td><code>/api/auth/logout</code></td>
+            <td><span class="badge badge-role">Public</span></td>
+            <td>Invalidates client session tokens.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Course & Catalog Endpoints</h2>
+      <table class="no-break">
+        <thead>
+          <tr>
+            <th style="width: 80px;">Method</th>
+            <th>Endpoint</th>
+            <th style="width: 120px;">Access Level</th>
+            <th>Description & Payload</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-get">GET</span></td>
+            <td><code>/api/courses</code></td>
+            <td><span class="badge badge-role">Public</span></td>
+            <td>Returns list of all active courses with optional query parameters (<code>category, level, search</code>).</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-get">GET</span></td>
+            <td><code>/api/courses/:id</code></td>
+            <td><span class="badge badge-role">Public</span></td>
+            <td>Fetches deep details, syllabus modules, lessons, and instructor profile for a course ID.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-post">POST</span></td>
+            <td><code>/api/courses/:id/enroll</code></td>
+            <td><span class="badge badge-auth">JWT Auth</span></td>
+            <td>Enrolls the authenticated student into the course and initializes progress record.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-post">POST</span></td>
+            <td><code>/api/courses</code></td>
+            <td><span class="badge badge-auth">Admin</span></td>
+            <td>Creates a new course with nested curriculum modules and lesson definitions.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-delete">DELETE</span></td>
+            <td><code>/api/courses/:id</code></td>
+            <td><span class="badge badge-auth">Admin</span></td>
+            <td>Deletes course and removes it from user enrollment indices.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Learning Progress & Admin Endpoints</h2>
+      <table class="no-break">
+        <thead>
+          <tr>
+            <th style="width: 80px;">Method</th>
+            <th>Endpoint</th>
+            <th style="width: 120px;">Access Level</th>
+            <th>Description & Payload</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-get">GET</span></td>
+            <td><code>/api/progress/:courseId</code></td>
+            <td><span class="badge badge-auth">JWT Auth</span></td>
+            <td>Retrieves completed lesson IDs, percentage completed, and certificate issuance status.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-post">POST</span></td>
+            <td><code>/api/progress/lesson-complete</code></td>
+            <td><span class="badge badge-auth">JWT Auth</span></td>
+            <td>Marks a lesson as completed, recalculates completion %, and updates last watched position.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-get">GET</span></td>
+            <td><code>/api/admin/stats</code></td>
+            <td><span class="badge badge-auth">Admin</span></td>
+            <td>Returns aggregate metrics: Total Revenue, Total Students, Active Courses, Completion Rates.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-get">GET</span></td>
+            <td><code>/api/admin/users</code></td>
+            <td><span class="badge badge-auth">Admin</span></td>
+            <td>Returns all registered platform users with roles, enrollment counts, and registration dates.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-put">PUT</span></td>
+            <td><code>/api/admin/users/:userId/role</code></td>
+            <td><span class="badge badge-auth">Admin</span></td>
+            <td>Elevates or adjusts user role (<code>student, instructor, admin</code>).</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-delete">DELETE</span></td>
+            <td><code>/api/admin/users/:userId</code></td>
+            <td><span class="badge badge-auth">Admin</span></td>
+            <td>Deactivates user record and clears session tokens.</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-get">GET</span></td>
+            <td><code>/api/admin/enrollments</code></td>
+            <td><span class="badge badge-auth">Admin</span></td>
+            <td>Fetches platform-wide active student course enrollments.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- Section 5 -->
+    <section>
+      <h1><span class="section-num">5</span> Security & Role-Based Access Control (RBAC)</h1>
+      <p>Security is implemented at both the network boundary and within the application layer through defense-in-depth methodologies.</p>
+
+      <div class="grid-3 no-break">
+        <div class="card card-highlight">
+          <div class="card-title">🔐 JWT Bearer Tokens</div>
+          <p style="font-size: 11.5px; margin-bottom:0; color: var(--text-muted);">Signed using high-entropy secrets, encapsulating user ID, email, and role claims. Tokens are verified on every protected API call via Express middleware.</p>
+        </div>
+        <div class="card card-highlight">
+          <div class="card-title">🛡️ BCrypt Password Security</div>
+          <p style="font-size: 11.5px; margin-bottom:0; color: var(--text-muted);">Zero plain-text password storage. All user credentials undergo 10 rounds of cryptographic salting and hashing before persisting.</p>
+        </div>
+        <div class="card card-highlight">
+          <div class="card-title">🚦 RBAC Route Guards</div>
+          <p style="font-size: 11.5px; margin-bottom:0; color: var(--text-muted);">Double-layer route protection: Client-side <code>&lt;ProtectedRoute&gt;</code> components prevent unauthorized DOM views, while backend middleware rejects unauthorized API calls with 403 Forbidden.</p>
+        </div>
+      </div>
+
+      <h2>Role Access Permission Matrix</h2>
+      <table class="no-break">
+        <thead>
+          <tr>
+            <th>Platform Capability / Resource</th>
+            <th style="text-align:center;">Public / Guest</th>
+            <th style="text-align:center;">Student</th>
+            <th style="text-align:center;">Instructor</th>
+            <th style="text-align:center;">Administrator</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Browse Course Catalog & Search</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+          </tr>
+          <tr>
+            <td>Course Enrollment</td>
+            <td style="text-align:center; color:var(--danger); font-weight:700;">✗</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+          </tr>
+          <tr>
+            <td>Watch Video Lessons & Mark Progress</td>
+            <td style="text-align:center; color:var(--danger); font-weight:700;">✗</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓ (Enrolled)</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+          </tr>
+          <tr>
+            <td>Student Dashboard & Profile Management</td>
+            <td style="text-align:center; color:var(--danger); font-weight:700;">✗</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+          </tr>
+          <tr>
+            <td>Course Authoring & Curriculum Management</td>
+            <td style="text-align:center; color:var(--danger); font-weight:700;">✗</td>
+            <td style="text-align:center; color:var(--danger); font-weight:700;">✗</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+          </tr>
+          <tr>
+            <td>Admin Management Suite (Users, Reports, Analytics)</td>
+            <td style="text-align:center; color:var(--danger); font-weight:700;">✗</td>
+            <td style="text-align:center; color:var(--danger); font-weight:700;">✗</td>
+            <td style="text-align:center; color:var(--danger); font-weight:700;">✗</td>
+            <td style="text-align:center; color:var(--success); font-weight:700;">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- Section 6: Comprehensive UI Walkthrough -->
+    <section>
+      <h1><span class="section-num">6</span> Comprehensive Visual UI & Workflow Walkthrough</h1>
+      <p>The following section illustrates the primary validated interfaces, workflows, and functional views in the LearnHub ecosystem.</p>
+
+      <!-- 6.1 Landing Page -->
+      <div class="screenshot-figure">
+        <div class="screenshot-header">
+          <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+          <div class="browser-address">http://localhost:3000/ - Landing & Discovery Portal</div>
+          <div style="font-size:10px; color:#94a3b8;">Fig 6.1</div>
+        </div>
+        <img class="screenshot-img" src="screenshots/01_home_page.png" alt="LearnHub Home Page" />
+        <div class="screenshot-caption">
+          <span><strong>Figure 6.1:</strong> Modern Hero Showcase, Featured Course Highlights, Category Exploration, and Stats Bar.</span>
+          <span>Route: <code>/</code></span>
+        </div>
+      </div>
+
+      <!-- 6.2 Course Catalog -->
+      <div class="screenshot-figure">
+        <div class="screenshot-header">
+          <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+          <div class="browser-address">http://localhost:3000/courses - Search & Filter Catalog</div>
+          <div style="font-size:10px; color:#94a3b8;">Fig 6.2</div>
+        </div>
+        <img class="screenshot-img" src="screenshots/02_course_catalog.png" alt="Course Catalog" />
+        <div class="screenshot-caption">
+          <span><strong>Figure 6.2:</strong> Dynamic Course Catalog with category sidebar filters, difficulty badges, search bar, and live pricing.</span>
+          <span>Route: <code>/courses</code></span>
+        </div>
+      </div>
+
+      <div class="page-break"></div>
+
+      <!-- 6.3 Course Details -->
+      <div class="screenshot-figure">
+        <div class="screenshot-header">
+          <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+          <div class="browser-address">http://localhost:3000/course/web101 - Course Syllabus & Enrollment</div>
+          <div style="font-size:10px; color:#94a3b8;">Fig 6.3</div>
+        </div>
+        <img class="screenshot-img" src="screenshots/03_course_details.png" alt="Course Details Page" />
+        <div class="screenshot-caption">
+          <span><strong>Figure 6.3:</strong> Course Details with full syllabus module accordions, instructor biography, ratings, and instant purchase CTA.</span>
+          <span>Route: <code>/course/:id</code></span>
+        </div>
+      </div>
+
+      <!-- 6.4 Authentication Suite -->
+      <div class="grid-2 no-break">
+        <div class="screenshot-figure" style="margin: 10px 0;">
+          <div class="screenshot-header">
+            <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+            <div class="browser-address" style="min-width:140px;">/login</div>
+          </div>
+          <img class="screenshot-img" src="screenshots/04_login_page.png" alt="Login Page" />
+          <div class="screenshot-caption"><span><strong>Figure 6.4a:</strong> Sign-In with Demo Fast-Fill.</span></div>
+        </div>
+        <div class="screenshot-figure" style="margin: 10px 0;">
+          <div class="screenshot-header">
+            <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+            <div class="browser-address" style="min-width:140px;">/register</div>
+          </div>
+          <img class="screenshot-img" src="screenshots/05_register_page.png" alt="Register Page" />
+          <div class="screenshot-caption"><span><strong>Figure 6.4b:</strong> User Registration with Validation.</span></div>
+        </div>
+      </div>
+
+      <div class="page-break"></div>
+
+      <!-- 6.5 Interactive Video Classroom -->
+      <div class="screenshot-figure">
+        <div class="screenshot-header">
+          <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+          <div class="browser-address">http://localhost:3000/course/web101/learn - Interactive Video Player</div>
+          <div style="font-size:10px; color:#94a3b8;">Fig 6.5</div>
+        </div>
+        <img class="screenshot-img" src="screenshots/08_video_player.png" alt="Video Player Classroom" />
+        <div class="screenshot-caption">
+          <span><strong>Figure 6.5:</strong> Interactive Video Learning Player with automated lesson progression, lesson playlist navigation, and dynamic checkmarking.</span>
+          <span>Route: <code>/course/:id/learn</code></span>
+        </div>
+      </div>
+
+      <!-- 6.6 Student Dashboard & My Courses -->
+      <div class="screenshot-figure">
+        <div class="screenshot-header">
+          <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+          <div class="browser-address">http://localhost:3000/dashboard - Student Learning Hub</div>
+          <div style="font-size:10px; color:#94a3b8;">Fig 6.6</div>
+        </div>
+        <img class="screenshot-img" src="screenshots/06_student_dashboard.png" alt="Student Dashboard" />
+        <div class="screenshot-caption">
+          <span><strong>Figure 6.6:</strong> Student Dashboard showing active enrolled courses, overall completion percentages, study hours, and quick continue buttons.</span>
+          <span>Route: <code>/dashboard</code></span>
+        </div>
+      </div>
+
+      <div class="page-break"></div>
+
+      <!-- 6.7 My Courses & Profile -->
+      <div class="grid-2 no-break">
+        <div class="screenshot-figure" style="margin: 10px 0;">
+          <div class="screenshot-header">
+            <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+            <div class="browser-address" style="min-width:140px;">/my-courses</div>
+          </div>
+          <img class="screenshot-img" src="screenshots/07_my_courses.png" alt="My Courses Page" />
+          <div class="screenshot-caption"><span><strong>Figure 6.7a:</strong> Enrolled Course Library.</span></div>
+        </div>
+        <div class="screenshot-figure" style="margin: 10px 0;">
+          <div class="screenshot-header">
+            <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+            <div class="browser-address" style="min-width:140px;">/profile</div>
+          </div>
+          <img class="screenshot-img" src="screenshots/10_user_profile.png" alt="User Profile Page" />
+          <div class="screenshot-caption"><span><strong>Figure 6.7b:</strong> Student Profile & Settings.</span></div>
+        </div>
+      </div>
+
+      <!-- 6.8 Admin Dashboard -->
+      <div class="screenshot-figure">
+        <div class="screenshot-header">
+          <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+          <div class="browser-address">http://localhost:3000/admin - Enterprise Admin Control Center</div>
+          <div style="font-size:10px; color:#94a3b8;">Fig 6.8</div>
+        </div>
+        <img class="screenshot-img" src="screenshots/11_admin_dashboard.png" alt="Admin Dashboard" />
+        <div class="screenshot-caption">
+          <span><strong>Figure 6.8:</strong> Administrator Command Center with revenue metrics, student counts, course completion stats, and fast navigation tabs.</span>
+          <span>Route: <code>/admin</code></span>
+        </div>
+      </div>
+
+      <div class="page-break"></div>
+
+      <!-- 6.9 Admin Management Suite -->
+      <div class="grid-2 no-break">
+        <div class="screenshot-figure" style="margin: 10px 0;">
+          <div class="screenshot-header">
+            <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+            <div class="browser-address" style="min-width:140px;">/admin/courses</div>
+          </div>
+          <img class="screenshot-img" src="screenshots/12_admin_courses.png" alt="Admin Courses Management" />
+          <div class="screenshot-caption"><span><strong>Figure 6.9a:</strong> Course Moderation & Publishing.</span></div>
+        </div>
+        <div class="screenshot-figure" style="margin: 10px 0;">
+          <div class="screenshot-header">
+            <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+            <div class="browser-address" style="min-width:140px;">/admin/users</div>
+          </div>
+          <img class="screenshot-img" src="screenshots/13_admin_users.png" alt="Admin Users Management" />
+          <div class="screenshot-caption"><span><strong>Figure 6.9b:</strong> User Accounts & Role Elevation.</span></div>
+        </div>
+      </div>
+
+      <!-- 6.10 Admin Enrollments & Reports -->
+      <div class="grid-2 no-break">
+        <div class="screenshot-figure" style="margin: 10px 0;">
+          <div class="screenshot-header">
+            <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+            <div class="browser-address" style="min-width:140px;">/admin/enrollments</div>
+          </div>
+          <img class="screenshot-img" src="screenshots/15_admin_enrollments.png" alt="Admin Enrollments Management" />
+          <div class="screenshot-caption"><span><strong>Figure 6.10a:</strong> Active Enrollments & Student Records.</span></div>
+        </div>
+        <div class="screenshot-figure" style="margin: 10px 0;">
+          <div class="screenshot-header">
+            <div class="browser-dots"><span class="browser-dot dot-red"></span><span class="browser-dot dot-yellow"></span><span class="browser-dot dot-green"></span></div>
+            <div class="browser-address" style="min-width:140px;">/admin/reports</div>
+          </div>
+          <img class="screenshot-img" src="screenshots/14_admin_reports.png" alt="Admin Reports & Analytics" />
+          <div class="screenshot-caption"><span><strong>Figure 6.10b:</strong> Revenue Analytics & Trajectory Reports.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- Section 7 -->
+    <section>
+      <h1><span class="section-num">7</span> User Guides (Student, Instructor, Admin)</h1>
+      
+      <h2>👨‍🎓 7.1 Student User Guide</h2>
+      <ol style="margin-left: 20px; margin-bottom: 14px;">
+        <li style="margin-bottom: 6px;"><strong>Account Creation & Login:</strong> Navigate to <code>/register</code> to sign up or use <code>/login</code> with pre-configured student demo credentials (<code>alex@learnhub.com / student123</code>).</li>
+        <li style="margin-bottom: 6px;"><strong>Browsing & Enrolling:</strong> Go to the Course Catalog, filter by category or search terms, and click <em>Enroll Now</em> on any course details page.</li>
+        <li style="margin-bottom: 6px;"><strong>Active Learning:</strong> Visit <em>My Courses</em> or <em>Dashboard</em> and click on any course to open the Video Classroom. Check off completed lessons to update progress in real time.</li>
+        <li style="margin-bottom: 6px;"><strong>Profile Customization:</strong> Update profile bio, phone number, and avatar under <code>/profile</code>.</li>
+      </ol>
+
+      <h2>👨‍🏫 7.2 Instructor User Guide</h2>
+      <ol style="margin-left: 20px; margin-bottom: 14px;">
+        <li style="margin-bottom: 6px;"><strong>Instructor Authentication:</strong> Sign in with instructor credentials (<code>elena@learnhub.com / instructor123</code>).</li>
+        <li style="margin-bottom: 6px;"><strong>Curriculum Management:</strong> Access courses to view active course metrics and student engagement levels.</li>
+        <li style="margin-bottom: 6px;"><strong>Authoring Courses:</strong> Construct lessons, assign streaming video URLs, configure pricing, and submit courses for publishing.</li>
+      </ol>
+
+      <h2>🛡️ 7.3 Administrator Operations Guide</h2>
+      <ol style="margin-left: 20px; margin-bottom: 14px;">
+        <li style="margin-bottom: 6px;"><strong>Admin Portal Access:</strong> Log in using administrator credentials (<code>admin@learnhub.com / admin123</code>) to access <code>/admin</code>.</li>
+        <li style="margin-bottom: 6px;"><strong>User Management (<code>/admin/users</code>):</strong> View registered users, promote users between roles, or deactivate accounts.</li>
+        <li style="margin-bottom: 6px;"><strong>Course Moderation (<code>/admin/courses</code>):</strong> Publish new courses, modify curriculum data, or remove outdated content.</li>
+        <li style="margin-bottom: 6px;"><strong>Enrollments & Financial Audit (<code>/admin/enrollments</code> & <code>/admin/reports</code>):</strong> Inspect total platform revenue, active enrollments, and student trends.</li>
+      </ol>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- Section 8 -->
+    <section>
+      <h1><span class="section-num">8</span> Installation, Deployment & Operations Guide</h1>
+      
+      <h2>Prerequisites</h2>
+      <ul style="margin-left: 20px; margin-bottom: 12px;">
+        <li><strong>Node.js:</strong> v18.0.0 or higher (v20+ / v24+ recommended)</li>
+        <li><strong>NPM:</strong> v9.0.0 or higher</li>
+        <li><strong>MongoDB:</strong> Optional (Local MongoDB server or MongoDB Atlas URI; system automatically utilizes zero-config in-memory persistence when MongoDB is offline).</li>
+      </ul>
+
+      <h2>Step-by-Step Local Setup</h2>
+      <div class="card no-break" style="margin-bottom:14px;">
+        <div class="card-title">1. Clone & Install Dependencies</div>
+        <pre><code># Clone repository
+cd LearnHub
+
+# Install Backend Dependencies
+cd server
+npm install
+
+# Install Frontend Dependencies
+cd ../client
+npm install</code></pre>
+      </div>
+
+      <div class="card no-break" style="margin-bottom:14px;">
+        <div class="card-title">2. Environment Configuration (<code>server/.env</code>)</div>
+        <pre><code>PORT=5000
+MONGODB_URI=mongodb://127.0.0.1:27017/learnhub
+JWT_SECRET=learnhub_super_secret_jwt_key_2026
+NODE_ENV=development</code></pre>
+      </div>
+
+      <div class="card no-break" style="margin-bottom:14px;">
+        <div class="card-title">3. Launch Servers</div>
+        <pre><code># In Terminal 1 - Start Backend (Port 5000)
+cd server
+node index.js
+
+# In Terminal 2 - Start Frontend (Port 3000)
+cd client
+npm run dev</code></pre>
+      </div>
+
+      <div class="callout callout-success no-break" style="margin-top:16px;">
+        <div class="callout-title">🎉 Production Readiness & Quality Guarantee</div>
+        <p style="margin-bottom:0;">LearnHub has undergone end-to-end verification across Chrome, Microsoft Edge, and Firefox. The frontend utilizes responsive CSS layouts adaptable from 320px mobile displays up to 4K ultra-wide monitors.</p>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>`;
+
+async function generate() {
+  console.log('📝 Writing standalone HTML documentation...');
+  fs.writeFileSync(OUTPUT_HTML, htmlContent, 'utf-8');
+  console.log(`✅ Saved HTML: ${OUTPUT_HTML}`);
+
+  console.log('🚀 Launching Edge headless to render PDF...');
+  const browser = await puppeteer.launch({
+    executablePath: EDGE_PATH,
+    headless: 'new',
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--allow-file-access-from-files']
+  });
+
+  const page = await browser.newPage();
+  const fileUrl = 'file:///' + OUTPUT_HTML.replace(/\\/g, '/');
+  console.log(`Navigating to ${fileUrl}...`);
+  await page.goto(fileUrl, { waitUntil: 'load' });
+
+  // Wait for images to paint
+  await new Promise(r => setTimeout(r, 1500));
+
+  console.log('📄 Rendering PDF with print styling...');
+  await page.pdf({
+    path: OUTPUT_PDF,
+    format: 'A4',
+    printBackground: true,
+    margin: {
+      top: '12mm',
+      bottom: '16mm',
+      left: '10mm',
+      right: '10mm'
+    },
+    displayHeaderFooter: true,
+    headerTemplate: '<div></div>',
+    footerTemplate: `
+      <div style="font-size: 8px; font-family: sans-serif; color: #94a3b8; width: 100%; display: flex; justify-content: space-between; padding: 0 35px;">
+        <span>LearnHub Enterprise System Documentation</span>
+        <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
+      </div>
+    `
+  });
+
+  await browser.close();
+  console.log(`🎉 Clean Master PDF successfully generated: ${OUTPUT_PDF}`);
+}
+
+generate();

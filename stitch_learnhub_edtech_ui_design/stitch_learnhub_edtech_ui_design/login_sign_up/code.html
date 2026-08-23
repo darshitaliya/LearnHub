@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LearnHub - Login &amp; Registration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#e5eeff",
+                      "secondary-container": "#57dffe",
+                      "on-surface-variant": "#464555",
+                      "on-tertiary-container": "#ffd4a4",
+                      "on-primary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "surface-container-highest": "#d3e4fe",
+                      "secondary-fixed-dim": "#4cd7f6",
+                      "surface-dim": "#cbdbf5",
+                      "on-surface": "#0b1c30",
+                      "tertiary": "#684000",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "on-primary-container": "#dad7ff",
+                      "tertiary-fixed": "#ffddb8",
+                      "surface-variant": "#d3e4fe",
+                      "primary": "#3525cd",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "tertiary-container": "#885500",
+                      "surface-bright": "#f8f9ff",
+                      "on-background": "#0b1c30",
+                      "on-secondary-container": "#006172",
+                      "surface-container-low": "#eff4ff",
+                      "surface-container-high": "#dce9ff",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#acedff",
+                      "on-primary-fixed": "#0f0069",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-secondary-fixed": "#001f26",
+                      "on-secondary": "#ffffff",
+                      "background": "#f8f9ff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface": "#f8f9ff",
+                      "surface-tint": "#4d44e3",
+                      "outline": "#777587",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#2a1700",
+                      "inverse-surface": "#213145",
+                      "secondary": "#00687a",
+                      "on-tertiary": "#ffffff",
+                      "outline-variant": "#c7c4d8",
+                      "on-secondary-fixed-variant": "#004e5c",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "primary-fixed": "#e2dfff",
+                      "primary-container": "#4f46e5",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "inverse-primary": "#c3c0ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-md": "24px",
+                      "stack-xs": "4px",
+                      "stack-lg": "48px",
+                      "container-max": "1280px",
+                      "base": "8px",
+                      "margin-mobile": "16px",
+                      "gutter": "24px",
+                      "margin-desktop": "40px",
+                      "stack-sm": "12px"
+              },
+              "fontFamily": {
+                      "label-caps": ["Geist"],
+                      "body-sm": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "display-lg-mobile": ["Inter"],
+                      "body-base": ["Inter"],
+                      "display-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                      "body-sm": ["14px", { "lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400" }],
+                      "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                      "display-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "body-base": ["16px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }],
+                      "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        .form-transition {
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hidden-form {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            visibility: hidden;
+            transform: translateY(10px);
+        }
+        .active-form {
+            opacity: 1;
+            pointer-events: auto;
+            position: relative;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-base text-body-base antialiased selection:bg-primary-container selection:text-on-primary-container">
+<main class="min-h-screen w-full flex">
+<!-- Left Panel: Brand & Illustration (Hidden on Mobile) -->
+<div class="hidden lg:flex flex-col w-1/2 bg-surface-container-low p-margin-desktop relative overflow-hidden">
+<!-- Background Decoration -->
+<div class="absolute -top-40 -left-40 w-96 h-96 bg-primary-fixed rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+<div class="absolute top-40 -right-20 w-72 h-72 bg-secondary-fixed rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+<!-- Header -->
+<div class="z-10 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">LearnHub</span>
+</div>
+<!-- Illustration Area -->
+<div class="flex-grow flex items-center justify-center relative z-10 w-full max-w-lg mx-auto">
+<div class="w-full aspect-square relative rounded-2xl overflow-hidden glass-panel">
+<img class="object-cover w-full h-full" data-alt="A highly detailed, 3D futuristic illustration of a minimalist academic workspace. A sleek, transparent glass tablet displays a glowing interface with abstract educational geometric nodes floating above it. The scene is bathed in soft, high-key white lighting, accented by deep primary indigo blues and bright cyan highlights, creating a premium SaaS-like aesthetic that feels clear, progressive, and highly professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOm8qAeH7Vs5Cm9rFDsLkSx6ngKQFY1tSCa9g4Bryv4DQNbm4VaY6bE9Y75la7q8gUu-VBtiqwBbnrwxTiImisIlSxs60qILBw94JPFz1FRIze7o5T9u1zsEljcYzKDJJEFBZZRvEaeFBp4lsciBIowytVC-CVgydc78DeTS1BjfhOnvyaE2zUVToiaEC9Mw6QrG0CgcxFjCCLeGPTaT8YIifYldTxXzmGy9f6K6iZYZF1Q76pWcFI"/>
+<div class="absolute inset-0 bg-gradient-to-tr from-surface/40 to-transparent mix-blend-overlay"></div>
+</div>
+</div>
+<!-- Footer Quote -->
+<div class="z-10 mt-auto">
+<blockquote class="font-body-base text-body-base text-on-surface-variant max-w-md">
+                    "The futuristic academic experience designed for clarity, progress, and professional empowerment."
+                </blockquote>
+</div>
+</div>
+<!-- Right Panel: Forms -->
+<div class="w-full lg:w-1/2 flex items-center justify-center p-margin-mobile md:p-margin-desktop bg-surface relative z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.02)]">
+<div class="w-full max-w-md">
+<!-- Mobile Logo -->
+<div class="lg:hidden flex justify-center items-center gap-2 mb-stack-lg">
+<span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">LearnHub</span>
+</div>
+<!-- Dynamic Header -->
+<div class="mb-stack-lg">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-stack-xs transition-all duration-300" id="page-title">Welcome Back</h1>
+<p class="font-body-base text-body-base text-on-surface-variant transition-all duration-300" id="page-subtitle">Enter your details to access your account.</p>
+</div>
+<div class="relative w-full">
+<!-- LOGIN FORM -->
+<form class="flex flex-col gap-stack-md form-transition active-form w-full" id="login-form">
+<!-- Social Auth -->
+<button class="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low transition-colors duration-200 text-on-surface font-body-base text-body-base font-medium" type="button">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+                            Continue with Google
+                        </button>
+<div class="flex items-center my-stack-xs opacity-60">
+<div class="flex-grow border-t border-outline-variant"></div>
+<span class="mx-4 font-label-caps text-label-caps text-on-surface-variant">OR CONTINUE WITH</span>
+<div class="flex-grow border-t border-outline-variant"></div>
+</div>
+<div class="flex flex-col gap-stack-sm">
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="login-email">Email Address</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/50 focus:bg-surface-container-lowest focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 font-body-base text-body-base text-on-surface transition-all placeholder:text-outline/50 outline-none" id="login-email" placeholder="you@example.com" type="email"/>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-baseline">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="login-password">Password</label>
+<a class="font-body-sm text-body-sm text-primary hover:text-primary-container transition-colors" href="#">Forgot password?</a>
+</div>
+<input class="w-full bg-surface-container-low border border-outline-variant/50 focus:bg-surface-container-lowest focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 font-body-base text-body-base text-on-surface transition-all placeholder:text-outline/50 outline-none" id="login-password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary rounded-lg py-3 px-4 font-body-base text-body-base font-medium shadow-[0_4px_14px_rgba(53,37,205,0.25)] hover:-translate-y-[1px] hover:shadow-[0_6px_20px_rgba(53,37,205,0.3)] transition-all duration-200 mt-stack-xs" type="submit">
+                            Log In
+                        </button>
+<p class="text-center font-body-sm text-body-sm text-on-surface-variant mt-stack-sm">
+                            Don't have an account? <button class="text-primary font-medium hover:underline transition-all" id="btn-show-register" type="button">Sign up</button>
+</p>
+</form>
+<!-- REGISTRATION FORM -->
+<form class="flex flex-col gap-stack-md form-transition hidden-form w-full" id="register-form">
+<div class="flex flex-col gap-stack-sm">
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="reg-name">Full Name</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/50 focus:bg-surface-container-lowest focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 font-body-base text-body-base text-on-surface transition-all placeholder:text-outline/50 outline-none" id="reg-name" placeholder="Jane Doe" type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="reg-email">Email Address</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/50 focus:bg-surface-container-lowest focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 font-body-base text-body-base text-on-surface transition-all placeholder:text-outline/50 outline-none" id="reg-email" placeholder="you@example.com" type="email"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="reg-phone">Phone Number</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/50 focus:bg-surface-container-lowest focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 font-body-base text-body-base text-on-surface transition-all placeholder:text-outline/50 outline-none" id="reg-phone" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="reg-password">Create Password</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/50 focus:bg-surface-container-lowest focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 font-body-base text-body-base text-on-surface transition-all placeholder:text-outline/50 outline-none" id="reg-password" placeholder="••••••••" type="password"/>
+<p class="font-body-sm text-[12px] text-outline mt-1">Must be at least 8 characters.</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary rounded-lg py-3 px-4 font-body-base text-body-base font-medium shadow-[0_4px_14px_rgba(53,37,205,0.25)] hover:-translate-y-[1px] hover:shadow-[0_6px_20px_rgba(53,37,205,0.3)] transition-all duration-200 mt-stack-xs" type="submit">
+                            Create Account
+                        </button>
+<p class="text-center font-body-sm text-body-sm text-on-surface-variant mt-stack-sm">
+                            Already have an account? <button class="text-primary font-medium hover:underline transition-all" id="btn-show-login" type="button">Log in</button>
+</p>
+</form>
+</div>
+</div>
+</div>
+</main>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const btnShowRegister = document.getElementById('btn-show-register');
+            const btnShowLogin = document.getElementById('btn-show-login');
+            
+            const pageTitle = document.getElementById('page-title');
+            const pageSubtitle = document.getElementById('page-subtitle');
+
+            const contentMap = {
+                login: {
+                    title: "Welcome Back",
+                    subtitle: "Enter your details to access your account."
+                },
+                register: {
+                    title: "Create Account",
+                    subtitle: "Join LearnHub and start your journey today."
+                }
+            };
+
+            function fadeText(element, newText) {
+                element.style.opacity = '0';
+                setTimeout(() => {
+                    element.innerText = newText;
+                    element.style.opacity = '1';
+                }, 150);
+            }
+
+            btnShowRegister.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginForm.classList.replace('active-form', 'hidden-form');
+                registerForm.classList.replace('hidden-form', 'active-form');
+                
+                fadeText(pageTitle, contentMap.register.title);
+                fadeText(pageSubtitle, contentMap.register.subtitle);
+            });
+
+            btnShowLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                registerForm.classList.replace('active-form', 'hidden-form');
+                loginForm.classList.replace('hidden-form', 'active-form');
+                
+                fadeText(pageTitle, contentMap.login.title);
+                fadeText(pageSubtitle, contentMap.login.subtitle);
+            });
+        });
+    </script>
+</body></html>
