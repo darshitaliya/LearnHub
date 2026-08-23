@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import CourseCard from '../components/CourseCard';
 import EnrollmentFormModal from '../components/EnrollmentFormModal';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 
 const STATIC_FEATURED_COURSES = [
   {
@@ -79,6 +80,27 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { user, refreshUser } = useAuth();
   const [selectedEnrollCourse, setSelectedEnrollCourse] = useState(null);
+  const [featuredCourses, setFeaturedCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    fetchFeaturedCourses();
+  }, []);
+
+  const fetchFeaturedCourses = async () => {
+    try {
+      const res = await api.get('/courses');
+      if (res.data && res.data.length > 0) {
+        setFeaturedCourses(res.data.slice(0, 6));
+      } else {
+        setFeaturedCourses(STATIC_FEATURED_COURSES);
+      }
+    } catch (err) {
+      setFeaturedCourses(STATIC_FEATURED_COURSES);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-surface">
@@ -232,8 +254,8 @@ export default function HomePage() {
             </div>
 
             <div className="row g-4">
-              {STATIC_FEATURED_COURSES.map((course) => (
-                <div key={course.id} className="col-12 col-md-6 col-lg-4">
+              {featuredCourses.map((course) => (
+                <div key={course.id || course._id} className="col-12 col-md-6 col-lg-4">
                   <CourseCard course={course} onEnrollClick={(crs) => setSelectedEnrollCourse(crs)} />
                 </div>
               ))}

@@ -29,20 +29,21 @@ export default function LoginPage() {
     setFieldErrors({});
     setLoading(true);
 
-    const result = await login(email, password);
-    setLoading(false);
-
-    if (result.success) {
-      if (result.user.role === 'admin') {
+    try {
+      const loggedUser = await login(email, password);
+      if (loggedUser?.role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/dashboard');
       }
-    } else {
-      if (result.fieldErrors) {
-        setFieldErrors(result.fieldErrors);
+    } catch (err) {
+      const serverErr = err.response?.data?.error || 'Invalid email or password.';
+      setError(serverErr);
+      if (err.response?.data?.fieldErrors) {
+        setFieldErrors(err.response.data.fieldErrors);
       }
-      setError(result.error || 'Invalid credentials.');
+    } finally {
+      setLoading(false);
     }
   };
 
