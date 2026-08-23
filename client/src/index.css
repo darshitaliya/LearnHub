@@ -443,3 +443,38 @@ body {
   color: #ffffff !important;
 }
 
+/* ==========================================================================
+   Mobile Responsiveness Enhancements
+   ========================================================================== */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+@media (max-width: 767.98px) {
+  .font-display-lg {
+    font-size: 32px !important;
+    line-height: 1.2 !important;
+  }
+  .font-headline-md {
+    font-size: 20px !important;
+  }
+  .glass-card {
+    display: none !important;
+  }
+  .table-responsive {
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+  .hero-badge {
+    font-size: 11px !important;
+  }
+}
+
+.ratio-16x9 {
+  aspect-ratio: 16 / 9;
+}
+
+
