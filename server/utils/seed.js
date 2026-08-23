@@ -10,10 +10,6 @@ const DB_FILE_PATH = path.resolve(process.cwd(), 'data', 'persistent_db.json');
 
 export const seedInitialData = async () => {
   try {
-    if (fs.existsSync(LOCK_FILE_PATH) || fs.existsSync(DB_FILE_PATH)) {
-      console.log('ℹ️ Database already initialized. Skipping auto-seeding to preserve all deletions.');
-      return;
-    }
     const userCount = await User.countDocuments().catch(() => 0);
     if (userCount === 0) {
       console.log('🌱 Seeding initial demo users into MongoDB...');

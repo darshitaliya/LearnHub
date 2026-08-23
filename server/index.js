@@ -25,6 +25,16 @@ connectDB().then(() => {
 app.use(cors());
 app.use(express.json());
 
+// Database connection middleware for Serverless
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+  } catch (err) {
+    // Proceed with fallback if MongoDB unavailable
+  }
+  next();
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
