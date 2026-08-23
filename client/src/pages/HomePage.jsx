@@ -7,75 +7,6 @@ import EnrollmentFormModal from '../components/EnrollmentFormModal';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
-const STATIC_FEATURED_COURSES = [
-  {
-    id: 'web101',
-    title: 'Full-Stack React 18, Node.js & MongoDB Architecture',
-    category: 'Computer Science',
-    level: 'Intermediate',
-    rating: 4.9,
-    reviewsCount: 1250,
-    subtitle: 'Master modern full-stack web development with React 18, Node.js REST APIs, Mongoose, and cloud deployment.',
-    techStack: ['React 18', 'Node.js', 'Express', 'MongoDB'],
-    thumbnail: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'cs201',
-    title: 'Web Application Security & OWASP Vulnerabilities',
-    category: 'Computer Science',
-    level: 'Intermediate',
-    rating: 4.9,
-    reviewsCount: 890,
-    subtitle: 'Identify and mitigate top web security flaws: SQL Injection (SQLi), Cross-Site Scripting (XSS), and CSRF.',
-    techStack: ['OWASP', 'Web Security', 'Burp Suite', 'XSS'],
-    thumbnail: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'ml301',
-    title: 'Deep Learning & Transformers Architecture',
-    category: 'Data Science',
-    level: 'Advanced',
-    rating: 5.0,
-    reviewsCount: 2100,
-    subtitle: 'Build PyTorch neural networks, attention mechanisms, LLMs, and MLOps deployment pipelines.',
-    techStack: ['PyTorch', 'Deep Learning', 'Transformers', 'Python'],
-    thumbnail: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'web_nextjs14',
-    title: 'Mastering Next.js 14 App Router & Server Actions',
-    category: 'Computer Science',
-    level: 'Advanced',
-    rating: 4.8,
-    reviewsCount: 950,
-    subtitle: 'Build hyper-fast SSR & SSG applications with Next.js 14, React Server Components, and Vercel cloud deployment.',
-    techStack: ['Next.js 14', 'TypeScript', 'TailwindCSS', 'Prisma'],
-    thumbnail: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'devops_cloud',
-    title: 'Cloud Infrastructure, Docker & Kubernetes Masterclass',
-    category: 'Computer Science',
-    level: 'Intermediate',
-    rating: 4.9,
-    reviewsCount: 1420,
-    subtitle: 'Containerize applications, orchestrate Kubernetes clusters, and automate enterprise CI/CD pipelines.',
-    techStack: ['Docker', 'Kubernetes', 'DevOps', 'AWS'],
-    thumbnail: 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'des102',
-    title: 'UI/UX Design Systems & Figma Interface Architecture',
-    category: 'Design',
-    level: 'Beginner',
-    rating: 4.9,
-    reviewsCount: 1780,
-    subtitle: 'Design enterprise design systems, interactive prototypes, auto-layouts, and user research workflows.',
-    techStack: ['Figma', 'UI/UX Design', 'Design Systems', 'Wireframing'],
-    thumbnail: 'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=1200&q=80',
-  },
-];
-
 export default function HomePage() {
   const navigate = useNavigate();
   const { user, refreshUser } = useAuth();
@@ -90,13 +21,9 @@ export default function HomePage() {
   const fetchFeaturedCourses = async () => {
     try {
       const res = await api.get('/courses');
-      if (res.data && res.data.length > 0) {
-        setFeaturedCourses(res.data.slice(0, 6));
-      } else {
-        setFeaturedCourses(STATIC_FEATURED_COURSES);
-      }
+      setFeaturedCourses(res.data || []);
     } catch (err) {
-      setFeaturedCourses(STATIC_FEATURED_COURSES);
+      setFeaturedCourses([]);
     } finally {
       setLoading(false);
     }
@@ -253,13 +180,31 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="row g-4">
-              {featuredCourses.map((course) => (
-                <div key={course.id || course._id} className="col-12 col-md-6 col-lg-4">
-                  <CourseCard course={course} onEnrollClick={(crs) => setSelectedEnrollCourse(crs)} />
-                </div>
-              ))}
-            </div>
+            {loading ? (
+              <div className="text-center py-5">
+                <div className="spinner-border text-primary" role="status" />
+                <p className="mt-2 text-on-surface-variant font-body-sm">Loading live curriculum from database...</p>
+              </div>
+            ) : featuredCourses.length > 0 ? (
+              <div className="row g-4">
+                {featuredCourses.slice(0, 6).map((course) => (
+                  <div key={course.id || course._id} className="col-12 col-md-6 col-lg-4">
+                    <CourseCard course={course} onEnrollClick={(crs) => setSelectedEnrollCourse(crs)} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-5 bg-surface-container-low rounded-4 border border-outline-variant/30 p-4">
+                <span className="material-symbols-outlined fs-1 text-primary mb-2">menu_book</span>
+                <h4 className="fw-bold mb-1">No Courses Published Yet</h4>
+                <p className="text-on-surface-variant font-body-sm max-w-sm mx-auto mb-3">
+                  Courses added by the Admin will appear here live.
+                </p>
+                <Link to="/courses" className="btn btn-primary font-body-sm px-4 py-2 rounded-3">
+                  View Catalog
+                </Link>
+              </div>
+            )}
           </div>
         </section>
 
