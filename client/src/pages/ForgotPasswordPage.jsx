@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Logo from '../components/Logo';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -16,9 +17,8 @@ export default function ForgotPasswordPage() {
   return (
     <div className="bg-surface text-on-surface font-body-base min-vh-100 w-100 d-flex align-items-center justify-content-center p-4">
       <div className="bg-white rounded-4 border border-outline-variant/30 p-5 shadow-sm w-100" style={{ maxWidth: '440px' }}>
-        <div className="d-flex align-items-center gap-2 mb-4 cursor-pointer" onClick={() => navigate('/')}>
-          <span className="material-symbols-outlined text-primary fs-3 fill">school</span>
-          <span className="font-headline-md text-on-surface fw-bold fs-4">LearnHub</span>
+        <div className="mb-4">
+          <Logo size="md" />
         </div>
 
         <h1 className="font-headline-md fw-bold mb-2">Reset Password</h1>
