@@ -1,19 +1,33 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from '../components/Logo';
 import CaptchaField from '../components/CaptchaField';
 
 export default function LoginPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, login, logout } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [captchaData, setCaptchaData] = useState({ captchaToken: '', captchaInput: '' });
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const { user, login, logout } = useAuth();
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (location.state?.email) {
+      setEmail(location.state.email);
+    }
+    if (location.state?.password) {
+      setPassword(location.state.password);
+    }
+    if (location.state?.message) {
+      setSuccessMsg(location.state.message);
+    }
+  }, [location.state]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +35,7 @@ export default function LoginPage() {
     setFieldErrors({});
 
     if (!captchaData.captchaInput?.trim()) {
-      setFieldErrors((prev) => ({ ...prev, captcha: 'Please enter the CAPTCHA verification code.' }));
+      setFieldErrors((prev) => ({ ...prev, captcha: 'Please enter the security CAPTCHA code.' }));
       return;
     }
 
@@ -54,35 +68,15 @@ export default function LoginPage() {
     }
   };
 
-  const fillCredentials = (roleEmail, rolePass) => {
+  const handleFillDemo = (roleEmail, rolePass, roleName) => {
     setEmail(roleEmail);
     setPassword(rolePass);
     setError('');
     setFieldErrors({});
-  };
-
-  const handleDemoLogin = async (roleEmail, rolePass) => {
-    fillCredentials(roleEmail, rolePass);
-    setError('');
-    setFieldErrors({});
-    setLoading(true);
-
-    try {
-      const loggedUser = await login(roleEmail, rolePass);
-      if (loggedUser?.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
-    } catch (err) {
-      const serverErr =
-        err.response?.data?.error ||
-        (err.code === 'ERR_NETWORK' || !err.response
-          ? 'Cannot connect to server. Please ensure backend is running.'
-          : 'Invalid email or password.');
-      setError(serverErr);
-    } finally {
-      setLoading(false);
+    setSuccessMsg(`${roleName} credentials filled! Please enter the CAPTCHA code below to log in.`);
+    const captchaInputEl = document.getElementById('login-captcha');
+    if (captchaInputEl) {
+      captchaInputEl.focus();
     }
   };
 
@@ -157,24 +151,29 @@ export default function LoginPage() {
             </div>
           )}
 
+          {successMsg && (
+            <div className="alert alert-success font-body-sm rounded-3 mb-3 d-flex align-items-center gap-2">
+              <span className="material-symbols-outlined fs-5 text-success">check_circle</span>
+              <span>{successMsg}</span>
+            </div>
+          )}
+
           {error && <div className="alert alert-danger font-body-sm rounded-3 mb-3">{error}</div>}
 
           {/* Quick Preset Login Buttons for Demo */}
           <div className="mb-3 p-3 bg-surface-container-low rounded-3 border border-outline-variant/30">
-            <span className="font-label-caps text-on-surface-variant d-block mb-2">ONE-CLICK DEMO LOGINS:</span>
+            <span className="font-label-caps text-on-surface-variant d-block mb-2">ONE-CLICK DEMO CREDENTIALS:</span>
             <div className="d-flex flex-wrap gap-2">
               <button
                 type="button"
-                disabled={loading}
-                onClick={() => handleDemoLogin('alex@learnhub.com', 'student123')}
+                onClick={() => handleFillDemo('alex@learnhub.com', 'student123', 'Student')}
                 className="btn btn-sm btn-outline-primary font-body-sm px-3 py-1.5 rounded-pill fw-semibold shadow-xs"
               >
                 Student Demo
               </button>
               <button
                 type="button"
-                disabled={loading}
-                onClick={() => handleDemoLogin('admin@learnhub.com', 'admin123')}
+                onClick={() => handleFillDemo('admin@learnhub.com', 'admin123', 'Admin')}
                 className="btn btn-sm btn-outline-primary font-body-sm px-3 py-1.5 rounded-pill fw-semibold shadow-xs"
               >
                 Admin Demo

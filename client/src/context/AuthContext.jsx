@@ -86,15 +86,20 @@ export function AuthProvider({ children }) {
       typeof nameOrData === 'object' && nameOrData !== null
         ? nameOrData
         : { name: nameOrData, email, phone, password };
-    const res = await api.post('/auth/register', payload);
+
+    const shouldAutoLogin = payload.autoLogin !== false;
+    const { autoLogin, ...apiPayload } = payload;
+
+    const res = await api.post('/auth/register', apiPayload);
     const authToken = res.data.token;
     const authUser = res.data.user;
 
-    localStorage.setItem('learnhub_token', authToken);
-    localStorage.setItem('learnhub_user', JSON.stringify(authUser));
-
-    setToken(authToken);
-    setUser(authUser);
+    if (shouldAutoLogin) {
+      localStorage.setItem('learnhub_token', authToken);
+      localStorage.setItem('learnhub_user', JSON.stringify(authUser));
+      setToken(authToken);
+      setUser(authUser);
+    }
     setLoading(false);
     return authUser;
   };

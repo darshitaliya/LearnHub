@@ -88,8 +88,15 @@ export default function RegisterPage() {
         password: formData.password,
         captchaToken: captchaData.captchaToken,
         captchaInput: captchaData.captchaInput,
+        autoLogin: false,
       });
-      navigate('/dashboard');
+      navigate('/login', {
+        state: {
+          message: 'Account registered successfully! Please enter the CAPTCHA code to log in.',
+          email: formData.email.trim(),
+          password: formData.password,
+        },
+      });
     } catch (err) {
       const serverErr =
         err.response?.data?.error ||
