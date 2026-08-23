@@ -9,6 +9,7 @@ import {
   getAllOrders,
   getEnrollments,
   deleteEnrollment,
+  getExecutiveReport,
 } from '../controllers/adminController.js';
 import { requireAuth, requireRole } from '../middleware/authMiddleware.js';
 
@@ -18,6 +19,7 @@ router.use(requireAuth);
 router.use(requireRole('admin'));
 
 router.get('/stats', getAdminStats);
+router.get('/reports', getExecutiveReport);
 router.get('/users', getAllUsers);
 router.post('/users', createUser);
 router.put('/users/:userId', updateUser);
