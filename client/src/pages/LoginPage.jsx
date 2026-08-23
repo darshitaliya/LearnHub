@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../components/Logo';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -22,64 +23,45 @@ export default function LoginPage() {
     }
   }, [user, navigate]);
 
-  const validateFrontend = () => {
-    const errors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!email.trim()) {
-      errors.email = 'Email address is required.';
-    } else if (!emailRegex.test(email.trim())) {
-      errors.email = 'Please enter a valid email address.';
-    }
-
-    if (!password) {
-      errors.password = 'Password is required.';
-    }
-
-    return errors;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setFieldErrors({});
-
-    const clientErrors = validateFrontend();
-    if (Object.keys(clientErrors).length > 0) {
-      setFieldErrors(clientErrors);
-      setError(Object.values(clientErrors)[0]);
-      return;
-    }
-
     setLoading(true);
-    try {
-      const loggedUser = await login(email, password);
-      if (loggedUser?.role === 'admin') {
+
+    const result = await login(email, password);
+    setLoading(false);
+
+    if (result.success) {
+      if (result.user.role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/dashboard');
       }
-    } catch (err) {
-      const serverErr = err.response?.data?.error || 'Invalid email or password.';
-      setError(serverErr);
-      if (err.response?.data?.fieldErrors) {
-        setFieldErrors(err.response.data.fieldErrors);
+    } else {
+      if (result.fieldErrors) {
+        setFieldErrors(result.fieldErrors);
       }
-    } finally {
-      setLoading(false);
+      setError(result.error || 'Invalid credentials.');
     }
   };
 
+  const fillCredentials = (roleEmail, rolePass) => {
+    setEmail(roleEmail);
+    setPassword(rolePass);
+    setError('');
+    setFieldErrors({});
+  };
+
   return (
-    <div className="bg-surface text-on-surface font-body-base min-vh-100 w-100 d-flex">
+    <div className="min-vh-100 w-100 d-flex flex-column flex-lg-row bg-surface">
       {/* Left Panel - Brand & Illustration */}
       <div className="d-none d-lg-flex flex-column w-50 bg-surface-container-low p-5 position-relative overflow-hidden">
         <div className="position-absolute rounded-circle opacity-30 pointer-events-none" style={{ top: '-100px', left: '-100px', width: '380px', height: '380px', backgroundColor: '#e2dfff', filter: 'blur(80px)' }} />
         <div className="position-absolute rounded-circle opacity-30 pointer-events-none" style={{ top: '200px', right: '-50px', width: '300px', height: '300px', backgroundColor: '#acedff', filter: 'blur(80px)' }} />
 
-        <div className="position-relative z-1 d-flex align-items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-          <span className="material-symbols-outlined text-primary fs-2 fill">school</span>
-          <span className="font-headline-md text-on-surface fw-bold fs-4">LearnHub</span>
+        <div className="position-relative z-1">
+          <Logo size="lg" />
         </div>
 
         <div className="flex-grow-1 d-flex align-items-center justify-content-center position-relative z-1 w-100 max-w-lg mx-auto py-4">
@@ -102,9 +84,8 @@ export default function LoginPage() {
       {/* Right Panel - Login Form */}
       <div className="w-100 w-lg-50 d-flex align-items-center justify-content-center p-4 p-md-5 bg-surface position-relative z-2">
         <div className="w-100" style={{ maxWidth: '420px' }}>
-          <div className="d-lg-none d-flex justify-content-center align-items-center gap-2 mb-4 cursor-pointer" onClick={() => navigate('/')}>
-            <span className="material-symbols-outlined text-primary fs-3 fill">school</span>
-            <span className="font-headline-md text-on-surface fw-bold fs-4">LearnHub</span>
+          <div className="d-lg-none d-flex justify-content-center mb-4">
+            <Logo size="lg" />
           </div>
 
           <div className="mb-4">

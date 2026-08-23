@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Logo from './Logo';
 
 export default function Footer({ onNavigate }) {
   const scrollToTop = (e) => {
@@ -14,15 +15,7 @@ export default function Footer({ onNavigate }) {
           {/* Brand & Mission Column */}
           <div className="col-12 col-lg-4">
             <div className="d-flex flex-column gap-3 max-w-sm">
-              <Link to="/" className="text-decoration-none d-flex align-items-center gap-2 m-0">
-                <div
-                  className="rounded-3 text-white d-flex align-items-center justify-content-center shadow-sm"
-                  style={{ width: '36px', height: '36px', background: 'linear-gradient(135deg, #3525cd 0%, #4f46e5 100%)' }}
-                >
-                  <span className="material-symbols-outlined fs-5 fill m-0 text-white">school</span>
-                </div>
-                <span className="font-headline-md text-primary font-bold fs-4">LearnHub</span>
-              </Link>
+              <Logo size="md" />
 
               <p className="font-body-sm text-on-surface-variant m-0" style={{ lineHeight: '1.6' }}>
                 Empowering the next generation of software engineers, AI researchers, and digital product designers through state-of-the-art curriculum.

@@ -56,12 +56,14 @@ export default function RegisterPage() {
     }
 
     if (!formData.password) {
-      errors.password = 'Password must be at least 8 characters.';
-    } else if (formData.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters.';
+      errors.password = 'Password is required.';
+    } else if (formData.password.length < 6) {
+      errors.password = 'Password must be at least 6 characters.';
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = 'Confirm your password.';
+    } else if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match.';
     }
 
@@ -82,14 +84,10 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      const registeredUser = await register(formData);
-      if (registeredUser?.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
+      await register(formData.name, formData.email, formData.phone, formData.password);
+      navigate('/dashboard');
     } catch (err) {
-      const serverErr = err.response?.data?.error || 'Registration failed. Please try again.';
+      const serverErr = err.response?.data?.error || 'Registration failed.';
       setError(serverErr);
       if (err.response?.data?.fieldErrors) {
         setFieldErrors(err.response.data.fieldErrors);
@@ -106,9 +104,8 @@ export default function RegisterPage() {
         <div className="position-absolute rounded-circle opacity-30 pointer-events-none" style={{ top: '-100px', left: '-100px', width: '380px', height: '380px', backgroundColor: '#e2dfff', filter: 'blur(80px)' }} />
         <div className="position-absolute rounded-circle opacity-30 pointer-events-none" style={{ top: '200px', right: '-50px', width: '300px', height: '300px', backgroundColor: '#acedff', filter: 'blur(80px)' }} />
 
-        <div className="position-relative z-1 d-flex align-items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-          <span className="material-symbols-outlined text-primary fs-2 fill">school</span>
-          <span className="font-headline-md text-on-surface fw-bold fs-4">LearnHub</span>
+        <div className="position-relative z-1">
+          <Logo size="lg" />
         </div>
 
         <div className="flex-grow-1 d-flex align-items-center justify-content-center position-relative z-1 w-100 max-w-lg mx-auto py-4">
@@ -131,9 +128,8 @@ export default function RegisterPage() {
       {/* Right Panel - Register Form */}
       <div className="w-100 w-lg-50 d-flex align-items-center justify-content-center p-4 p-md-5 bg-surface position-relative z-2">
         <div className="w-100" style={{ maxWidth: '420px' }}>
-          <div className="d-lg-none d-flex justify-content-center align-items-center gap-2 mb-4 cursor-pointer" onClick={() => navigate('/')}>
-            <span className="material-symbols-outlined text-primary fs-3 fill">school</span>
-            <span className="font-headline-md text-on-surface fw-bold fs-4">LearnHub</span>
+          <div className="d-lg-none d-flex justify-content-center mb-4">
+            <Logo size="lg" />
           </div>
 
           <div className="mb-4">

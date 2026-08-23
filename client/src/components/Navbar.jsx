@@ -5,6 +5,8 @@ import { useCart } from '../context/CartContext';
 import { useCourses } from '../context/CourseContext';
 import { useTheme } from '../context/ThemeContext';
 
+import Logo from './Logo';
+
 export default function Navbar() {
   const { user, isAuthenticated, logout, isAdmin, isInstructor } = useAuth();
   const { cartCount } = useCart();
@@ -24,15 +26,7 @@ export default function Navbar() {
     <header className="sticky-top z-3 bg-white border-bottom border-outline-variant/20 shadow-sm w-100">
       <div className="max-w-container-max mx-auto px-3 px-md-5 py-3 d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center gap-4 gap-lg-5">
-          <Link to="/" className="text-decoration-none d-flex align-items-center gap-2 m-0">
-            <div
-              className="rounded-3 text-white d-flex align-items-center justify-content-center shadow-sm"
-              style={{ width: '36px', height: '36px', background: 'linear-gradient(135deg, #3525cd 0%, #4f46e5 100%)' }}
-            >
-              <span className="material-symbols-outlined fs-5 fill m-0 text-white">school</span>
-            </div>
-            <span className="font-headline-md text-primary font-bold fs-4">LearnHub</span>
-          </Link>
+          <Logo size="md" />
 
           <nav className="d-none d-md-flex align-items-center gap-3">
             <Link to="/courses" className="font-body-base text-on-surface-variant text-decoration-none hover-primary px-2 py-1 rounded fw-medium">
