@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnHub — Comprehensive Project Specification & Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3525cd;
+      --primary-dark: #1e1b4b;
+      --secondary: #00687a;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --success: #16a34a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+
+    .logo-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .print-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .print-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin: 32px 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 20px 0 8px 0;
+    }
+
+    p, li {
+      font-size: 14px;
+      color: #334155;
+    }
+
+    ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px 0;
+      font-size: 13.5px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #e0e7ff;
+      color: var(--primary);
+    }
+
+    .badge-success {
+      background: #dcfce7;
+      color: var(--success);
+    }
+
+    .code-box {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 14px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+
+    .footer-stamp {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .container {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      .print-btn {
+        display: none;
+      }
+      h2 {
+        page-break-after: avoid;
+      }
+      table, .code-box {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-bar">
+      <div>
+        <div class="logo-title">🎓 LEARNHUB ACADEMY</div>
+        <div class="subtitle">Official Comprehensive Architecture, Modules & Functional Specification Manual</div>
+      </div>
+      <button class="print-btn" onclick="window.print()">🖨️ Save as PDF / Print</button>
+    </div>
+
+    <h2>1. Executive Summary & Purpose</h2>
+    <p>
+      <strong>LearnHub</strong> is a full-stack, enterprise-grade <strong>Learning Management System (LMS)</strong> built to deliver high-quality, barrier-free technical education. It features interactive curriculum browsing, real-time video classrooms, progress tracking, automated printable certificate issuance, an administrative suite with soft delete, LIFO data ordering, and dynamic CAPTCHA security.
+    </p>
+
+    <h2>2. Technology Stack & Architecture</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Tier / Component</th>
+          <th>Technology</th>
+          <th>Role & Responsibility</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Frontend SPA</strong></td>
+          <td>React 18 + Vite</td>
+          <td>Fast single-page application with responsive layouts and fluid state management.</td>
+        </tr>
+        <tr>
+          <td><strong>Design & Styling</strong></td>
+          <td>Vanilla CSS + Material Design Tokens</td>
+          <td>Custom design system with Google Plus Jakarta Sans typography and glassmorphic UI.</td>
+        </tr>
+        <tr>
+          <td><strong>Backend API Server</strong></td>
+          <td>Node.js + Express.js</td>
+          <td>RESTful API managing authentication, CRUD modules, reports, and security middleware.</td>
+        </tr>
+        <tr>
+          <td><strong>Database (Primary)</strong></td>
+          <td>MongoDB Atlas Cloud</td>
+          <td>Mongoose-backed persistence for Users, Courses, Enrollments, and Certifications.</td>
+        </tr>
+        <tr>
+          <td><strong>Database (Fallback)</strong></td>
+          <td>Persistent JSON Store</td>
+          <td>Zero-downtime offline fallback mechanism ensuring high availability.</td>
+        </tr>
+        <tr>
+          <td><strong>Security & Auth</strong></td>
+          <td>JWT + Bcrypt.js + Cookies</td>
+          <td>Secure password hashing, signed access tokens, and HTTP-only cookie support.</td>
+        </tr>
+        <tr>
+          <td><strong>Anti-Bot Security</strong></td>
+          <td>Dynamic SVG CAPTCHA</td>
+          <td>Cryptographically signed distorted visual challenges on all forms.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3. Complete Page-by-Page Breakdown</h2>
+
+    <h3>1. Landing Page (<code>/</code> • <code>HomePage.jsx</code>)</h3>
+    <ul>
+      <li>Showcases platform branding, value propositions, and learner community metrics.</li>
+      <li><strong>6 Static Curated Popular Courses</strong>: Fixed premium cards with ratings, tech tags, and 1-click redirection to the course catalog.</li>
+      <li>Category filter shortcuts (Computer Science, Data Science, Design, Business).</li>
+    </ul>
+
+    <h3>2. Course Catalog & Search (<code>/courses</code> • <code>CourseListingPage.jsx</code>)</h3>
+    <ul>
+      <li>Live searchable catalog displaying all courses published by admins in the database.</li>
+      <li>Multi-facet filtering: Category, Level (Beginner / Intermediate / Advanced), and Pricing.</li>
+      <li>Responsive 6-item pagination and instant course application modal.</li>
+    </ul>
+
+    <h3>3. Classroom & Video Player (<code>/player</code> • <code>VideoPlayerPage.jsx</code>)</h3>
+    <ul>
+      <li>Distraction-free learning room with embedded YouTube streaming lectures.</li>
+      <li>Curriculum accordion with real-time lesson progress checkmarks.</li>
+      <li><strong>Automated Certificate of Completion</strong>: Generated dynamically upon 100% course completion.</li>
+    </ul>
+
+    <h3>4. Student Dashboard (<code>/dashboard</code> • <code>StudentDashboardPage.jsx</code>)</h3>
+    <ul>
+      <li>Overview of enrolled courses, completed hours, and active certifications.</li>
+      <li>1-Click "Resume Learning" button taking students directly back to their current lesson.</li>
+    </ul>
+
+    <h3>5. Authentication Suite (<code>/login</code>, <code>/register</code>, <code>/forgot-password</code>)</h3>
+    <ul>
+      <li><strong>Login Page</strong>: Email/Password login guarded with mandatory dynamic CAPTCHA. Demo buttons prefill credentials without skipping CAPTCHA.</li>
+      <li><strong>Register Page</strong>: Form validation with CAPTCHA, redirecting to login with prefilled credentials.</li>
+      <li><strong>Forgot Password Page</strong>: CAPTCHA-protected password recovery requests.</li>
+    </ul>
+
+    <h3>6. Admin Control Center (<code>/admin</code>)</h3>
+    <ul>
+      <li><strong>Admin Dashboard (<code>/admin</code>)</strong>: Real-time platform KPI metrics and category distribution.</li>
+      <li><strong>Course Management (<code>/admin/courses</code>)</strong>: Course CRUD with 50+ instant presets, soft delete, and LIFO ordering.</li>
+      <li><strong>User Management (<code>/admin/users</code>)</strong>: User account CRUD, role modification, soft delete, and LIFO ordering.</li>
+      <li><strong>Enrollment Applications (<code>/admin/enrollments</code>)</strong>: Student applications and manual enrollment tools.</li>
+      <li><strong>Reports & Audit (<code>/admin/reports</code>)</strong>: Exportable intelligence reports with RFC-4180 CSV generation and printable letterhead PDF layouts.</li>
+    </ul>
+
+    <h3>7. Contact & Support Center (<code>/contact</code> • <code>ContactPage.jsx</code>)</h3>
+    <ul>
+      <li>Direct support form with inquiry categorization and CAPTCHA spam protection.</li>
+      <li>Frequently Asked Questions (FAQ) reference guide.</li>
+    </ul>
+
+    <h2>4. Key Security & Operational Highlights</h2>
+    <ul>
+      <li><strong>LIFO (Last-In, First-Out) Sorting</strong>: All admin tables show newly created items at the very top.</li>
+      <li><strong>Non-Destructive Soft Delete</strong>: Records are flagged with <code>isDeleted: true</code> to maintain database integrity.</li>
+      <li><strong>Stateless CAPTCHA Tokens</strong>: Signed with JWT (10-minute expiry), eliminating server memory leaks.</li>
+      <li><strong>Single-Port Universal Deployment</strong>: Express serves both API and compiled React SPA bundle.</li>
+    </ul>
+
+    <h2>5. Quick Execution Guide</h2>
+    <div class="code-box">
+# 1. Install Dependencies & Build Client Bundle
+npm --prefix server install
+npm --prefix client install
+npm --prefix client run build
+
+# 2. Run Production Server (Single Port http://localhost:5000)
+node server/index.js
+    </div>
+
+    <div class="footer-stamp">
+      <span>LearnHub Learning Management Infrastructure &copy; 2026</span>
+      <span>Official Release Specification Document</span>
+    </div>
+  </div>
+
+</body>
+</html>

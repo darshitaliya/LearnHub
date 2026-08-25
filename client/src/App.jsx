@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { CourseProvider } from './context/CourseContext';
@@ -16,6 +17,7 @@ export default function App() {
             <CourseProvider>
               <ToastProvider>
                 <AppRoutes />
+                <Analytics />
               </ToastProvider>
             </CourseProvider>
           </CartProvider>
