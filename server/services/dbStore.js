@@ -469,31 +469,36 @@ export const dbStore = {
   async getProgress(userId, courseId) {
     const uStr = String(userId || '');
     const cStr = String(courseId || '');
+    const key = `${uStr}_${cStr}`;
 
     if (isMongoConnected()) {
-      let prog = await Progress.findOne({
-        $or: [
-          { userId: uStr, courseId: cStr },
-          { userId: userId, courseId: courseId },
-        ],
-      });
-      if (!prog) {
-        prog = await Progress.create({
-          userId: uStr,
-          courseId: cStr,
-          completedLessons: [],
-          percentage: 0,
-          certificateEarned: false,
-          quizPassed: false,
-          quizScore: 0,
+      try {
+        let prog = await Progress.findOne({
+          $or: [
+            { userId: uStr, courseId: cStr },
+            { userId: userId, courseId: courseId },
+            { key },
+          ],
         });
+        if (!prog) {
+          prog = await Progress.create({
+            key,
+            userId: uStr,
+            courseId: cStr,
+            completedLessons: [],
+            percentage: 0,
+            certificateEarned: false,
+            quizPassed: false,
+            quizScore: 0,
+          });
+        }
+        return prog;
+      } catch (err) {
+        console.warn('MongoDB progress fetch error, falling back:', err);
       }
-      return prog;
     }
 
-    const key = `${uStr}_${cStr}`;
     if (!memoryStore.progress[key]) {
-      // Check if progress exists under a loose key match
       const matchingKey = Object.keys(memoryStore.progress).find((k) => {
         const p = memoryStore.progress[k];
         return String(p.userId) === uStr && (String(p.courseId) === cStr || k.endsWith(`_${cStr}`));
@@ -504,6 +509,7 @@ export const dbStore = {
       }
 
       memoryStore.progress[key] = {
+        key,
         userId: uStr,
         courseId: cStr,
         completedLessons: [],
@@ -517,24 +523,47 @@ export const dbStore = {
     return memoryStore.progress[key];
   },
 
-
   async saveProgress(userId, courseId, updateData) {
-    const key = `${userId}_${courseId}`;
+    const uStr = String(userId || '');
+    const cStr = String(courseId || '');
+    const key = `${uStr}_${cStr}`;
+
     if (isMongoConnected()) {
-      return await Progress.findOneAndUpdate(
-        { userId, courseId },
-        { ...updateData, updatedAt: new Date() },
-        { new: true, upsert: true }
-      );
+      try {
+        const saved = await Progress.findOneAndUpdate(
+          {
+            $or: [
+              { userId: uStr, courseId: cStr },
+              { userId: userId, courseId: courseId },
+              { key },
+            ],
+          },
+          {
+            key,
+            userId: uStr,
+            courseId: cStr,
+            ...updateData,
+            updatedAt: new Date(),
+          },
+          { new: true, upsert: true, setDefaultsOnInsert: true }
+        );
+        return saved;
+      } catch (err) {
+        console.warn('MongoDB progress save error, falling back to file store:', err);
+      }
     }
 
     memoryStore.progress[key] = {
-      ...(memoryStore.progress[key] || { userId, courseId }),
+      ...(memoryStore.progress[key] || { userId: uStr, courseId: cStr }),
+      key,
+      userId: uStr,
+      courseId: cStr,
       ...updateData,
     };
     saveStateToFile();
     return memoryStore.progress[key];
   },
+
 
 
   // STATS

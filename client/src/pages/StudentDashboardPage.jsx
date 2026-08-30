@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import CourseQuizModal from '../components/CourseQuizModal';
 import CertificateModal from '../components/CertificateModal';
 import api from '../services/api';
+import { getLocalProgress, resolveMergedProgress } from '../utils/progressStorage';
 
 export default function StudentDashboardPage() {
   const { user, logout, isAdmin, refreshUser } = useAuth();
@@ -17,7 +18,6 @@ export default function StudentDashboardPage() {
   // Quiz & Certificate Modal States
   const [selectedQuizCourse, setSelectedQuizCourse] = useState(null);
   const [selectedCertCourse, setSelectedCertCourse] = useState(null);
-
 
   const learningActivityData = [
     { day: 'Mon', height: '40%', hours: '1.5h' },
@@ -60,54 +60,28 @@ export default function StudentDashboardPage() {
       const notEnrolled = allCourses.find((c) => !userEnrolledIds.includes(c.id) && !userEnrolledIds.includes(c._id));
       setRecommendedCourse(notEnrolled || allCourses[0] || null);
 
-      // Fetch live progress for enrolled courses
+      // Fetch live progress for enrolled courses with 2-layer sync
       const pMap = {};
       await Promise.all(
         userEnrolled.map(async (c) => {
           const primaryId = c.id || c._id;
+          const totalLessonsCount = c.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 4;
+          const localData = getLocalProgress(currentUser?.id || currentUser?._id, primaryId);
+
           try {
             const pRes = await api.get(`/progress/${primaryId}`);
-            const serverProg = pRes.data || {};
-            const completedArr = serverProg.completedLessons || [];
-            const totalLessonsCount = c.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || Math.max(completedArr.length, 1);
-            
-            let lessonPct = serverProg.percentage !== undefined ? serverProg.percentage : 0;
-            if (completedArr.length > 0 && totalLessonsCount > 0) {
-              const calcPct = Math.min(100, Math.round((completedArr.length / totalLessonsCount) * 100));
-              lessonPct = Math.max(lessonPct, calcPct);
-            }
+            const merged = resolveMergedProgress(pRes.data, localData, totalLessonsCount);
 
-            const isModulesCompleted = Boolean(lessonPct >= 100 || (completedArr.length >= totalLessonsCount && totalLessonsCount > 0) || serverProg.quizPassed);
-            const isQuizPassed = Boolean(serverProg.quizPassed);
-            const isCertUnlocked = isQuizPassed;
-
-            const progData = {
-              percentage: isModulesCompleted ? 100 : lessonPct,
-              completedLessons: completedArr,
-              isModulesCompleted,
-              isQuizUnlocked: isModulesCompleted,
-              quizPassed: isQuizPassed,
-              quizScore: serverProg.quizScore || 0,
-              certificateEarned: isCertUnlocked,
-            };
-
-            if (c.id) pMap[c.id] = progData;
-            if (c._id) pMap[c._id] = progData;
+            if (c.id) pMap[c.id] = merged;
+            if (c._id) pMap[c._id] = merged;
           } catch (e) {
-            const fallbackData = {
-              percentage: 0,
-              completedLessons: [],
-              isModulesCompleted: false,
-              isQuizUnlocked: false,
-              quizPassed: false,
-              quizScore: 0,
-              certificateEarned: false,
-            };
-            if (c.id) pMap[c.id] = fallbackData;
-            if (c._id) pMap[c._id] = fallbackData;
+            const merged = resolveMergedProgress(null, localData, totalLessonsCount);
+            if (c.id) pMap[c.id] = merged;
+            if (c._id) pMap[c._id] = merged;
           }
         })
       );
+
 
 
       setProgressMap(pMap);

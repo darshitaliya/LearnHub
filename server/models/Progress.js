@@ -6,7 +6,7 @@ const progressSchema = new mongoose.Schema(
       type: String,
       default: () => `prg_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
     },
-    key: { type: String, required: true, unique: true, index: true },
+    key: { type: String, default: '' },
     userId: { type: String, required: true, index: true },
     courseId: { type: String, required: true, index: true },
     completedLessons: [{ type: String }],
@@ -23,6 +23,10 @@ const progressSchema = new mongoose.Schema(
   }
 );
 
+// Compound unique index for reliable user-course progress lookups
+progressSchema.index({ userId: 1, courseId: 1 }, { unique: true });
+
 const Progress = mongoose.models.Progress || mongoose.model('Progress', progressSchema);
 export default Progress;
+
 

@@ -6,6 +6,7 @@ import CertificateModal from '../components/CertificateModal';
 import CourseQuizModal from '../components/CourseQuizModal';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { getLocalProgress, resolveMergedProgress } from '../utils/progressStorage';
 
 export default function MyCoursesPage() {
   const { user, isAdmin, refreshUser } = useAuth();
@@ -18,7 +19,6 @@ export default function MyCoursesPage() {
   const [selectedCertCourse, setSelectedCertCourse] = useState(null);
   const [selectedQuizCourse, setSelectedQuizCourse] = useState(null);
 
-
   useEffect(() => {
     fetchEnrolledCoursesWithProgress();
   }, []);
@@ -26,7 +26,6 @@ export default function MyCoursesPage() {
   const fetchEnrolledCoursesWithProgress = async () => {
     setLoading(true);
     try {
-      // Refresh current user info to get latest enrolledCourses list
       let currentUser = user;
       try {
         const meRes = await api.get('/auth/me');
@@ -46,60 +45,45 @@ export default function MyCoursesPage() {
       // Strictly filter to ONLY courses the student has actually enrolled in
       const studentCourses = allCourses.filter((c) => enrolledIds.includes(c.id) || enrolledIds.includes(c._id));
 
-      // Fetch live progress for each enrolled course
+      // Fetch live progress for each enrolled course with 2-layer sync
       const coursesWithProgress = await Promise.all(
         studentCourses.map(async (crs) => {
+          const courseId = crs.id || crs._id;
+          const totalLessonsCount = crs.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 4;
+          const localData = getLocalProgress(currentUser?.id || currentUser?._id, courseId);
+
           try {
-            const courseId = crs.id || crs._id;
             const progRes = await api.get(`/progress/${courseId}`);
-            const serverProg = progRes.data || {};
-            const completedCount = serverProg.completedLessons?.length || 0;
-            const totalLessonsCount = crs.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || Math.max(completedCount, 1);
-            
-            // Calculate lesson completion %
-            let lessonPct = serverProg.percentage !== undefined ? serverProg.percentage : 0;
-            if (completedCount > 0 && totalLessonsCount > 0) {
-              const calcLessonPct = Math.min(100, Math.round((completedCount / totalLessonsCount) * 100));
-              lessonPct = Math.max(lessonPct, calcLessonPct);
-            }
-
-            // Step 1: Modules are completed when all lessons are watched or progress is 100%
-            const isModulesCompleted = Boolean(lessonPct >= 100 || (completedCount >= totalLessonsCount && totalLessonsCount > 0) || serverProg.quizPassed);
-            const finalProgressPct = isModulesCompleted ? 100 : lessonPct;
-
-            // Step 2: Quiz unlocks once modules are completed
-            const isQuizUnlocked = isModulesCompleted;
-            const isQuizPassed = Boolean(serverProg.quizPassed);
-
-            // Step 3: Certificate unlocks strictly once the quiz is passed
-            const isCertUnlocked = isQuizPassed;
+            const merged = resolveMergedProgress(progRes.data, localData, totalLessonsCount);
 
             return {
               ...crs,
-              progressPercentage: finalProgressPct,
-              completedCount,
-              totalLessonsCount,
-              isModulesCompleted,
-              isQuizUnlocked,
-              quizPassed: isQuizPassed,
-              quizScore: serverProg.quizScore || 0,
-              isCompleted: isCertUnlocked,
+              progressPercentage: merged.percentage,
+              completedCount: merged.completedCount,
+              totalLessonsCount: merged.totalLessonsCount,
+              isModulesCompleted: merged.isModulesCompleted,
+              isQuizUnlocked: merged.isQuizUnlocked,
+              quizPassed: merged.quizPassed,
+              quizScore: merged.quizScore,
+              isCompleted: merged.certificateEarned,
             };
           } catch (err) {
+            const merged = resolveMergedProgress(null, localData, totalLessonsCount);
             return {
               ...crs,
-              progressPercentage: 0,
-              completedCount: 0,
-              totalLessonsCount: crs.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 1,
-              isModulesCompleted: false,
-              isQuizUnlocked: false,
-              quizPassed: false,
-              quizScore: 0,
-              isCompleted: false,
+              progressPercentage: merged.percentage,
+              completedCount: merged.completedCount,
+              totalLessonsCount: merged.totalLessonsCount,
+              isModulesCompleted: merged.isModulesCompleted,
+              isQuizUnlocked: merged.isQuizUnlocked,
+              quizPassed: merged.quizPassed,
+              quizScore: merged.quizScore,
+              isCompleted: merged.certificateEarned,
             };
           }
         })
       );
+
 
 
       setEnrolledCoursesData(coursesWithProgress);

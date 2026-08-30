@@ -6,6 +6,8 @@ import CourseQuizModal from '../components/CourseQuizModal';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { getLocalProgress, saveLocalProgress, resolveMergedProgress } from '../utils/progressStorage';
+
 
 export default function VideoPlayerPage() {
   const { id } = useParams();
@@ -108,10 +110,15 @@ export default function VideoPlayerPage() {
       }
 
       setCourse(loadedCourse);
-      setCompletedLessons(progRes.data?.completedLessons || []);
-      setPercentage(progRes.data?.percentage || 0);
-      setQuizPassed(Boolean(progRes.data?.quizPassed || progRes.data?.certificateEarned));
-      setQuizScore(progRes.data?.quizScore || 0);
+
+      const totalLCount = loadedCourse?.modules?.flatMap((m) => m.lessons)?.length || 4;
+      const localData = getLocalProgress(user?.id || user?._id, id);
+      const merged = resolveMergedProgress(progRes.data, localData, totalLCount);
+
+      setCompletedLessons(merged.completedLessons);
+      setPercentage(merged.percentage);
+      setQuizPassed(merged.quizPassed);
+      setQuizScore(merged.quizScore);
 
       // Select first available lesson
       if (loadedCourse?.modules?.[0]?.lessons?.[0]) {
@@ -128,11 +135,16 @@ export default function VideoPlayerPage() {
     const targetId = lessonId || activeLesson?.id || activeLesson?.title || 'les_1';
     const totalCount = allLessons.length || 4;
 
-    // Optimistically update state so checkmarks update instantly in UI
+    // Optimistically update state and local cache
     const updatedDone = Array.from(new Set([...completedLessons, targetId]));
     const calculatedPct = Math.min(100, Math.round((updatedDone.length / totalCount) * 100));
     setCompletedLessons(updatedDone);
     setPercentage(calculatedPct);
+
+    saveLocalProgress(user?.id || user?._id, id, {
+      completedLessons: updatedDone,
+      percentage: calculatedPct,
+    });
 
     try {
       const res = await api.post('/progress/lesson-complete', {
@@ -146,6 +158,12 @@ export default function VideoPlayerPage() {
         const serverPct = res.data.percentage !== undefined ? res.data.percentage : calculatedPct;
         setCompletedLessons(serverDone);
         setPercentage(serverPct);
+
+        saveLocalProgress(user?.id || user?._id, id, {
+          completedLessons: serverDone,
+          percentage: serverPct,
+          certificateEarned: Boolean(res.data.certificateEarned || quizPassed),
+        });
 
         if (res.data.certificateEarned || quizPassed) {
           setQuizPassed(true);
@@ -163,6 +181,11 @@ export default function VideoPlayerPage() {
     const allLessonIds = allLessons.map((l) => l.id || l.title);
     setCompletedLessons(allLessonIds);
     setPercentage(100);
+
+    saveLocalProgress(user?.id || user?._id, id, {
+      completedLessons: allLessonIds,
+      percentage: 100,
+    });
 
     try {
       const res = await api.post('/progress/lesson-complete', {
@@ -185,11 +208,20 @@ export default function VideoPlayerPage() {
     setQuizPassed(true);
     setQuizScore(finalScore);
     setPercentage(100);
+
+    saveLocalProgress(user?.id || user?._id, id, {
+      percentage: 100,
+      quizPassed: true,
+      quizScore: finalScore,
+      certificateEarned: true,
+    });
+
     showToast(`Quiz Passed with ${finalScore}%! Official Certificate Unlocked! 🏆`, 'success', 5000);
     if (shouldOpenCert) {
       setShowCertificate(true);
     }
   };
+
 
   // Flatten all lessons across modules for next/prev navigation
   const allLessons = course?.modules?.flatMap((m) => m.lessons) || [];
