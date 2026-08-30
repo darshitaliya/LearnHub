@@ -105,23 +105,19 @@ export default function MyCoursesPage() {
     <div className="d-flex flex-column min-vh-100 bg-surface">
       <Navbar />
 
-      <main className="flex-grow-1 container py-5" style={{ marginTop: '70px', maxWidth: '1200px' }}>
-        {/* Page Header */}
-        <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-5 border-bottom border-outline-variant/30 pb-4">
+      <main className="flex-grow-1 max-w-container-max mx-auto px-3 px-md-5 py-4 py-md-5 w-100" style={{ marginTop: '70px' }}>
+        {/* Header Title & Navigation Bar */}
+        <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4 pb-3 border-bottom border-outline-variant/20">
           <div>
-            <div className="d-flex align-items-center gap-2 mb-1">
-              <span className="badge bg-primary-container text-primary font-label-caps px-3 py-1 rounded-pill">
-                STUDENT PORTAL
-              </span>
-              <span className="badge bg-secondary-container text-secondary font-label-caps px-3 py-1 rounded-pill">
-                STEP-BY-STEP LEARNING
-              </span>
-            </div>
-            <h1 className="font-headline-lg text-on-surface fw-bold m-0 fs-2">My Enrolled Courses</h1>
-            <p className="font-body-base text-on-surface-variant m-0 mt-1">
+            <span className="font-label-caps text-primary">YOUR ENROLLED LEARNING</span>
+            <h1 className="font-headline-md text-on-surface m-0 fw-bold fs-2">
+              My Enrolled Courses ({enrolledCoursesData.length})
+            </h1>
+            <p className="font-body-sm text-on-surface-variant m-0 mt-1">
               Complete your video modules ➔ Pass the subject certification quiz ➔ Unlock your official certificate.
             </p>
           </div>
+
 
           <div className="d-flex align-items-center gap-2">
             <button
