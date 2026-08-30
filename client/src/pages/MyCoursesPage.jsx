@@ -27,8 +27,9 @@ export default function MyCoursesPage() {
       let currentUser = user;
       try {
         const meRes = await api.get('/auth/me');
-        currentUser = meRes.data;
-        if (refreshUser) refreshUser();
+        if (meRes.data) {
+          currentUser = meRes.data;
+        }
       } catch (e) {
         // Fallback to auth context user
       }

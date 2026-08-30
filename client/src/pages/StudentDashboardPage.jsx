@@ -24,19 +24,20 @@ export default function StudentDashboardPage() {
 
   useEffect(() => {
     fetchStudentDashboardData();
-  }, [user]);
+  }, []);
 
   const fetchStudentDashboardData = async () => {
     setLoading(true);
     try {
-      // Refresh current user info to get fresh enrolledCourses array
+      // Fetch fresh user data and courses
       let currentUser = user;
       try {
         const meRes = await api.get('/auth/me');
-        currentUser = meRes.data;
-        if (refreshUser) refreshUser();
+        if (meRes.data) {
+          currentUser = meRes.data;
+        }
       } catch (e) {
-        // Fallback
+        // Fallback to existing user from context
       }
 
       const res = await api.get('/courses');
