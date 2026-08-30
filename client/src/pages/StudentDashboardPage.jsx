@@ -346,44 +346,51 @@ export default function StudentDashboardPage() {
                           </div>
 
                           <div className="d-flex flex-column gap-2 align-items-sm-end justify-content-center">
-                            {prog.certificateEarned ? (
-                              <div className="d-flex gap-2">
-                                <Link to={`/course/${courseId}/learn`} className="btn btn-outline-primary btn-sm font-body-sm py-1.5 px-3 rounded-3 d-flex align-items-center gap-1">
-                                  <span>Review</span>
-                                  <span className="material-symbols-outlined fs-6">play_arrow</span>
-                                </Link>
+                            <div className="d-flex gap-2">
+                              <Link to={`/course/${courseId}/learn`} className="btn btn-primary font-body-sm py-1.5 px-3 rounded-3 d-flex align-items-center gap-1">
+                                <span>{pct === 0 ? 'Start' : prog.isModulesCompleted ? 'Review' : 'Resume'}</span>
+                                <span className="material-symbols-outlined fs-6">play_arrow</span>
+                              </Link>
+
+                              {prog.certificateEarned && (
                                 <button
                                   type="button"
                                   onClick={() => setSelectedCertCourse(course)}
-                                  className="btn btn-warning text-dark fw-bold btn-sm font-body-sm px-2.5 py-1.5 rounded-3 d-flex align-items-center gap-1 shadow-xs"
+                                  className="btn btn-warning font-body-sm px-2.5 py-1.5 rounded-3 d-flex align-items-center gap-1 shadow-xs"
                                   title="View & Print Official Certificate"
                                 >
-                                  <span className="material-symbols-outlined fs-6 fill">workspace_premium</span>
-                                  <span>Certificate</span>
+                                  <span className="material-symbols-outlined fs-6 fill text-dark">workspace_premium</span>
                                 </button>
-                              </div>
-                            ) : prog.isQuizUnlocked ? (
-                              <div className="d-flex gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => setSelectedQuizCourse(course)}
-                                  className="btn btn-primary btn-sm font-body-sm py-1.5 px-3 rounded-3 d-flex align-items-center gap-1 shadow-xs"
-                                >
-                                  <span className="material-symbols-outlined fs-6">quiz</span>
-                                  <span>Take Quiz</span>
-                                </button>
-                                <Link to={`/course/${courseId}/learn`} className="btn btn-outline-primary btn-sm font-body-sm py-1.5 px-2.5 rounded-3 d-flex align-items-center gap-1">
-                                  <span className="material-symbols-outlined fs-6">play_arrow</span>
-                                </Link>
-                              </div>
+                              )}
+                            </div>
+
+                            {prog.isQuizUnlocked ? (
+                              <button
+                                type="button"
+                                onClick={() => setSelectedQuizCourse(course)}
+                                className={`btn btn-sm font-body-sm py-1 px-2.5 rounded-2 d-flex align-items-center gap-1 ${
+                                  prog.quizPassed
+                                    ? 'btn-outline-success text-success fw-bold'
+                                    : 'btn-warning text-dark fw-bold shadow-xs'
+                                }`}
+                                style={{ fontSize: '11px' }}
+                              >
+                                <span className="material-symbols-outlined fs-6 fill">
+                                  {prog.quizPassed ? 'verified' : 'quiz'}
+                                </span>
+                                <span>{prog.quizPassed ? `Quiz Passed (${prog.quizScore || 100}%) ✅` : '📝 Take Quiz (Unlocked)'}</span>
+                              </button>
                             ) : (
-                              <Link to={`/course/${courseId}/learn`} className="btn btn-primary btn-sm font-body-sm py-1.5 px-3 rounded-3 d-flex align-items-center gap-1">
-                                <span>{pct === 0 ? 'Start Learning' : 'Continue'}</span>
-                                <span className="material-symbols-outlined fs-6">play_arrow</span>
-                              </Link>
+                              <span
+                                className="badge bg-light text-muted border border-outline-variant/30 font-label-caps px-2 py-1 rounded-2 d-flex align-items-center gap-1"
+                                style={{ fontSize: '10px' }}
+                                title="Complete video lessons to unlock the quiz"
+                              >
+                                <span className="material-symbols-outlined text-muted" style={{ fontSize: '13px' }}>lock</span>
+                                <span>Complete Modules ({pct}%) to Unlock Quiz</span>
+                              </span>
                             )}
                           </div>
-
                         </div>
                       );
                     })}
