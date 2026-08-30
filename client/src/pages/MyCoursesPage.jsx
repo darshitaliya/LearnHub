@@ -55,18 +55,34 @@ export default function MyCoursesPage() {
             const serverProg = progRes.data || {};
             const completedCount = serverProg.completedLessons?.length || 0;
             const totalLessonsCount = crs.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || Math.max(completedCount, 1);
-            const calcPercentage = Math.min(100, Math.round((completedCount / totalLessonsCount) * 100));
+            
+            // Calculate lesson completion %
+            let lessonPct = serverProg.percentage !== undefined ? serverProg.percentage : 0;
+            if (completedCount > 0 && totalLessonsCount > 0) {
+              const calcLessonPct = Math.min(100, Math.round((completedCount / totalLessonsCount) * 100));
+              lessonPct = Math.max(lessonPct, calcLessonPct);
+            }
 
-            const isCertUnlocked = Boolean(serverProg.certificateEarned || serverProg.quizPassed || (serverProg.percentage >= 100) || calcPercentage >= 100);
-            const finalPercentage = isCertUnlocked ? 100 : Math.max(serverProg.percentage || 0, calcPercentage);
+            // Step 1: Modules are completed when all lessons are watched or progress is 100%
+            const isModulesCompleted = Boolean(lessonPct >= 100 || (completedCount >= totalLessonsCount && totalLessonsCount > 0) || serverProg.quizPassed);
+            const finalProgressPct = isModulesCompleted ? 100 : lessonPct;
+
+            // Step 2: Quiz unlocks once modules are completed
+            const isQuizUnlocked = isModulesCompleted;
+            const isQuizPassed = Boolean(serverProg.quizPassed);
+
+            // Step 3: Certificate unlocks strictly once the quiz is passed
+            const isCertUnlocked = isQuizPassed;
 
             return {
               ...crs,
-              progressPercentage: finalPercentage,
+              progressPercentage: finalProgressPct,
               completedCount,
               totalLessonsCount,
-              quizPassed: Boolean(serverProg.quizPassed || isCertUnlocked),
-              quizScore: serverProg.quizScore || (isCertUnlocked ? 100 : 0),
+              isModulesCompleted,
+              isQuizUnlocked,
+              quizPassed: isQuizPassed,
+              quizScore: serverProg.quizScore || 0,
               isCompleted: isCertUnlocked,
             };
           } catch (err) {
@@ -75,6 +91,8 @@ export default function MyCoursesPage() {
               progressPercentage: 0,
               completedCount: 0,
               totalLessonsCount: crs.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 1,
+              isModulesCompleted: false,
+              isQuizUnlocked: false,
               quizPassed: false,
               quizScore: 0,
               isCompleted: false,
@@ -103,39 +121,61 @@ export default function MyCoursesPage() {
     <div className="d-flex flex-column min-vh-100 bg-surface">
       <Navbar />
 
-      <main className="flex-grow-1 max-w-container-max mx-auto px-3 px-md-5 py-4 py-md-5 w-100">
-        <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+      <main className="flex-grow-1 container py-5" style={{ marginTop: '70px', maxWidth: '1200px' }}>
+        {/* Page Header */}
+        <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-5 border-bottom border-outline-variant/30 pb-4">
           <div>
-            <span className="font-label-caps text-primary fw-bold">YOUR ENROLLED LEARNING DASHBOARD</span>
-            <h1 className="font-headline-md text-on-surface m-0 fw-bold fs-2">My Enrolled Courses ({enrolledCoursesData.length})</h1>
+            <div className="d-flex align-items-center gap-2 mb-1">
+              <span className="badge bg-primary-container text-primary font-label-caps px-3 py-1 rounded-pill">
+                STUDENT PORTAL
+              </span>
+              <span className="badge bg-secondary-container text-secondary font-label-caps px-3 py-1 rounded-pill">
+                STEP-BY-STEP LEARNING
+              </span>
+            </div>
+            <h1 className="font-headline-lg text-on-surface fw-bold m-0 fs-2">My Enrolled Courses</h1>
+            <p className="font-body-base text-on-surface-variant m-0 mt-1">
+              Complete your video modules ➔ Pass the subject certification quiz ➔ Unlock your official certificate.
+            </p>
           </div>
-          <div className="d-flex gap-2">
-            {isAdmin && (
-              <button onClick={() => navigate('/admin/courses')} className="btn btn-primary font-body-sm px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2">
-                <span className="material-symbols-outlined fs-5">add_circle</span> Manage Platform Courses (Admin)
-              </button>
-            )}
-            <button onClick={() => navigate('/courses')} className="btn btn-outline-primary font-body-sm px-4 py-2 rounded-3">
-              Explore Catalog & Enroll
+
+          <div className="d-flex align-items-center gap-2">
+            <button
+              onClick={() => navigate('/courses')}
+              className="btn btn-outline-primary font-body-sm px-3 py-2 rounded-3 d-flex align-items-center gap-1 shadow-xs"
+            >
+              <span className="material-symbols-outlined fs-5">search</span>
+              <span>Browse Catalog</span>
+            </button>
+            <button
+              onClick={() => navigate('/dashboard/student')}
+              className="btn btn-primary font-body-sm px-3 py-2 rounded-3 d-flex align-items-center gap-1 shadow-xs"
+            >
+              <span className="material-symbols-outlined fs-5">dashboard</span>
+              <span>Student Dashboard</span>
             </button>
           </div>
         </div>
 
+        {/* Content Body */}
         {loading ? (
-          <div className="text-center py-5">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading enrolled courses...</span>
+          <div className="d-flex flex-column align-items-center justify-content-center py-5">
+            <div className="spinner-border text-primary mb-3" role="status">
+              <span className="visually-hidden">Loading...</span>
             </div>
+            <p className="font-body-sm text-on-surface-variant">Loading your enrolled courses & verified progress...</p>
           </div>
         ) : enrolledCoursesData.length === 0 ? (
-          <div className="bg-white rounded-4 border border-outline-variant/30 p-5 text-center shadow-sm">
-            <span className="material-symbols-outlined fs-1 text-outline mb-2">school</span>
-            <h3 className="font-headline-md fw-bold mb-2">No Enrolled Courses Yet</h3>
+          <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-4 p-5 text-center shadow-sm">
+            <div className="rounded-circle bg-primary-container text-primary d-inline-flex p-3 mb-3">
+              <span className="material-symbols-outlined fs-1">school</span>
+            </div>
+            <h3 className="font-headline-md text-on-surface fw-bold mb-2">No Enrolled Courses Found</h3>
             <p className="font-body-base text-on-surface-variant max-w-md mx-auto mb-4">
-              Browse our course catalog to find your desired course and click "Enroll Now" to start learning!
+              Explore our wide variety of industry-leading courses and start learning today.
             </p>
-            <button onClick={() => navigate('/courses')} className="btn btn-primary font-body-base px-5 py-2.5 rounded-3 shadow-sm">
-              Browse Course Catalog & Enroll
+            <button onClick={() => navigate('/courses')} className="btn btn-primary font-body-sm px-4 py-2.5 rounded-3">
+              Browse Available Courses
             </button>
           </div>
         ) : (
@@ -145,11 +185,15 @@ export default function MyCoursesPage() {
                 <div className="bg-white rounded-4 border border-outline-variant/30 overflow-hidden shadow-sm h-100 d-flex flex-column transition-hover">
                   <div className="position-relative">
                     <img src={crs.thumbnail} alt={crs.title} className="w-100 object-fit-cover" style={{ height: '180px' }} />
-                    {crs.isCompleted && (
+                    {crs.isCompleted ? (
                       <span className="badge bg-warning text-dark font-label-caps position-absolute top-0 end-0 m-3 px-3 py-1.5 shadow-sm fw-bold d-flex align-items-center gap-1">
-                        <span className="material-symbols-outlined fs-6 fill">workspace_premium</span> CERTIFIED
+                        <span className="material-symbols-outlined fs-6 fill">workspace_premium</span> CERTIFIED 🏆
                       </span>
-                    )}
+                    ) : crs.isModulesCompleted ? (
+                      <span className="badge bg-success text-white font-label-caps position-absolute top-0 end-0 m-3 px-3 py-1.5 shadow-sm fw-bold d-flex align-items-center gap-1">
+                        <span className="material-symbols-outlined fs-6 fill">quiz</span> QUIZ UNLOCKED
+                      </span>
+                    ) : null}
                   </div>
 
                   <div className="p-4 d-flex flex-column flex-grow-1">
@@ -158,31 +202,41 @@ export default function MyCoursesPage() {
                     <p className="font-body-sm text-on-surface-variant mb-3 line-clamp-2">{crs.subtitle || crs.description}</p>
 
                     <div className="mt-auto pt-3 border-top border-outline-variant/20">
-                      <div className="d-flex align-items-center justify-content-between font-label-caps mb-1">
-                        <span className="text-on-surface-variant">Course Progress</span>
-                        <span className={`fw-bold ${crs.isCompleted ? 'text-success' : 'text-primary'}`}>
-                          {crs.progressPercentage}% Complete
-                        </span>
+                      {/* Step Progress Tracker Indicator */}
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <div className="d-flex align-items-center gap-1.5 font-label-caps" style={{ fontSize: '11px' }}>
+                          <span className={`badge ${crs.isModulesCompleted ? 'bg-success' : 'bg-primary'} text-white rounded-pill px-2 py-0.5`}>
+                            1. Modules: {crs.progressPercentage}%
+                          </span>
+                          <span className={`badge ${crs.quizPassed ? 'bg-success' : crs.isQuizUnlocked ? 'bg-warning text-dark' : 'bg-light text-muted'} rounded-pill px-2 py-0.5`}>
+                            2. Quiz {crs.quizPassed ? '✅' : crs.isQuizUnlocked ? '🔓' : '🔒'}
+                          </span>
+                          <span className={`badge ${crs.isCompleted ? 'bg-warning text-dark' : 'bg-light text-muted'} rounded-pill px-2 py-0.5`}>
+                            3. Cert {crs.isCompleted ? '🏆' : '🔒'}
+                          </span>
+                        </div>
                       </div>
 
                       {/* Dynamic Progress Bar */}
                       <div className="w-100 bg-surface-container rounded-pill mb-3" style={{ height: '8px' }}>
                         <div
-                          className={`rounded-pill h-100 transition-all ${crs.isCompleted ? 'bg-success' : 'bg-primary'}`}
+                          className={`rounded-pill h-100 transition-all ${crs.isCompleted ? 'bg-warning' : crs.isModulesCompleted ? 'bg-success' : 'bg-primary'}`}
                           style={{ width: `${crs.progressPercentage}%` }}
                         ></div>
                       </div>
 
                       <div className="d-flex flex-column gap-2">
+                        {/* Step 1: Learning Button */}
                         <div className="d-flex gap-2">
                           <button
                             onClick={() => navigate(`/course/${crs.id || crs._id}/learn`)}
                             className="btn btn-primary flex-grow-1 font-body-sm py-2 rounded-3 d-flex align-items-center justify-content-center gap-2"
                           >
-                            <span>{crs.progressPercentage === 0 ? 'Start Learning' : 'Continue Learning'}</span>
+                            <span>{crs.progressPercentage === 0 ? 'Start Learning' : crs.isModulesCompleted ? 'Review Modules' : 'Continue Learning'}</span>
                             <span className="material-symbols-outlined fs-6">play_arrow</span>
                           </button>
 
+                          {/* Step 3: Certificate Button (Unlocked upon Quiz Pass) */}
                           {crs.isCompleted && (
                             <button
                               onClick={() => setSelectedCertCourse(crs)}
@@ -194,20 +248,35 @@ export default function MyCoursesPage() {
                           )}
                         </div>
 
-                        {/* Quiz Trigger Button */}
-                        <button
-                          onClick={() => setSelectedQuizCourse(crs)}
-                          className={`btn btn-sm font-body-sm py-1.5 rounded-3 d-flex align-items-center justify-content-center gap-1.5 ${
-                            crs.quizPassed
-                              ? 'btn-outline-success text-success fw-semibold'
-                              : 'btn-outline-primary text-primary fw-semibold'
-                          }`}
-                        >
-                          <span className="material-symbols-outlined fs-6 fill">
-                            {crs.quizPassed ? 'verified' : 'quiz'}
-                          </span>
-                          <span>{crs.quizPassed ? `Quiz Passed (${crs.quizScore || 100}%) ✅` : 'Take Course Quiz & Get Certificate'}</span>
-                        </button>
+                        {/* Step 2: Sequential Quiz Button */}
+                        {crs.isQuizUnlocked ? (
+                          <button
+                            onClick={() => setSelectedQuizCourse(crs)}
+                            className={`btn btn-sm font-body-sm py-2 rounded-3 d-flex align-items-center justify-content-center gap-1.5 ${
+                              crs.quizPassed
+                                ? 'btn-outline-success text-success fw-bold'
+                                : 'btn-warning text-dark fw-bold shadow-xs'
+                            }`}
+                          >
+                            <span className="material-symbols-outlined fs-6 fill">
+                              {crs.quizPassed ? 'verified' : 'quiz'}
+                            </span>
+                            <span>
+                              {crs.quizPassed
+                                ? `Quiz Passed (${crs.quizScore || 100}%) - Certificate Unlocked! 🏆`
+                                : '📝 Take Course Quiz (Unlocked) ➔ Get Certificate'}
+                            </span>
+                          </button>
+                        ) : (
+                          <div
+                            className="btn btn-sm btn-light text-muted font-body-sm py-2 rounded-3 d-flex align-items-center justify-content-center gap-1.5 border border-outline-variant/30 cursor-not-allowed"
+                            style={{ fontSize: '12px' }}
+                            title="Complete all course video modules first to unlock the quiz"
+                          >
+                            <span className="material-symbols-outlined fs-6 text-muted">lock</span>
+                            <span>Complete All Modules ({crs.progressPercentage}%) to Unlock Quiz</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

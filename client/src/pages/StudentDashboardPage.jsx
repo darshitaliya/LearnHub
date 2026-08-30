@@ -70,28 +70,45 @@ export default function StudentDashboardPage() {
             const serverProg = pRes.data || {};
             const completedArr = serverProg.completedLessons || [];
             const totalLessonsCount = c.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || Math.max(completedArr.length, 1);
-            const calcPercentage = Math.min(100, Math.round((completedArr.length / totalLessonsCount) * 100));
+            
+            let lessonPct = serverProg.percentage !== undefined ? serverProg.percentage : 0;
+            if (completedArr.length > 0 && totalLessonsCount > 0) {
+              const calcPct = Math.min(100, Math.round((completedArr.length / totalLessonsCount) * 100));
+              lessonPct = Math.max(lessonPct, calcPct);
+            }
 
-            const isCertUnlocked = Boolean(serverProg.certificateEarned || serverProg.quizPassed || (serverProg.percentage >= 100) || calcPercentage >= 100);
-            const finalPercentage = isCertUnlocked ? 100 : Math.max(serverProg.percentage || 0, calcPercentage);
+            const isModulesCompleted = Boolean(lessonPct >= 100 || (completedArr.length >= totalLessonsCount && totalLessonsCount > 0) || serverProg.quizPassed);
+            const isQuizPassed = Boolean(serverProg.quizPassed);
+            const isCertUnlocked = isQuizPassed;
 
             const progData = {
-              percentage: finalPercentage,
+              percentage: isModulesCompleted ? 100 : lessonPct,
               completedLessons: completedArr,
-              quizPassed: Boolean(serverProg.quizPassed || isCertUnlocked),
-              quizScore: serverProg.quizScore || (isCertUnlocked ? 100 : 0),
+              isModulesCompleted,
+              isQuizUnlocked: isModulesCompleted,
+              quizPassed: isQuizPassed,
+              quizScore: serverProg.quizScore || 0,
               certificateEarned: isCertUnlocked,
             };
 
             if (c.id) pMap[c.id] = progData;
             if (c._id) pMap[c._id] = progData;
           } catch (e) {
-            const fallbackData = { percentage: 0, completedLessons: [], quizPassed: false, quizScore: 0, certificateEarned: false };
+            const fallbackData = {
+              percentage: 0,
+              completedLessons: [],
+              isModulesCompleted: false,
+              isQuizUnlocked: false,
+              quizPassed: false,
+              quizScore: 0,
+              certificateEarned: false,
+            };
             if (c.id) pMap[c.id] = fallbackData;
             if (c._id) pMap[c._id] = fallbackData;
           }
         })
       );
+
 
       setProgressMap(pMap);
     } catch (err) {
@@ -357,7 +374,7 @@ export default function StudentDashboardPage() {
                           <div className="d-flex flex-column gap-2 align-items-sm-end justify-content-center">
                             <div className="d-flex gap-2">
                               <Link to={`/course/${courseId}/learn`} className="btn btn-primary font-body-sm py-1.5 px-3 rounded-3 d-flex align-items-center gap-1">
-                                <span>Resume</span>
+                                <span>{pct === 0 ? 'Start' : prog.isModulesCompleted ? 'Review' : 'Resume'}</span>
                                 <span className="material-symbols-outlined fs-6">play_arrow</span>
                               </Link>
 
@@ -373,26 +390,38 @@ export default function StudentDashboardPage() {
                               )}
                             </div>
 
-                            <button
-                              type="button"
-                              onClick={() => setSelectedQuizCourse(course)}
-                              className={`btn btn-sm font-body-sm py-1 px-2 rounded-2 d-flex align-items-center gap-1 ${
-                                prog.quizPassed
-                                  ? 'btn-outline-success text-success fw-semibold'
-                                  : 'btn-outline-primary text-primary fw-semibold'
-                              }`}
-                              style={{ fontSize: '11px' }}
-                            >
-                              <span className="material-symbols-outlined fs-6 fill">
-                                {prog.quizPassed ? 'verified' : 'quiz'}
+                            {prog.isQuizUnlocked ? (
+                              <button
+                                type="button"
+                                onClick={() => setSelectedQuizCourse(course)}
+                                className={`btn btn-sm font-body-sm py-1 px-2.5 rounded-2 d-flex align-items-center gap-1 ${
+                                  prog.quizPassed
+                                    ? 'btn-outline-success text-success fw-bold'
+                                    : 'btn-warning text-dark fw-bold shadow-xs'
+                                }`}
+                                style={{ fontSize: '11px' }}
+                              >
+                                <span className="material-symbols-outlined fs-6 fill">
+                                  {prog.quizPassed ? 'verified' : 'quiz'}
+                                </span>
+                                <span>{prog.quizPassed ? `Quiz Passed (${prog.quizScore || 100}%) ✅` : '📝 Take Quiz (Unlocked)'}</span>
+                              </button>
+                            ) : (
+                              <span
+                                className="badge bg-light text-muted border border-outline-variant/30 font-label-caps px-2 py-1 rounded-2 d-flex align-items-center gap-1"
+                                style={{ fontSize: '10px' }}
+                                title="Complete video lessons to unlock the quiz"
+                              >
+                                <span className="material-symbols-outlined text-muted" style={{ fontSize: '13px' }}>lock</span>
+                                <span>Complete Modules ({pct}%) to Unlock Quiz</span>
                               </span>
-                              <span>{prog.quizPassed ? `Quiz Passed (${prog.quizScore || 100}%) ✅` : 'Take Quiz & Get Certificate'}</span>
-                            </button>
+                            )}
                           </div>
                         </div>
                       );
                     })}
                   </div>
+
 
                 )}
               </div>

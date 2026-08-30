@@ -467,26 +467,56 @@ export const dbStore = {
 
   // PROGRESS OPERATIONS
   async getProgress(userId, courseId) {
-    const key = `${userId}_${courseId}`;
+    const uStr = String(userId || '');
+    const cStr = String(courseId || '');
+
     if (isMongoConnected()) {
-      let prog = await Progress.findOne({ userId, courseId });
+      let prog = await Progress.findOne({
+        $or: [
+          { userId: uStr, courseId: cStr },
+          { userId: userId, courseId: courseId },
+        ],
+      });
       if (!prog) {
-        prog = await Progress.create({ userId, courseId, completedLessons: [], percentage: 0, certificateEarned: false });
+        prog = await Progress.create({
+          userId: uStr,
+          courseId: cStr,
+          completedLessons: [],
+          percentage: 0,
+          certificateEarned: false,
+          quizPassed: false,
+          quizScore: 0,
+        });
       }
       return prog;
     }
 
+    const key = `${uStr}_${cStr}`;
     if (!memoryStore.progress[key]) {
+      // Check if progress exists under a loose key match
+      const matchingKey = Object.keys(memoryStore.progress).find((k) => {
+        const p = memoryStore.progress[k];
+        return String(p.userId) === uStr && (String(p.courseId) === cStr || k.endsWith(`_${cStr}`));
+      });
+
+      if (matchingKey) {
+        return memoryStore.progress[matchingKey];
+      }
+
       memoryStore.progress[key] = {
-        userId,
-        courseId,
+        userId: uStr,
+        courseId: cStr,
         completedLessons: [],
         percentage: 0,
         certificateEarned: false,
+        quizPassed: false,
+        quizScore: 0,
       };
+      saveStateToFile();
     }
     return memoryStore.progress[key];
   },
+
 
   async saveProgress(userId, courseId, updateData) {
     const key = `${userId}_${courseId}`;
