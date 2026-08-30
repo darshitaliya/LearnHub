@@ -11,37 +11,45 @@ export const getProgress = async (req, res, next) => {
 
 export const completeLesson = async (req, res, next) => {
   try {
-    const { courseId, lessonId } = req.body;
-    if (!courseId || !lessonId) {
-      return res.status(400).json({ success: false, error: 'courseId and lessonId are required' });
+    const { courseId, lessonId, totalLessonsCount, markCourseComplete } = req.body;
+    if (!courseId) {
+      return res.status(400).json({ success: false, error: 'courseId is required' });
     }
 
     const prog = await dbStore.getProgress(req.user.id, courseId);
+    let completedLessons = [...(prog.completedLessons || [])];
 
-    const completedLessons = [...(prog.completedLessons || [])];
-    if (!completedLessons.includes(lessonId)) {
+    if (lessonId && !completedLessons.includes(lessonId)) {
       completedLessons.push(lessonId);
     }
 
-    let percentage = prog.percentage || 0;
     const course = await dbStore.getCourseById(courseId);
-    if (course && course.modules) {
-      let totalLessons = 0;
+    let totalLessons = totalLessonsCount || 0;
+    if (!totalLessons && course?.modules && course.modules.length > 0) {
       course.modules.forEach((m) => {
         totalLessons += m.lessons ? m.lessons.length : 0;
       });
-      if (totalLessons > 0) {
-        percentage = Math.min(100, Math.round((completedLessons.length / totalLessons) * 100));
-      }
+    }
+    if (!totalLessons && course?.lessonsCount) {
+      totalLessons = course.lessonsCount;
+    }
+    if (!totalLessons || totalLessons <= 0) {
+      totalLessons = Math.max(completedLessons.length, 4);
     }
 
-    const certificateEarned = percentage >= 100;
+    let percentage = Math.min(100, Math.round((completedLessons.length / totalLessons) * 100));
+    if (markCourseComplete) {
+      percentage = 100;
+    }
+
+    const certificateEarned = percentage >= 100 || prog.quizPassed || prog.certificateEarned;
 
     const updatedProg = await dbStore.saveProgress(req.user.id, courseId, {
       completedLessons,
-      lastWatchedLesson: lessonId,
+      lastWatchedLesson: lessonId || prog.lastWatchedLesson,
       percentage,
       certificateEarned,
+      updatedAt: new Date().toISOString(),
     });
 
     return res.status(200).json(updatedProg);
@@ -49,6 +57,7 @@ export const completeLesson = async (req, res, next) => {
     next(err);
   }
 };
+
 
 export const submitQuiz = async (req, res, next) => {
   try {

@@ -1,84 +1,152 @@
-// Course-Specific Technical Quiz Question Banks & Dynamic Quiz Generator
+// Comprehensive Subject-Specific Technical Quiz Question Banks & Strict Token Matcher
 
 export const COURSE_QUIZZES = {
-  // 1. CI/CD Pipelines with GitHub Actions & Docker
-  ci_cd: {
-    title: 'CI/CD Pipelines with GitHub Actions & Docker Certification Exam',
+  // 1. PHP & MySQL Backend Engineering
+  php: {
+    title: 'PHP 8 & MySQL Backend Web Engineering Certification Exam',
     passingScore: 70,
     questions: [
       {
         id: 1,
-        question: 'Which directory must GitHub Actions workflow YAML files be placed in within a repository?',
+        question: 'Which database extension in PHP is recommended for secure, parameterized database queries across multiple SQL drivers?',
         options: [
-          '.github/workflows/',
-          '.ci/actions/',
-          '.pipelines/github/',
-          'workflows/.github/',
+          'PDO (PHP Data Objects)',
+          'mysql_connect() (Deprecated legacy extension)',
+          'fopen() text parser',
+          'eval() SQL string evaluator',
         ],
         correctAnswer: 0,
-        explanation: 'GitHub Actions automatically parses workflow configurations located in the .github/workflows/ directory.',
+        explanation: 'PDO provides a data-access abstraction layer with built-in prepared statement support, preventing SQL injection.',
       },
       {
         id: 2,
-        question: 'What is the primary difference between continuous delivery and continuous deployment?',
+        question: 'Which superglobal array in PHP contains form data submitted via the HTTP POST method?',
         options: [
-          'Continuous delivery requires manual approval before deploying to production, whereas continuous deployment deploys automatically.',
-          'Continuous deployment only builds Docker images, whereas continuous delivery also writes unit tests.',
-          'Continuous delivery is only used for mobile apps, while continuous deployment is for web apps.',
-          'There is no functional difference between the two terms.',
+          '$_POST',
+          '$_GET',
+          '$_SERVER',
+          '$_SESSION',
         ],
         correctAnswer: 0,
-        explanation: 'Continuous Delivery prepares releases ready for deployment requiring human signoff; Continuous Deployment automates release directly into production.',
+        explanation: '$_POST is an associative array of variables passed to the current script via the HTTP POST method.',
       },
       {
         id: 3,
-        question: 'In a Dockerfile, which instruction specifies the executable that will always run when the container starts?',
+        question: 'What is Composer in the PHP ecosystem?',
         options: [
-          'ENTRYPOINT',
-          'RUN',
-          'FROM',
-          'COPY',
+          'The official dependency and package management tool for PHP libraries',
+          'A web browser built for PHP development',
+          'A command to reboot the Apache web server',
+          'A database compression algorithm',
         ],
         correctAnswer: 0,
-        explanation: 'ENTRYPOINT sets the default command and executable that cannot be easily overridden during docker run.',
+        explanation: 'Composer manages project dependencies, libraries, and PSR-4 autoloading for modern PHP applications.',
       },
       {
         id: 4,
-        question: 'How do you securely pass API secrets and tokens to a GitHub Actions step?',
+        question: 'In Object-Oriented PHP 8+, how do you define a constructor with Constructor Property Promotion?',
         options: [
-          'Store them in GitHub Repository Secrets and reference them via ${{ secrets.SECRET_NAME }}',
-          'Hardcode them in the public workflow YAML file',
-          'Add them to the README.md file',
-          'Pass them as URL parameters in git commit messages',
+          'public function __construct(public string $name, public int $age) {}',
+          'function create($name, $age) { this.name = name; }',
+          'constructor($name, $age) -> Object',
+          'init($name, $age) := struct',
         ],
         correctAnswer: 0,
-        explanation: 'Repository and Organization Secrets encrypt sensitive variables and expose them to runner contexts via ${{ secrets.NAME }}.',
+        explanation: 'PHP 8 allows declaring class properties directly inside constructor parameter signatures with visibility modifiers.',
       },
       {
         id: 5,
-        question: 'What is a Multi-Stage Docker build primarily used for?',
+        question: 'Which function must be invoked before sending any output to initialize or resume a PHP session?',
         options: [
-          'Reducing the final container image size by discarding intermediate build dependencies and tools',
-          'Running multiple distinct containers on the same port',
-          'Speeding up git clone times inside the container',
-          'Preventing containers from shutting down when an error occurs',
+          'session_start()',
+          'session_register()',
+          'start_cookie()',
+          'init_session()',
         ],
         correctAnswer: 0,
-        explanation: 'Multi-stage builds allow separating build-time compilers from the lean production runtime, drastically shrinking production container images.',
+        explanation: 'session_start() initializes session data and sends the session cookie header before any HTML/text output is sent.',
       },
     ],
   },
 
-  // 2. AI & Machine Learning
+  // 2. Python Programming & Scripting
+  python: {
+    title: 'Python Programming, Data Structures & Scripting Exam',
+    passingScore: 70,
+    questions: [
+      {
+        id: 1,
+        question: 'What is the key difference between a Python List and a Python Tuple?',
+        options: [
+          'Lists are mutable (can be modified), whereas Tuples are immutable (cannot be modified after creation)',
+          'Tuples can only store numbers, while Lists store text',
+          'Lists use parentheses () while Tuples use square brackets []',
+          'Tuples execute in GPU memory while Lists execute in CPU memory',
+        ],
+        correctAnswer: 0,
+        explanation: 'Lists are mutable sequences defined with [], whereas tuples are immutable sequences defined with ().',
+      },
+      {
+        id: 2,
+        question: 'What does the `yield` keyword in a Python function do?',
+        options: [
+          'Turns the function into a Generator that produces values lazily on demand without loading all items into memory at once',
+          'Terminates the program immediately with an error code',
+          'Imports a third-party module from PyPI',
+          'Converts variable types from integer to float',
+        ],
+        correctAnswer: 0,
+        explanation: 'Yield produces generator iterators that compute values one by one, saving memory for massive datasets.',
+      },
+      {
+        id: 3,
+        question: 'What is the Global Interpreter Lock (GIL) in CPython?',
+        options: [
+          'A mutex that allows only one native thread to execute Python bytecode at a time in a single process',
+          'A hardware lock on motherboard CPUs',
+          'A security password required to run Python scripts',
+          'A database lock for SQLite databases',
+        ],
+        correctAnswer: 0,
+        explanation: 'The GIL synchronizes thread execution in CPython to prevent race conditions in Python memory management.',
+      },
+      {
+        id: 4,
+        question: 'Which built-in Python function is used to apply a function over an iterable and filter elements based on truthiness?',
+        options: [
+          'filter() and map()',
+          'eval() and exec()',
+          'sort() and slice()',
+          'append() and extend()',
+        ],
+        correctAnswer: 0,
+        explanation: 'filter(func, iterable) filters elements, while map(func, iterable) transforms each item in the sequence.',
+      },
+      {
+        id: 5,
+        question: 'What is a Python Decorator?',
+        options: [
+          'A function that takes another function as an argument and extends its behavior without explicitly modifying it',
+          'A graphical CSS theme for Tkinter apps',
+          'A comment symbol (#)',
+          'A tool used to format code indentation',
+        ],
+        correctAnswer: 0,
+        explanation: 'Decorators (@decorator_name) wrap functions to add logging, authentication, caching, or timing dynamically.',
+      },
+    ],
+  },
+
+  // 3. Machine Learning & Artificial Intelligence
   ai_ml: {
-    title: 'AI & Machine Learning Masterclass Assessment',
+    title: 'AI, Machine Learning & Deep Neural Networks Assessment',
     passingScore: 70,
     questions: [
       {
         id: 1,
         question: 'In Supervised Machine Learning, what defines the training dataset?',
         options: [
-          'Input features paired with ground-truth target labels',
+          'Input features paired with corresponding ground-truth target labels',
           'Only unlabeled raw features without target labels',
           'A random sequence of unstructured binary files',
           'Reinforcement reward matrices with time-lagged feedback',
@@ -137,7 +205,347 @@ export const COURSE_QUIZZES = {
     ],
   },
 
-  // 3. Google Cloud Platform (GCP) & GKE
+  // 4. React & Next.js
+  react_next: {
+    title: 'React 18 & Next.js 14 Enterprise Architecture Exam',
+    passingScore: 70,
+    questions: [
+      {
+        id: 1,
+        question: 'What is the primary benefit of React Server Components (RSC) in Next.js App Router?',
+        options: [
+          'Zero client-side bundle impact for server components, direct backend data access, and faster initial page loads',
+          'Removing JavaScript support from web browsers',
+          'Replacing CSS stylesheets with PHP templates',
+          'Disabling all interactive buttons',
+        ],
+        correctAnswer: 0,
+        explanation: 'Server components render on the server, keeping large dependencies out of client JavaScript bundles while fetching data directly.',
+      },
+      {
+        id: 2,
+        question: 'In React, what hook should be used to memoize expensive calculation results between re-renders?',
+        options: [
+          'useMemo()',
+          'useCallback()',
+          'useRef()',
+          'useEffect()',
+        ],
+        correctAnswer: 0,
+        explanation: 'useMemo caches the result of a calculation between renders until its dependencies change.',
+      },
+      {
+        id: 3,
+        question: 'Why should keys provided to list elements in React be unique and stable IDs rather than array index numbers?',
+        options: [
+          'To help React correctly identify which items have changed, been added, or removed during virtual DOM reconciliation',
+          'To apply CSS border colors',
+          'To format numbers as currency',
+          'To make API calls faster',
+        ],
+        correctAnswer: 0,
+        explanation: 'Stable keys ensure the Virtual DOM diffing algorithm preserves component state and avoids rendering bugs when list order changes.',
+      },
+      {
+        id: 4,
+        question: 'What does useEffect with an empty dependency array [] represent in a React functional component?',
+        options: [
+          'The effect runs exactly once after the component mounts',
+          'The effect runs on every single render continuously in an infinite loop',
+          'The component is destroyed immediately',
+          'State updates are blocked completely',
+        ],
+        correctAnswer: 0,
+        explanation: 'An empty dependency array [] tells React to execute the effect only when the component is initially mounted into the DOM.',
+      },
+      {
+        id: 5,
+        question: 'How do you share state globally across deep React component trees without prop-drilling?',
+        options: [
+          'React Context API (createContext, useContext) or state libraries (Zustand/Redux)',
+          'Passing props through 20 parent levels manually',
+          'Using document.getElementById() inside components',
+          'Reloading the browser page on every click',
+        ],
+        correctAnswer: 0,
+        explanation: 'Context API and modern state stores provide clean global state access to any consuming child component without prop-drilling.',
+      },
+    ],
+  },
+
+  // 5. Node.js & Express
+  node_express: {
+    title: 'Node.js & Express REST API Architecture Exam',
+    passingScore: 70,
+    questions: [
+      {
+        id: 1,
+        question: 'What is the Node.js Event Loop primarily responsible for?',
+        options: [
+          'Offloading asynchronous non-blocking I/O operations and executing callback queues on a single main thread',
+          'Compiling C++ code into binary files',
+          'Formatting JSON strings into HTML tables',
+          'Managing GPU shader pipelines',
+        ],
+        correctAnswer: 0,
+        explanation: 'The event loop processes non-blocking I/O tasks asynchronously via libuv, handling thousands of concurrent network connections efficiently.',
+      },
+      {
+        id: 2,
+        question: 'In Express.js, what does the next() function inside a middleware do?',
+        options: [
+          'Passes control to the next matching middleware function or route handler in the stack',
+          'Immediately sends an HTTP 500 error response',
+          'Restarts the Node.js server process',
+          'Clears all cookies from the client browser',
+        ],
+        correctAnswer: 0,
+        explanation: 'Calling next() passes the request and response objects to the subsequent middleware or route handler in Express.',
+      },
+      {
+        id: 3,
+        question: 'Which HTTP status code signifies that a requested resource was successfully created on the server?',
+        options: [
+          '201 Created',
+          '200 OK',
+          '204 No Content',
+          '400 Bad Request',
+        ],
+        correctAnswer: 0,
+        explanation: 'HTTP 201 Created is the standard REST response indicating that one or more new resources have been successfully created.',
+      },
+      {
+        id: 4,
+        question: 'How should unhandled Promise rejections and uncaught exceptions be managed in production Node.js servers?',
+        options: [
+          'Catch errors with try/catch, use global process.on("unhandledRejection") handlers, log with monitoring tools, and perform graceful shutdown if necessary',
+          'Ignore errors and let the process freeze',
+          'Delete the node_modules folder',
+          'Disable error reporting completely in production',
+        ],
+        correctAnswer: 0,
+        explanation: 'Robust error handling with structured logging and process managers (like PM2 or Docker) ensures server reliability.',
+      },
+      {
+        id: 5,
+        question: 'What is CORS (Cross-Origin Resource Sharing) middleware used for in Express APIs?',
+        options: [
+          'Configuring HTTP response headers that permit web browsers on different domains to make secure API requests',
+          'Encrypting hard drives on the server',
+          'Translating JavaScript into English',
+          'Creating database backups every night',
+        ],
+        correctAnswer: 0,
+        explanation: 'CORS middleware sets Access-Control-Allow-Origin headers to govern cross-origin HTTP requests from client browser frontends.',
+      },
+    ],
+  },
+
+  // 6. Java Enterprise & OOP
+  java: {
+    title: 'Java Enterprise, Spring Boot & OOP Certification Exam',
+    passingScore: 70,
+    questions: [
+      {
+        id: 1,
+        question: 'What is the role of the JVM (Java Virtual Machine)?',
+        options: [
+          'Executes compiled Java bytecode (.class files) on any underlying hardware platform ("Write Once, Run Anywhere")',
+          'A text editor for typing Java source code',
+          'A physical chip installed on computer motherboards',
+          'A database query optimizer for Oracle databases',
+        ],
+        correctAnswer: 0,
+        explanation: 'The JVM provides platform independence by converting Java bytecode into native machine instructions at runtime via JIT compilation.',
+      },
+      {
+        id: 2,
+        question: 'What is the difference between an Interface and an Abstract Class in Java?',
+        options: [
+          'A class can implement multiple interfaces, but can only inherit from one abstract class (single inheritance)',
+          'Interfaces can have instance variables with state, while abstract classes cannot',
+          'Abstract classes cannot have constructors',
+          'Interfaces are only available in Android SDK',
+        ],
+        correctAnswer: 0,
+        explanation: 'Java supports multiple interface implementation, allowing classes to adhere to multiple contract specifications while retaining single class inheritance.',
+      },
+      {
+        id: 3,
+        question: 'In the Spring Framework, what does Inversion of Control (IoC) and Dependency Injection (DI) accomplish?',
+        options: [
+          'Spring manages object creation, configuration, and lifecycle dependencies rather than having classes instantiate their own dependencies with "new"',
+          'Disables database transactions',
+          'Replaces Java with Python at runtime',
+          'Converts REST APIs into SOAP XML',
+        ],
+        correctAnswer: 0,
+        explanation: 'IoC Container manages object lifecycle and injects required dependencies (@Autowired) to promote loose coupling and testability.',
+      },
+      {
+        id: 4,
+        question: 'What is the purpose of the Garbage Collector in Java?',
+        options: [
+          'Automatically reclaims heap memory by destroying objects that are no longer reachable by running threads',
+          'Deletes unused .java files from the hard drive',
+          'Closes browser tabs after 10 minutes',
+          'Formats source code to follow Google Java style',
+        ],
+        correctAnswer: 0,
+        explanation: 'Java Garbage Collection automatically manages memory allocation and deallocation, preventing manual memory leaks.',
+      },
+      {
+        id: 5,
+        question: 'Which collection class in Java provides thread-safe, high-concurrency key-value storage without locking the entire table?',
+        options: [
+          'ConcurrentHashMap',
+          'HashMap',
+          'ArrayList',
+          'TreeSet',
+        ],
+        correctAnswer: 0,
+        explanation: 'ConcurrentHashMap uses bucket-level locking and lock-free CAS operations for high-throughput concurrent reads and writes.',
+      },
+    ],
+  },
+
+  // 7. C++ & Data Structures
+  cpp: {
+    title: 'C++ Systems Programming, Memory Management & DSA Exam',
+    passingScore: 70,
+    questions: [
+      {
+        id: 1,
+        question: 'In C++, what is the difference between stack memory and heap memory allocation?',
+        options: [
+          'Stack memory is allocated and deallocated automatically in LIFO order with high speed, while Heap memory is allocated dynamically (via new/malloc) and requires explicit release (delete/free or smart pointers)',
+          'Stack memory is stored on the hard drive, while Heap memory is stored in CPU registers',
+          'Heap memory is limited to 1 kilobyte',
+          'Stack memory cannot store integers',
+        ],
+        correctAnswer: 0,
+        explanation: 'Stack memory is fast and managed by CPU call frames; Heap memory is dynamic, larger, and managed manually or via RAII smart pointers.',
+      },
+      {
+        id: 2,
+        question: 'What is RAII (Resource Acquisition Is Initialization) in modern C++?',
+        options: [
+          'A programming idiom where resource lifetimes are bound to the scoped lifetime of an object, guaranteeing cleanup upon destruction',
+          'A compiler flag that enables C++20 modules',
+          'A tool used to draw UML class diagrams',
+          'A function that prints text to std::cout',
+        ],
+        correctAnswer: 0,
+        explanation: 'RAII ensures that resources (file handles, memory, mutexes) are automatically released in class destructors when objects go out of scope.',
+      },
+      {
+        id: 3,
+        question: 'What is the time complexity of searching for an element in a balanced Binary Search Tree (such as std::set/std::map Red-Black Tree)?',
+        options: [
+          'O(log N)',
+          'O(N^2)',
+          'O(1) Constant Time',
+          'O(N!)',
+        ],
+        correctAnswer: 0,
+        explanation: 'Balanced BSTs maintain logarithmic height, ensuring O(log N) worst and average case lookup, insertion, and deletion.',
+      },
+      {
+        id: 4,
+        question: 'What is the purpose of `std::unique_ptr` in C++11 and later?',
+        options: [
+          'A smart pointer that exclusively owns and manages another object through a pointer and disposes of that object when the unique_ptr goes out of scope',
+          'A pointer that can be duplicated infinitely across 50 threads',
+          'A variable that converts strings to uppercase',
+          'A pointer that cannot point to memory',
+        ],
+        correctAnswer: 0,
+        explanation: 'std::unique_ptr prevents memory leaks by enforcing single ownership semantics and automatically calling delete upon destruction.',
+      },
+      {
+        id: 5,
+        question: 'Which sorting algorithm has a guaranteed worst-case time complexity of O(N log N) while maintaining stability?',
+        options: [
+          'Merge Sort',
+          'Quick Sort (Worst-case O(N^2))',
+          'Bubble Sort (O(N^2))',
+          'Selection Sort (O(N^2))',
+        ],
+        correctAnswer: 0,
+        explanation: 'Merge Sort uses divide-and-conquer to guarantee O(N log N) comparison performance in all cases and preserves duplicate element relative ordering.',
+      },
+    ],
+  },
+
+  // 8. CI/CD & DevOps
+  ci_cd: {
+    title: 'CI/CD Pipelines with GitHub Actions & Docker Certification Exam',
+    passingScore: 70,
+    questions: [
+      {
+        id: 1,
+        question: 'Which directory must GitHub Actions workflow YAML files be placed in within a repository?',
+        options: [
+          '.github/workflows/',
+          '.ci/actions/',
+          '.pipelines/github/',
+          'workflows/.github/',
+        ],
+        correctAnswer: 0,
+        explanation: 'GitHub Actions automatically parses workflow configurations located in the .github/workflows/ directory.',
+      },
+      {
+        id: 2,
+        question: 'What is the primary difference between continuous delivery and continuous deployment?',
+        options: [
+          'Continuous delivery requires manual approval before deploying to production, whereas continuous deployment deploys automatically upon passing tests.',
+          'Continuous deployment only builds Docker images, whereas continuous delivery also writes unit tests.',
+          'Continuous delivery is only used for mobile apps, while continuous deployment is for web apps.',
+          'There is no functional difference between the two terms.',
+        ],
+        correctAnswer: 0,
+        explanation: 'Continuous Delivery prepares releases ready for deployment requiring human signoff; Continuous Deployment automates release directly into production.',
+      },
+      {
+        id: 3,
+        question: 'In a Dockerfile, which instruction specifies the executable that will always run when the container starts?',
+        options: [
+          'ENTRYPOINT',
+          'RUN',
+          'FROM',
+          'COPY',
+        ],
+        correctAnswer: 0,
+        explanation: 'ENTRYPOINT sets the default command and executable that cannot be easily overridden during docker run.',
+      },
+      {
+        id: 4,
+        question: 'How do you securely pass API secrets and tokens to a GitHub Actions step?',
+        options: [
+          'Store them in GitHub Repository Secrets and reference them via ${{ secrets.SECRET_NAME }}',
+          'Hardcode them in the public workflow YAML file',
+          'Add them to the README.md file',
+          'Pass them as URL parameters in git commit messages',
+        ],
+        correctAnswer: 0,
+        explanation: 'Repository and Organization Secrets encrypt sensitive variables and expose them to runner contexts via ${{ secrets.NAME }}.',
+      },
+      {
+        id: 5,
+        question: 'What is a Multi-Stage Docker build primarily used for?',
+        options: [
+          'Reducing the final container image size by discarding intermediate build dependencies and compilers',
+          'Running multiple distinct containers on the same port',
+          'Speeding up git clone times inside the container',
+          'Preventing containers from shutting down when an error occurs',
+        ],
+        correctAnswer: 0,
+        explanation: 'Multi-stage builds allow separating build-time compilers from the lean production runtime, drastically shrinking production container images.',
+      },
+    ],
+  },
+
+  // 9. Google Cloud Platform (GCP) & GKE
   gcp_cloud: {
     title: 'Google Cloud Platform (GCP) Infrastructure & GKE Exam',
     passingScore: 70,
@@ -205,7 +613,7 @@ export const COURSE_QUIZZES = {
     ],
   },
 
-  // 4. Applied Cryptography & Security
+  // 10. Applied Cryptography & Security
   cryptography: {
     title: 'Applied Cryptography & TLS 1.3 Architecture Exam',
     passingScore: 70,
@@ -273,7 +681,7 @@ export const COURSE_QUIZZES = {
     ],
   },
 
-  // 5. Flutter 3 & Dart
+  // 11. Flutter 3 & Dart
   flutter: {
     title: 'Flutter 3 & Dart Mobile Development Certification Exam',
     passingScore: 70,
@@ -341,7 +749,7 @@ export const COURSE_QUIZZES = {
     ],
   },
 
-  // 6. Web Security & OWASP
+  // 12. Web Security & OWASP
   web_security: {
     title: 'Web Application Security & OWASP Vulnerabilities Exam',
     passingScore: 70,
@@ -409,75 +817,7 @@ export const COURSE_QUIZZES = {
     ],
   },
 
-  // 7. Full-Stack MERN & Next.js
-  mern_fullstack: {
-    title: 'Full-Stack MERN & Next.js 14 Architecture Exam',
-    passingScore: 70,
-    questions: [
-      {
-        id: 1,
-        question: 'What is the primary benefit of React Server Components (RSC) in Next.js App Router?',
-        options: [
-          'Zero client-side bundle impact for server components, direct backend data access, and faster initial page loads',
-          'Removing JavaScript support from web browsers',
-          'Replacing CSS stylesheets with PHP templates',
-          'Disabling all interactive buttons',
-        ],
-        correctAnswer: 0,
-        explanation: 'Server components render on the server, keeping large dependencies out of client JavaScript bundles while fetching data directly.',
-      },
-      {
-        id: 2,
-        question: 'In MongoDB, what does indexing a field (e.g. { email: 1 }) achieve?',
-        options: [
-          'Greatly accelerates search query performance by avoiding full collection scans',
-          'Encrypts the field using quantum algorithms',
-          'Automatically deletes duplicate documents every hour',
-          'Limits the maximum number of users to 100',
-        ],
-        correctAnswer: 0,
-        explanation: 'Indexes create ordered B-tree data structures allowing MongoDB to locate documents in logarithmic time (O(log N)) rather than scanning every document (O(N)).',
-      },
-      {
-        id: 3,
-        question: 'What is the purpose of Middleware in Express.js?',
-        options: [
-          'Functions that execute during the request-response cycle to perform authentication, logging, error handling, or validation',
-          'A physical cable connecting database servers',
-          'A tool used only for designing CSS gradients',
-          'A replacement for Node.js event loops',
-        ],
-        correctAnswer: 0,
-        explanation: 'Express middleware functions intercept incoming HTTP requests, process data (like verifying JWTs), and call next() or send responses.',
-      },
-      {
-        id: 4,
-        question: 'What does useEffect with an empty dependency array [] represent in a React functional component?',
-        options: [
-          'The effect runs exactly once after the component mounts',
-          'The effect runs on every single render continuously in an infinite loop',
-          'The component is destroyed immediately',
-          'State updates are blocked completely',
-        ],
-        correctAnswer: 0,
-        explanation: 'An empty dependency array [] tells React to execute the effect only when the component is initially mounted into the DOM.',
-      },
-      {
-        id: 5,
-        question: 'In REST API design, which HTTP method is idempotent and used to completely replace an existing resource?',
-        options: [
-          'PUT',
-          'POST',
-          'PATCH',
-          'DELETE',
-        ],
-        correctAnswer: 0,
-        explanation: 'PUT is idempotent and replaces the target resource representation in its entirety with the request payload.',
-      },
-    ],
-  },
-
-  // 8. Modern UI/UX Design & Figma
+  // 13. Modern UI/UX Design & Figma
   ui_ux: {
     title: 'Modern UI/UX Design Systems & Prototyping Exam',
     passingScore: 70,
@@ -544,81 +884,13 @@ export const COURSE_QUIZZES = {
       },
     ],
   },
-
-  // 9. Data Structures & Algorithms
-  dsa: {
-    title: 'Data Structures & Algorithms in Java & C++ Exam',
-    passingScore: 70,
-    questions: [
-      {
-        id: 1,
-        question: 'What is the average and worst-case time complexity of accessing an element in an Array by its index?',
-        options: [
-          'O(1) Constant Time',
-          'O(N) Linear Time',
-          'O(log N) Logarithmic Time',
-          'O(N^2) Quadratic Time',
-        ],
-        correctAnswer: 0,
-        explanation: 'Arrays allocate contiguous memory blocks, allowing constant-time O(1) random access via base address offset calculation.',
-      },
-      {
-        id: 2,
-        question: 'Which data structure follows the First-In, First-Out (FIFO) principle?',
-        options: [
-          'Queue',
-          'Stack',
-          'Binary Search Tree',
-          'Max-Heap',
-        ],
-        correctAnswer: 0,
-        explanation: 'Queues enforce FIFO ordering where elements are added at the rear and removed from the front.',
-      },
-      {
-        id: 3,
-        question: 'What is the optimal time complexity of Merge Sort algorithm on an array of N elements?',
-        options: [
-          'O(N log N) in all cases (best, average, worst)',
-          'O(N^2) in the worst case',
-          'O(N) Linear Time',
-          'O(1) Constant Space',
-        ],
-        correctAnswer: 0,
-        explanation: 'Merge Sort uses divide-and-conquer to split arrays in log N levels and merges them in O(N) time per level, guaranteeing O(N log N).',
-      },
-      {
-        id: 4,
-        question: 'In a Hash Table with good hash distribution, what is the average time complexity for insertion, lookup, and deletion?',
-        options: [
-          'O(1) Average Time',
-          'O(N log N)',
-          'O(N!) Factorial Time',
-          'O(sqrt(N))',
-        ],
-        correctAnswer: 0,
-        explanation: 'Hash maps map keys to bucket indices directly via hash functions, achieving O(1) average lookup and insertion.',
-      },
-      {
-        id: 5,
-        question: 'What algorithmic technique solves complex optimization problems by breaking them down into simpler overlapping subproblems with memoization?',
-        options: [
-          'Dynamic Programming (DP)',
-          'Greedy Heuristic Selection',
-          'Brute Force Permutation',
-          'Randomized Monte Carlo Search',
-        ],
-        correctAnswer: 0,
-        explanation: 'Dynamic Programming stores solutions to subproblems to avoid redundant recalculation, converting exponential complexity to polynomial time.',
-      },
-    ],
-  },
 };
 
-// Smart Quiz Resolver: maps any course to its curated technical exam or dynamically generates one
+// Precise Subject & Keyword-Boundary Quiz Resolver
 export function getQuizForCourse(course) {
-  if (!course) return COURSE_QUIZZES.mern_fullstack;
+  if (!course) return COURSE_QUIZZES.react_next;
 
-  // If the course already has a custom quiz defined on itself
+  // 1. If course has custom quiz embedded
   if (course.quiz && Array.isArray(course.quiz.questions) && course.quiz.questions.length > 0) {
     return {
       title: course.quiz.title || `${course.title} Official Certification Exam`,
@@ -627,40 +899,83 @@ export function getQuizForCourse(course) {
     };
   }
 
-  const str = `${course.id || ''} ${course._id || ''} ${course.title || ''} ${course.category || ''} ${course.techStack?.join(' ') || ''}`.toLowerCase();
+  const rawText = `${course.title || ''} ${course.subtitle || ''} ${course.category || ''} ${course.techStack?.join(' ') || ''}`.toLowerCase();
 
-  if (str.includes('ci/cd') || str.includes('docker') || str.includes('actions') || str.includes('pipeline') || str.includes('devops')) {
-    return COURSE_QUIZZES.ci_cd;
+  // 2. Exact PHP match
+  if (/\bphp\b/i.test(rawText) || /\blaravel\b/i.test(rawText) || /\bwordpress\b/i.test(rawText) || /\bcodeigniter\b/i.test(rawText) || /\bsymfony\b/i.test(rawText)) {
+    return COURSE_QUIZZES.php;
   }
-  if (str.includes('ai') || str.includes('machine learning') || str.includes('neural') || str.includes('pytorch') || str.includes('python')) {
-    return COURSE_QUIZZES.ai_ml;
-  }
-  if (str.includes('gcp') || str.includes('cloud') || str.includes('gke') || str.includes('kubernetes') || str.includes('bigquery')) {
-    return COURSE_QUIZZES.gcp_cloud;
-  }
-  if (str.includes('crypto') || str.includes('aes') || str.includes('rsa') || str.includes('tls') || str.includes('encryption')) {
-    return COURSE_QUIZZES.cryptography;
-  }
-  if (str.includes('flutter') || str.includes('dart') || str.includes('mobile') || str.includes('ios') || str.includes('android')) {
+
+  // 3. Exact Flutter / Dart match
+  if (/\bflutter\b/i.test(rawText) || /\bdart\b/i.test(rawText) || /\bandroid\b/i.test(rawText) || /\bios\b/i.test(rawText) || /\bmobile\b/i.test(rawText)) {
     return COURSE_QUIZZES.flutter;
   }
-  if (str.includes('security') || str.includes('owasp') || str.includes('vulnerab') || str.includes('hacking') || str.includes('burp')) {
-    return COURSE_QUIZZES.web_security;
-  }
-  if (str.includes('design') || str.includes('figma') || str.includes('ui') || str.includes('ux') || str.includes('prototype')) {
-    return COURSE_QUIZZES.ui_ux;
-  }
-  if (str.includes('algorithm') || str.includes('dsa') || str.includes('data structure') || str.includes('c++') || str.includes('java')) {
-    return COURSE_QUIZZES.dsa;
+
+  // 4. Exact Cryptography / TLS match
+  if (/\bcryptography\b/i.test(rawText) || /\bcrypto\b/i.test(rawText) || /\baes\b/i.test(rawText) || /\brsa\b/i.test(rawText) || /\btls\b/i.test(rawText) || /\bencryption\b/i.test(rawText)) {
+    return COURSE_QUIZZES.cryptography;
   }
 
-  // Default to MERN / Modern Full-Stack web dev
-  return {
-    title: `${course.title || 'Course'} Official Certification Exam`,
-    passingScore: 70,
-    questions: COURSE_QUIZZES.mern_fullstack.questions.map((q, idx) => ({
-      ...q,
-      id: idx + 1,
-    })),
-  };
+  // 5. Exact Web Security / OWASP / Hacking match
+  if (/\bowasp\b/i.test(rawText) || /\bsecurity\b/i.test(rawText) || /\bvulnerability\b/i.test(rawText) || /\bhacking\b/i.test(rawText) || /\bburp\b/i.test(rawText) || /\bpenetration\b/i.test(rawText)) {
+    return COURSE_QUIZZES.web_security;
+  }
+
+  // 6. Exact CI/CD & Docker / DevOps match
+  if (/\bci\/cd\b/i.test(rawText) || /\bdocker\b/i.test(rawText) || /\bdevops\b/i.test(rawText) || /\bgithub actions\b/i.test(rawText) || /\bpipeline\b/i.test(rawText) || /\bjenkins\b/i.test(rawText)) {
+    return COURSE_QUIZZES.ci_cd;
+  }
+
+  // 7. Exact GCP / Cloud / GKE match
+  if (/\bgcp\b/i.test(rawText) || /\bgoogle cloud\b/i.test(rawText) || /\bgke\b/i.test(rawText) || /\bkubernetes\b/i.test(rawText) || /\bbigquery\b/i.test(rawText) || /\baws\b/i.test(rawText) || /\bazure\b/i.test(rawText)) {
+    return COURSE_QUIZZES.gcp_cloud;
+  }
+
+  // 8. Exact Machine Learning / Deep Learning / AI match (strictly word-boundary)
+  if (
+    /\bmachine learning\b/i.test(rawText) ||
+    /\bdeep learning\b/i.test(rawText) ||
+    /\bartificial intelligence\b/i.test(rawText) ||
+    /\bpytorch\b/i.test(rawText) ||
+    /\btensorflow\b/i.test(rawText) ||
+    /\bscikit\b/i.test(rawText) ||
+    /\bneural\b/i.test(rawText) ||
+    /\bdata science\b/i.test(rawText) ||
+    /\bai\b/i.test(rawText)
+  ) {
+    return COURSE_QUIZZES.ai_ml;
+  }
+
+  // 9. Exact Python match
+  if (/\bpython\b/i.test(rawText) || /\bdjango\b/i.test(rawText) || /\bflask\b/i.test(rawText) || /\bpandas\b/i.test(rawText) || /\bnumpy\b/i.test(rawText)) {
+    return COURSE_QUIZZES.python;
+  }
+
+  // 10. Exact Java match (avoiding JavaScript false positive)
+  if (/\bjava\b/i.test(rawText) && !/\bjavascript\b/i.test(rawText)) {
+    return COURSE_QUIZZES.java;
+  }
+
+  // 11. Exact C++ / C / DSA match
+  if (/\bc\+\+\b/i.test(rawText) || /\balgorithm\b/i.test(rawText) || /\bdsa\b/i.test(rawText) || /\bdata structure\b/i.test(rawText) || /\bleetcode\b/i.test(rawText)) {
+    return COURSE_QUIZZES.cpp;
+  }
+
+  // 12. Exact UI/UX / Figma match
+  if (/\bfigma\b/i.test(rawText) || /\bui\/ux\b/i.test(rawText) || /\bdesign system\b/i.test(rawText) || /\bprototype\b/i.test(rawText) || /\bwireframe\b/i.test(rawText)) {
+    return COURSE_QUIZZES.ui_ux;
+  }
+
+  // 13. Exact Node.js / Express / Backend API match
+  if (/\bnode\b/i.test(rawText) || /\bexpress\b/i.test(rawText) || /\bbackend\b/i.test(rawText) || /\bmicroservice\b/i.test(rawText) || /\brest api\b/i.test(rawText)) {
+    return COURSE_QUIZZES.node_express;
+  }
+
+  // 14. Exact React / Next.js / Frontend match
+  if (/\breact\b/i.test(rawText) || /\bnext\.js\b/i.test(rawText) || /\bnextjs\b/i.test(rawText) || /\bfrontend\b/i.test(rawText) || /\bmern\b/i.test(rawText)) {
+    return COURSE_QUIZZES.react_next;
+  }
+
+  // Default: React / Modern Web Dev
+  return COURSE_QUIZZES.react_next;
 }

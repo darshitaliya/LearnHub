@@ -125,20 +125,59 @@ export default function VideoPlayerPage() {
   };
 
   const handleLessonComplete = async (lessonId) => {
+    const targetId = lessonId || activeLesson?.id || activeLesson?.title || 'les_1';
+    const totalCount = allLessons.length || 4;
+
+    // Optimistically update state so checkmarks update instantly in UI
+    const updatedDone = Array.from(new Set([...completedLessons, targetId]));
+    const calculatedPct = Math.min(100, Math.round((updatedDone.length / totalCount) * 100));
+    setCompletedLessons(updatedDone);
+    setPercentage(calculatedPct);
+
     try {
-      const res = await api.post('/progress/lesson-complete', { courseId: id, lessonId });
-      const newDone = res.data.completedLessons || [];
-      const newPct = res.data.percentage || 0;
-      setCompletedLessons(newDone);
-      setPercentage(newPct);
+      const res = await api.post('/progress/lesson-complete', {
+        courseId: id,
+        lessonId: targetId,
+        totalLessonsCount: totalCount,
+      });
 
-      showToast(`Lesson Completed! 🎉 Course Progress: ${newPct}%`, 'success');
+      if (res.data) {
+        const serverDone = res.data.completedLessons || updatedDone;
+        const serverPct = res.data.percentage !== undefined ? res.data.percentage : calculatedPct;
+        setCompletedLessons(serverDone);
+        setPercentage(serverPct);
 
-      if (res.data.certificateEarned || quizPassed) {
+        if (res.data.certificateEarned || quizPassed) {
+          setQuizPassed(true);
+        }
+      }
+
+      showToast(`Lesson Completed! 🎉 Progress: ${calculatedPct}%`, 'success');
+    } catch (err) {
+      console.error('Error completing lesson:', err);
+    }
+  };
+
+  const handleMarkEntireCourseComplete = async () => {
+    const totalCount = allLessons.length || 4;
+    const allLessonIds = allLessons.map((l) => l.id || l.title);
+    setCompletedLessons(allLessonIds);
+    setPercentage(100);
+
+    try {
+      const res = await api.post('/progress/lesson-complete', {
+        courseId: id,
+        lessonId: allLessonIds[0] || 'les_1',
+        totalLessonsCount: totalCount,
+        markCourseComplete: true,
+      });
+
+      if (res.data?.certificateEarned || quizPassed) {
         setQuizPassed(true);
       }
+      showToast('All Lessons Marked Complete! 100% 🏆', 'success');
     } catch (err) {
-      console.error(err);
+      console.error('Error marking entire course complete:', err);
     }
   };
 
@@ -161,6 +200,10 @@ export default function VideoPlayerPage() {
       const next = allLessons[currentIndex + 1];
       setActiveLesson(next);
       handleLessonComplete(next.id || next.title);
+    } else {
+      // If at the end of the course, prompt to take the quiz
+      handleLessonComplete(activeLesson?.id || activeLesson?.title);
+      setShowQuiz(true);
     }
   };
 
@@ -169,6 +212,7 @@ export default function VideoPlayerPage() {
       setActiveLesson(allLessons[currentIndex - 1]);
     }
   };
+
 
   // Extract exact YouTube Video ID from lesson URL or fallback to subject-synchronized tutorial
   const extractYouTubeId = (lesson, courseTitle) => {
@@ -418,10 +462,24 @@ export default function VideoPlayerPage() {
               <span className="font-label-caps text-primary fw-bold" style={{ fontSize: '11px' }}>CURRICULUM PLAYLIST</span>
               <h2 className="font-headline-md text-on-surface fs-5 m-0 fw-bold">Course Modules</h2>
             </div>
-            <span className="badge bg-secondary-container text-secondary font-label-caps px-2.5 py-1 rounded-pill">
-              {allLessons.length} Lessons
-            </span>
+            <div className="d-flex align-items-center gap-1.5">
+              {percentage < 100 && (
+                <button
+                  type="button"
+                  onClick={handleMarkEntireCourseComplete}
+                  className="btn btn-sm btn-outline-success font-label-caps px-2 py-0.5 rounded shadow-xs"
+                  style={{ fontSize: '10px' }}
+                  title="Mark all lessons as completed"
+                >
+                  ✓ Mark All Done
+                </button>
+              )}
+              <span className="badge bg-secondary-container text-secondary font-label-caps px-2 py-1 rounded-pill" style={{ fontSize: '11px' }}>
+                {completedLessons.length}/{allLessons.length} Done
+              </span>
+            </div>
           </div>
+
 
           {/* Modules Accordion / List */}
           <div className="d-flex flex-column gap-3">
