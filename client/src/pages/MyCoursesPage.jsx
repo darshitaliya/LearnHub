@@ -180,83 +180,71 @@ export default function MyCoursesPage() {
                     <p className="font-body-sm text-on-surface-variant mb-3 line-clamp-2">{crs.subtitle || crs.description}</p>
 
                     <div className="mt-auto pt-3 border-top border-outline-variant/20">
-                      {/* Step Progress Tracker Indicator */}
-                      <div className="d-flex align-items-center justify-content-between mb-2">
-                        <div className="d-flex align-items-center gap-1.5 font-label-caps" style={{ fontSize: '11px' }}>
-                          <span className={`badge ${crs.isModulesCompleted ? 'bg-success' : 'bg-primary'} text-white rounded-pill px-2 py-0.5`}>
-                            1. Modules: {crs.progressPercentage}%
-                          </span>
-                          <span className={`badge ${crs.quizPassed ? 'bg-success' : crs.isQuizUnlocked ? 'bg-warning text-dark' : 'bg-light text-muted'} rounded-pill px-2 py-0.5`}>
-                            2. Quiz {crs.quizPassed ? '✅' : crs.isQuizUnlocked ? '🔓' : '🔒'}
-                          </span>
-                          <span className={`badge ${crs.isCompleted ? 'bg-warning text-dark' : 'bg-light text-muted'} rounded-pill px-2 py-0.5`}>
-                            3. Cert {crs.isCompleted ? '🏆' : '🔒'}
-                          </span>
-                        </div>
+                      {/* Clean Course Progress Header */}
+                      <div className="d-flex align-items-center justify-content-between font-label-caps mb-1.5">
+                        <span className="text-on-surface-variant fw-semibold">Course Progress</span>
+                        <span className={`fw-bold ${crs.isCompleted ? 'text-success' : 'text-primary'}`}>
+                          {crs.progressPercentage}% Complete
+                        </span>
                       </div>
 
                       {/* Dynamic Progress Bar */}
                       <div className="w-100 bg-surface-container rounded-pill mb-3" style={{ height: '8px' }}>
                         <div
-                          className={`rounded-pill h-100 transition-all ${crs.isCompleted ? 'bg-warning' : crs.isModulesCompleted ? 'bg-success' : 'bg-primary'}`}
+                          className={`rounded-pill h-100 transition-all ${crs.isCompleted ? 'bg-success' : 'bg-primary'}`}
                           style={{ width: `${crs.progressPercentage}%` }}
                         ></div>
                       </div>
 
-                      <div className="d-flex flex-column gap-2">
-                        {/* Step 1: Learning Button */}
+                      {/* Clean Contextual Action Buttons */}
+                      {crs.isCompleted ? (
                         <div className="d-flex gap-2">
                           <button
                             onClick={() => navigate(`/course/${crs.id || crs._id}/learn`)}
-                            className="btn btn-primary flex-grow-1 font-body-sm py-2 rounded-3 d-flex align-items-center justify-content-center gap-2"
+                            className="btn btn-outline-primary flex-grow-1 font-body-sm py-2 rounded-3 d-flex align-items-center justify-content-center gap-1.5"
                           >
-                            <span>{crs.progressPercentage === 0 ? 'Start Learning' : crs.isModulesCompleted ? 'Review Modules' : 'Continue Learning'}</span>
+                            <span>Review Course</span>
                             <span className="material-symbols-outlined fs-6">play_arrow</span>
                           </button>
-
-                          {/* Step 3: Certificate Button (Unlocked upon Quiz Pass) */}
-                          {crs.isCompleted && (
-                            <button
-                              onClick={() => setSelectedCertCourse(crs)}
-                              className="btn btn-warning font-body-sm px-3 rounded-3 d-flex align-items-center justify-content-center shadow-xs"
-                              title="View & Print Official Certificate"
-                            >
-                              <span className="material-symbols-outlined fs-5 fill text-dark">workspace_premium</span>
-                            </button>
-                          )}
+                          <button
+                            onClick={() => setSelectedCertCourse(crs)}
+                            className="btn btn-warning text-dark fw-bold font-body-sm px-3 py-2 rounded-3 d-flex align-items-center justify-content-center gap-1.5 shadow-xs"
+                            title="View & Print Official Certificate"
+                          >
+                            <span className="material-symbols-outlined fs-5 fill">workspace_premium</span>
+                            <span>Certificate</span>
+                          </button>
                         </div>
-
-                        {/* Step 2: Sequential Quiz Button */}
-                        {crs.isQuizUnlocked ? (
+                      ) : crs.isQuizUnlocked ? (
+                        <div className="d-flex flex-column gap-2">
                           <button
                             onClick={() => setSelectedQuizCourse(crs)}
-                            className={`btn btn-sm font-body-sm py-2 rounded-3 d-flex align-items-center justify-content-center gap-1.5 ${
-                              crs.quizPassed
-                                ? 'btn-outline-success text-success fw-bold'
-                                : 'btn-warning text-dark fw-bold shadow-xs'
-                            }`}
+                            className="btn btn-primary font-body-sm py-2 rounded-3 d-flex align-items-center justify-content-center gap-2 fw-semibold shadow-xs"
                           >
-                            <span className="material-symbols-outlined fs-6 fill">
-                              {crs.quizPassed ? 'verified' : 'quiz'}
-                            </span>
-                            <span>
-                              {crs.quizPassed
-                                ? `Quiz Passed (${crs.quizScore || 100}%) - Certificate Unlocked! 🏆`
-                                : '📝 Take Course Quiz (Unlocked) ➔ Get Certificate'}
-                            </span>
+                            <span className="material-symbols-outlined fs-6">quiz</span>
+                            <span>Take Certification Quiz</span>
                           </button>
-                        ) : (
-                          <div
-                            className="btn btn-sm btn-light text-muted font-body-sm py-2 rounded-3 d-flex align-items-center justify-content-center gap-1.5 border border-outline-variant/30 cursor-not-allowed"
-                            style={{ fontSize: '12px' }}
-                            title="Complete all course video modules first to unlock the quiz"
+                          <button
+                            onClick={() => navigate(`/course/${crs.id || crs._id}/learn`)}
+                            className="btn btn-outline-primary btn-sm font-body-sm py-1.5 rounded-3 d-flex align-items-center justify-content-center gap-1"
                           >
-                            <span className="material-symbols-outlined fs-6 text-muted">lock</span>
-                            <span>Complete All Modules ({crs.progressPercentage}%) to Unlock Quiz</span>
-                          </div>
-                        )}
-                      </div>
+                            <span>Review Modules</span>
+                            <span className="material-symbols-outlined fs-6">play_arrow</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="d-flex flex-column gap-2">
+                          <button
+                            onClick={() => navigate(`/course/${crs.id || crs._id}/learn`)}
+                            className="btn btn-primary font-body-sm py-2 rounded-3 d-flex align-items-center justify-content-center gap-2"
+                          >
+                            <span>{crs.progressPercentage === 0 ? 'Start Learning' : 'Continue Learning'}</span>
+                            <span className="material-symbols-outlined fs-6">play_arrow</span>
+                          </button>
+                        </div>
+                      )}
                     </div>
+
                   </div>
                 </div>
               </div>
