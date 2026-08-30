@@ -113,10 +113,8 @@ export default function MyCoursesPage() {
             <h1 className="font-headline-md text-on-surface m-0 fw-bold fs-2">
               My Enrolled Courses ({enrolledCoursesData.length})
             </h1>
-            <p className="font-body-sm text-on-surface-variant m-0 mt-1">
-              Complete your video modules ➔ Pass the subject certification quiz ➔ Unlock your official certificate.
-            </p>
           </div>
+
 
 
           <div className="d-flex align-items-center gap-2">
