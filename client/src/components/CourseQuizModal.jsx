@@ -113,22 +113,28 @@ export default function CourseQuizModal({ course, user, onClose, onQuizPassed })
           <div className="modal-header border-0 bg-primary text-white p-4 d-flex align-items-center justify-content-between">
             <div className="d-flex align-items-center gap-3">
               <div
-                className="rounded-circle bg-white/20 p-2 d-flex align-items-center justify-content-center text-white"
+                className="rounded-circle bg-white/20 p-2 d-flex align-items-center justify-content-center text-white flex-shrink-0"
                 style={{ width: '44px', height: '44px' }}
               >
                 <span className="material-symbols-outlined fs-4 fill">quiz</span>
               </div>
               <div>
-                <span className="badge bg-white/20 text-white font-label-caps px-2.5 py-0.5 rounded-pill mb-1">
-                  OFFICIAL CERTIFICATION ASSESSMENT
-                </span>
+                <div className="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                  <span className="badge bg-white/20 text-white font-label-caps px-2 py-0.5 rounded-pill" style={{ fontSize: '10px' }}>
+                    OFFICIAL CERTIFICATION ASSESSMENT
+                  </span>
+                  <span className="badge bg-warning text-dark font-label-caps px-2 py-0.5 rounded-pill fw-bold" style={{ fontSize: '10px' }}>
+                    {quizData.subject || course?.category || 'Subject Exam'}
+                  </span>
+                </div>
                 <h5 className="modal-title font-headline-md fw-bold m-0 fs-5 text-white">
-                  {quizData.title}
+                  {course?.title || quizData.title}
                 </h5>
               </div>
             </div>
             <button type="button" className="btn-close btn-close-white" onClick={onClose}></button>
           </div>
+
 
           {/* Progress Bar */}
           {!isSubmitted && (
