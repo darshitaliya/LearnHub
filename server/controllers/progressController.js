@@ -49,3 +49,35 @@ export const completeLesson = async (req, res, next) => {
     next(err);
   }
 };
+
+export const submitQuiz = async (req, res, next) => {
+  try {
+    const { courseId, score, answers, passed } = req.body;
+    if (!courseId) {
+      return res.status(400).json({ success: false, error: 'courseId is required' });
+    }
+
+    const prog = await dbStore.getProgress(req.user.id, courseId);
+    const numericScore = typeof score === 'number' ? score : 100;
+    const isPassed = typeof passed === 'boolean' ? passed : numericScore >= 70;
+
+    const updatedProg = await dbStore.saveProgress(req.user.id, courseId, {
+      quizCompleted: true,
+      quizScore: numericScore,
+      quizPassed: isPassed,
+      certificateEarned: isPassed,
+      percentage: isPassed ? Math.max(prog?.percentage || 0, 100) : (prog?.percentage || 0),
+      quizSubmittedAt: new Date().toISOString(),
+    });
+
+    return res.status(200).json({
+      success: true,
+      progress: updatedProg,
+      certificateEarned: isPassed,
+      quizScore: numericScore,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+

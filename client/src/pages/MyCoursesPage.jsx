@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CertificateModal from '../components/CertificateModal';
+import CourseQuizModal from '../components/CourseQuizModal';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,8 +14,10 @@ export default function MyCoursesPage() {
   const [enrolledCoursesData, setEnrolledCoursesData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Certificate Modal State
+  // Certificate & Quiz Modal States
   const [selectedCertCourse, setSelectedCertCourse] = useState(null);
+  const [selectedQuizCourse, setSelectedQuizCourse] = useState(null);
+
 
   useEffect(() => {
     fetchEnrolledCoursesWithProgress();
@@ -53,12 +56,16 @@ export default function MyCoursesPage() {
             const totalLessonsCount = crs.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 1;
             const calcPercentage = Math.min(100, Math.round((completedCount / totalLessonsCount) * 100));
 
+            const isCertUnlocked = calcPercentage >= 100 || progRes.data?.quizPassed || progRes.data?.certificateEarned;
+
             return {
               ...crs,
               progressPercentage: calcPercentage,
               completedCount,
               totalLessonsCount,
-              isCompleted: calcPercentage >= 100,
+              quizPassed: Boolean(progRes.data?.quizPassed || progRes.data?.certificateEarned),
+              quizScore: progRes.data?.quizScore || 0,
+              isCompleted: isCertUnlocked,
             };
           } catch (err) {
             return {
@@ -66,6 +73,8 @@ export default function MyCoursesPage() {
               progressPercentage: 0,
               completedCount: 0,
               totalLessonsCount: crs.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 1,
+              quizPassed: false,
+              quizScore: 0,
               isCompleted: false,
             };
           }
@@ -77,6 +86,13 @@ export default function MyCoursesPage() {
       console.error('Failed to fetch enrolled courses:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleQuizSuccess = (finalScore) => {
+    fetchEnrolledCoursesWithProgress();
+    if (selectedQuizCourse) {
+      setSelectedCertCourse(selectedQuizCourse);
     }
   };
 
@@ -128,7 +144,7 @@ export default function MyCoursesPage() {
                     <img src={crs.thumbnail} alt={crs.title} className="w-100 object-fit-cover" style={{ height: '180px' }} />
                     {crs.isCompleted && (
                       <span className="badge bg-warning text-dark font-label-caps position-absolute top-0 end-0 m-3 px-3 py-1.5 shadow-sm fw-bold d-flex align-items-center gap-1">
-                        <span className="material-symbols-outlined fs-6 fill">workspace_premium</span> 100% UNLOCKED
+                        <span className="material-symbols-outlined fs-6 fill">workspace_premium</span> CERTIFIED
                       </span>
                     )}
                   </div>
@@ -154,24 +170,41 @@ export default function MyCoursesPage() {
                         ></div>
                       </div>
 
-                      <div className="d-flex gap-2">
-                        <button
-                          onClick={() => navigate(`/course/${crs.id}/learn`)}
-                          className="btn btn-primary flex-grow-1 font-body-sm py-2.5 rounded-3 d-flex align-items-center justify-content-center gap-2"
-                        >
-                          <span>{crs.progressPercentage === 0 ? 'Start Learning' : 'Continue Learning'}</span>
-                          <span className="material-symbols-outlined fs-6">play_arrow</span>
-                        </button>
-
-                        {crs.isCompleted && (
+                      <div className="d-flex flex-column gap-2">
+                        <div className="d-flex gap-2">
                           <button
-                            onClick={() => setSelectedCertCourse(crs)}
-                            className="btn btn-warning font-body-sm px-3 rounded-3 d-flex align-items-center justify-content-center"
-                            title="View & Print Official Certificate"
+                            onClick={() => navigate(`/course/${crs.id || crs._id}/learn`)}
+                            className="btn btn-primary flex-grow-1 font-body-sm py-2 rounded-3 d-flex align-items-center justify-content-center gap-2"
                           >
-                            <span className="material-symbols-outlined fs-5 fill text-dark">workspace_premium</span>
+                            <span>{crs.progressPercentage === 0 ? 'Start Learning' : 'Continue Learning'}</span>
+                            <span className="material-symbols-outlined fs-6">play_arrow</span>
                           </button>
-                        )}
+
+                          {crs.isCompleted && (
+                            <button
+                              onClick={() => setSelectedCertCourse(crs)}
+                              className="btn btn-warning font-body-sm px-3 rounded-3 d-flex align-items-center justify-content-center shadow-xs"
+                              title="View & Print Official Certificate"
+                            >
+                              <span className="material-symbols-outlined fs-5 fill text-dark">workspace_premium</span>
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Quiz Trigger Button */}
+                        <button
+                          onClick={() => setSelectedQuizCourse(crs)}
+                          className={`btn btn-sm font-body-sm py-1.5 rounded-3 d-flex align-items-center justify-content-center gap-1.5 ${
+                            crs.quizPassed
+                              ? 'btn-outline-success text-success fw-semibold'
+                              : 'btn-outline-primary text-primary fw-semibold'
+                          }`}
+                        >
+                          <span className="material-symbols-outlined fs-6 fill">
+                            {crs.quizPassed ? 'verified' : 'quiz'}
+                          </span>
+                          <span>{crs.quizPassed ? `Quiz Passed (${crs.quizScore || 100}%) ✅` : 'Take Course Quiz & Get Certificate'}</span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -182,11 +215,23 @@ export default function MyCoursesPage() {
         )}
       </main>
 
+      {/* Quiz Modal */}
+      {selectedQuizCourse && (
+        <CourseQuizModal
+          course={selectedQuizCourse}
+          user={user}
+          onClose={() => setSelectedQuizCourse(null)}
+          onQuizPassed={(score) => handleQuizSuccess(score)}
+        />
+      )}
+
       {/* Certificate Modal */}
       {selectedCertCourse && (
         <CertificateModal
           studentName={user?.name}
           courseTitle={selectedCertCourse.title}
+          course={selectedCertCourse}
+          user={user}
           onClose={() => setSelectedCertCourse(null)}
         />
       )}

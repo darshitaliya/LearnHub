@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import CertificateModal from '../components/CertificateModal';
+import CourseQuizModal from '../components/CourseQuizModal';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -18,6 +19,10 @@ export default function VideoPlayerPage() {
   const [completedLessons, setCompletedLessons] = useState([]);
   const [percentage, setPercentage] = useState(0);
   const [showCertificate, setShowCertificate] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizPassed, setQuizPassed] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+
 
   // Mode: 'youtube' or 'mp4' (Default to 'youtube' for course-synchronized video)
   const [streamMode, setStreamMode] = useState('youtube');
@@ -103,8 +108,10 @@ export default function VideoPlayerPage() {
       }
 
       setCourse(loadedCourse);
-      setCompletedLessons(progRes.data.completedLessons || []);
-      setPercentage(progRes.data.percentage || 0);
+      setCompletedLessons(progRes.data?.completedLessons || []);
+      setPercentage(progRes.data?.percentage || 0);
+      setQuizPassed(Boolean(progRes.data?.quizPassed || progRes.data?.certificateEarned));
+      setQuizScore(progRes.data?.quizScore || 0);
 
       // Select first available lesson
       if (loadedCourse?.modules?.[0]?.lessons?.[0]) {
@@ -127,12 +134,21 @@ export default function VideoPlayerPage() {
 
       showToast(`Lesson Completed! 🎉 Course Progress: ${newPct}%`, 'success');
 
-      if (res.data.certificateEarned) {
-        setShowCertificate(true);
-        showToast('Congratulations! You unlocked your Official Certificate!', 'success', 5000);
+      if (res.data.certificateEarned || quizPassed) {
+        setQuizPassed(true);
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleQuizSuccess = (finalScore, shouldOpenCert = false) => {
+    setQuizPassed(true);
+    setQuizScore(finalScore);
+    setPercentage(100);
+    showToast(`Quiz Passed with ${finalScore}%! Official Certificate Unlocked! 🏆`, 'success', 5000);
+    if (shouldOpenCert) {
+      setShowCertificate(true);
     }
   };
 
@@ -235,23 +251,38 @@ export default function VideoPlayerPage() {
         <div className="flex-grow-1 p-3 p-md-4 d-flex flex-column bg-dark text-white">
           
           {/* Top Navigation & Progress Bar */}
-          <div className="d-flex align-items-center justify-content-between mb-3">
+          <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-3">
             <Link to="/dashboard" className="text-white-50 text-decoration-none font-body-sm d-flex align-items-center gap-1 hover-white">
               <span className="material-symbols-outlined fs-5">arrow_back</span> Back to Dashboard
             </Link>
 
-            <div className="d-flex align-items-center gap-3">
+            <div className="d-flex align-items-center flex-wrap gap-2">
               <span className="font-label-caps text-info">Progress: {percentage}%</span>
-              <div className="bg-secondary rounded-pill" style={{ width: '120px', height: '6px' }}>
+              <div className="bg-secondary rounded-pill me-2" style={{ width: '100px', height: '6px' }}>
                 <div className="bg-primary rounded-pill h-100" style={{ width: `${percentage}%` }}></div>
               </div>
-              {percentage >= 100 && (
-                <button onClick={() => setShowCertificate(true)} className="btn btn-sm btn-warning font-label-caps d-flex align-items-center gap-1 fw-bold">
-                  <span className="material-symbols-outlined fs-6">workspace_premium</span> Claim Certificate
+
+              <button
+                onClick={() => setShowQuiz(true)}
+                className={`btn btn-sm ${
+                  quizPassed ? 'btn-success text-white' : 'btn-outline-warning text-warning'
+                } font-label-caps d-flex align-items-center gap-1 fw-bold px-3 py-1.5 rounded-3 shadow-xs`}
+              >
+                <span className="material-symbols-outlined fs-6 fill">quiz</span>
+                <span>{quizPassed ? `Quiz Passed (${quizScore || 100}%) ✅` : 'Take Course Quiz'}</span>
+              </button>
+
+              {(percentage >= 100 || quizPassed) && (
+                <button
+                  onClick={() => setShowCertificate(true)}
+                  className="btn btn-sm btn-warning text-dark font-label-caps d-flex align-items-center gap-1 fw-bold px-3 py-1.5 rounded-3 shadow-xs"
+                >
+                  <span className="material-symbols-outlined fs-6 fill">workspace_premium</span> Claim Certificate
                 </button>
               )}
             </div>
           </div>
+
 
           {/* Dual Stream Multi-Server Switcher */}
           <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2 mb-2 px-1">
@@ -439,6 +470,44 @@ export default function VideoPlayerPage() {
                 </div>
               </div>
             ))}
+
+            {/* Final Exam & Certification Assessment Item */}
+            <div className="bg-white rounded-3 border border-outline-variant/30 overflow-hidden shadow-xs">
+              <div className="p-3 bg-primary-container/20 border-bottom border-outline-variant/20 d-flex align-items-center justify-content-between">
+                <div>
+                  <h4 className="font-body-base fw-bold text-primary m-0" style={{ fontSize: '14px' }}>
+                    Module: Assessment & Certification
+                  </h4>
+                  <span className="font-body-sm text-on-surface-variant" style={{ fontSize: '11px' }}>
+                    1 Final Quiz (Passing Grade: 70%)
+                  </span>
+                </div>
+                <span className="badge bg-primary text-white font-label-caps px-2 py-0.5 rounded">
+                  {quizPassed ? 'PASSED ✅' : 'REQUIRED'}
+                </span>
+              </div>
+
+              <div className="p-3 d-flex flex-column gap-2">
+                <button
+                  onClick={() => setShowQuiz(true)}
+                  className={`btn w-100 font-body-sm py-2 px-3 rounded-3 d-flex align-items-center justify-content-between text-start ${
+                    quizPassed
+                      ? 'btn-outline-success border-success text-success fw-bold'
+                      : 'btn-primary text-white fw-bold shadow-xs'
+                  }`}
+                >
+                  <div className="d-flex align-items-center gap-2">
+                    <span className="material-symbols-outlined fs-5 fill">
+                      {quizPassed ? 'verified' : 'quiz'}
+                    </span>
+                    <span>{quizPassed ? `Quiz Passed (${quizScore || 100}%)` : 'Take Course Quiz'}</span>
+                  </div>
+                  <span className="material-symbols-outlined fs-6">
+                    {quizPassed ? 'check' : 'arrow_forward'}
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Certificate Unlock Banner */}
@@ -446,23 +515,41 @@ export default function VideoPlayerPage() {
             <span className="material-symbols-outlined fs-1 text-warning mb-2">workspace_premium</span>
             <h4 className="font-headline-md fw-bold mb-1 fs-6">Official Course Certificate</h4>
             <p className="font-body-sm text-white-50 mb-3" style={{ fontSize: '12px' }}>
-              Complete 100% of module lessons to unlock your verified digital certificate of completion.
+              {quizPassed
+                ? 'Your verified certificate of accomplishment has been unlocked! Click below to view and print.'
+                : 'Pass the course-specific assessment quiz (70%+) to unlock your verified digital certificate of completion.'}
             </p>
             <button
               onClick={() => {
-                if (percentage >= 100) {
+                if (quizPassed || percentage >= 100) {
                   setShowCertificate(true);
                 } else {
-                  alert(`Complete all remaining lessons to unlock your certificate. Current Progress: ${percentage}%`);
+                  setShowQuiz(true);
                 }
               }}
-              className={`btn btn-sm ${percentage >= 100 ? 'btn-warning text-dark fw-bold' : 'btn-outline-light text-white opacity-75'} w-100 rounded-3 py-2 font-body-sm`}
+              className={`btn btn-sm ${
+                quizPassed || percentage >= 100
+                  ? 'btn-warning text-dark fw-bold'
+                  : 'btn-outline-light text-white'
+              } w-100 rounded-3 py-2.5 font-body-sm shadow-xs`}
             >
-              {percentage >= 100 ? '🎉 View & Download Certificate' : `Locked (${percentage}% Complete)`}
+              {quizPassed || percentage >= 100
+                ? '🎉 View & Download Certificate'
+                : '📝 Take Quiz to Unlock Certificate'}
             </button>
           </div>
         </div>
       </main>
+
+      {/* Quiz Modal */}
+      {showQuiz && (
+        <CourseQuizModal
+          course={course}
+          user={user}
+          onClose={() => setShowQuiz(false)}
+          onQuizPassed={(finalScore, shouldOpenCert) => handleQuizSuccess(finalScore, shouldOpenCert)}
+        />
+      )}
 
       {/* Certificate Modal */}
       {showCertificate && (
@@ -477,3 +564,4 @@ export default function VideoPlayerPage() {
     </div>
   );
 }
+

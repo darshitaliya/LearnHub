@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import CourseQuizModal from '../components/CourseQuizModal';
+import CertificateModal from '../components/CertificateModal';
 import api from '../services/api';
 
 export default function StudentDashboardPage() {
@@ -11,6 +13,11 @@ export default function StudentDashboardPage() {
   const [recommendedCourse, setRecommendedCourse] = useState(null);
   const [progressMap, setProgressMap] = useState({});
   const [loading, setLoading] = useState(true);
+
+  // Quiz & Certificate Modal States
+  const [selectedQuizCourse, setSelectedQuizCourse] = useState(null);
+  const [selectedCertCourse, setSelectedCertCourse] = useState(null);
+
 
   const learningActivityData = [
     { day: 'Mon', height: '40%', hours: '1.5h' },
@@ -64,16 +71,19 @@ export default function StudentDashboardPage() {
             const totalLessonsCount = c.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 1;
             const calcPercentage = Math.min(100, Math.round((completedArr.length / totalLessonsCount) * 100));
 
+            const isCertUnlocked = calcPercentage >= 100 || pRes.data?.quizPassed || pRes.data?.certificateEarned;
             const progData = {
               percentage: calcPercentage,
               completedLessons: completedArr,
-              certificateEarned: calcPercentage >= 100 || pRes.data?.certificateEarned,
+              quizPassed: Boolean(pRes.data?.quizPassed || pRes.data?.certificateEarned),
+              quizScore: pRes.data?.quizScore || 0,
+              certificateEarned: isCertUnlocked,
             };
 
             if (c.id) pMap[c.id] = progData;
             if (c._id) pMap[c._id] = progData;
           } catch (e) {
-            const fallbackData = { percentage: 0, completedLessons: [], certificateEarned: false };
+            const fallbackData = { percentage: 0, completedLessons: [], quizPassed: false, quizScore: 0, certificateEarned: false };
             if (c.id) pMap[c.id] = fallbackData;
             if (c._id) pMap[c._id] = fallbackData;
           }
@@ -84,6 +94,13 @@ export default function StudentDashboardPage() {
       console.error('Error loading student dashboard data:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleQuizSuccess = (finalScore) => {
+    fetchStudentDashboardData();
+    if (selectedQuizCourse) {
+      setSelectedCertCourse(selectedQuizCourse);
     }
   };
 
@@ -333,16 +350,46 @@ export default function StudentDashboardPage() {
                             </div>
                           </div>
 
-                          <div className="d-flex align-items-center justify-content-end">
-                            <Link to={`/course/${courseId}/learn`} className="btn btn-primary font-body-sm py-2 px-3 rounded-3 d-flex align-items-center gap-1">
-                              <span>Resume</span>
-                              <span className="material-symbols-outlined fs-6">play_arrow</span>
-                            </Link>
+                          <div className="d-flex flex-column gap-2 align-items-sm-end justify-content-center">
+                            <div className="d-flex gap-2">
+                              <Link to={`/course/${courseId}/learn`} className="btn btn-primary font-body-sm py-1.5 px-3 rounded-3 d-flex align-items-center gap-1">
+                                <span>Resume</span>
+                                <span className="material-symbols-outlined fs-6">play_arrow</span>
+                              </Link>
+
+                              {prog.certificateEarned && (
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedCertCourse(course)}
+                                  className="btn btn-warning font-body-sm px-2.5 py-1.5 rounded-3 d-flex align-items-center gap-1 shadow-xs"
+                                  title="View & Print Official Certificate"
+                                >
+                                  <span className="material-symbols-outlined fs-6 fill text-dark">workspace_premium</span>
+                                </button>
+                              )}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => setSelectedQuizCourse(course)}
+                              className={`btn btn-sm font-body-sm py-1 px-2 rounded-2 d-flex align-items-center gap-1 ${
+                                prog.quizPassed
+                                  ? 'btn-outline-success text-success fw-semibold'
+                                  : 'btn-outline-primary text-primary fw-semibold'
+                              }`}
+                              style={{ fontSize: '11px' }}
+                            >
+                              <span className="material-symbols-outlined fs-6 fill">
+                                {prog.quizPassed ? 'verified' : 'quiz'}
+                              </span>
+                              <span>{prog.quizPassed ? `Quiz Passed (${prog.quizScore || 100}%) ✅` : 'Take Quiz & Get Certificate'}</span>
+                            </button>
                           </div>
                         </div>
                       );
                     })}
                   </div>
+
                 )}
               </div>
 
@@ -422,6 +469,28 @@ export default function StudentDashboardPage() {
           </section>
         </div>
       </main>
+
+      {/* Quiz Modal */}
+      {selectedQuizCourse && (
+        <CourseQuizModal
+          course={selectedQuizCourse}
+          user={user}
+          onClose={() => setSelectedQuizCourse(null)}
+          onQuizPassed={(score) => handleQuizSuccess(score)}
+        />
+      )}
+
+      {/* Certificate Modal */}
+      {selectedCertCourse && (
+        <CertificateModal
+          studentName={user?.name}
+          courseTitle={selectedCertCourse.title}
+          course={selectedCertCourse}
+          user={user}
+          onClose={() => setSelectedCertCourse(null)}
+        />
+      )}
     </div>
   );
 }
+

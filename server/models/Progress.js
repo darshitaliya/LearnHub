@@ -12,6 +12,10 @@ const progressSchema = new mongoose.Schema(
     completedLessons: [{ type: String }],
     percentage: { type: Number, default: 0 },
     lastWatchedLesson: { type: String, default: '' },
+    quizCompleted: { type: Boolean, default: false },
+    quizScore: { type: Number, default: 0 },
+    quizPassed: { type: Boolean, default: false },
+    quizSubmittedAt: { type: Date, default: null },
     certificateEarned: { type: Boolean, default: false },
   },
   {
@@ -21,3 +25,4 @@ const progressSchema = new mongoose.Schema(
 
 const Progress = mongoose.models.Progress || mongoose.model('Progress', progressSchema);
 export default Progress;
+
