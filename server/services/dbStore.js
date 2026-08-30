@@ -502,8 +502,10 @@ export const dbStore = {
       ...(memoryStore.progress[key] || { userId, courseId }),
       ...updateData,
     };
+    saveStateToFile();
     return memoryStore.progress[key];
   },
+
 
   // STATS
   async getStats() {

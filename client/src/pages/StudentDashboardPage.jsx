@@ -67,16 +67,19 @@ export default function StudentDashboardPage() {
           const primaryId = c.id || c._id;
           try {
             const pRes = await api.get(`/progress/${primaryId}`);
-            const completedArr = pRes.data?.completedLessons || [];
-            const totalLessonsCount = c.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 1;
+            const serverProg = pRes.data || {};
+            const completedArr = serverProg.completedLessons || [];
+            const totalLessonsCount = c.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || Math.max(completedArr.length, 1);
             const calcPercentage = Math.min(100, Math.round((completedArr.length / totalLessonsCount) * 100));
 
-            const isCertUnlocked = calcPercentage >= 100 || pRes.data?.quizPassed || pRes.data?.certificateEarned;
+            const isCertUnlocked = Boolean(serverProg.certificateEarned || serverProg.quizPassed || (serverProg.percentage >= 100) || calcPercentage >= 100);
+            const finalPercentage = isCertUnlocked ? 100 : Math.max(serverProg.percentage || 0, calcPercentage);
+
             const progData = {
-              percentage: calcPercentage,
+              percentage: finalPercentage,
               completedLessons: completedArr,
-              quizPassed: Boolean(pRes.data?.quizPassed || pRes.data?.certificateEarned),
-              quizScore: pRes.data?.quizScore || 0,
+              quizPassed: Boolean(serverProg.quizPassed || isCertUnlocked),
+              quizScore: serverProg.quizScore || (isCertUnlocked ? 100 : 0),
               certificateEarned: isCertUnlocked,
             };
 
@@ -89,6 +92,7 @@ export default function StudentDashboardPage() {
           }
         })
       );
+
       setProgressMap(pMap);
     } catch (err) {
       console.error('Error loading student dashboard data:', err);

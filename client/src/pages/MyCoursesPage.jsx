@@ -52,19 +52,21 @@ export default function MyCoursesPage() {
           try {
             const courseId = crs.id || crs._id;
             const progRes = await api.get(`/progress/${courseId}`);
-            const completedCount = progRes.data?.completedLessons?.length || 0;
-            const totalLessonsCount = crs.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || 1;
+            const serverProg = progRes.data || {};
+            const completedCount = serverProg.completedLessons?.length || 0;
+            const totalLessonsCount = crs.modules?.reduce((sum, m) => sum + (m.lessons?.length || 0), 0) || Math.max(completedCount, 1);
             const calcPercentage = Math.min(100, Math.round((completedCount / totalLessonsCount) * 100));
 
-            const isCertUnlocked = calcPercentage >= 100 || progRes.data?.quizPassed || progRes.data?.certificateEarned;
+            const isCertUnlocked = Boolean(serverProg.certificateEarned || serverProg.quizPassed || (serverProg.percentage >= 100) || calcPercentage >= 100);
+            const finalPercentage = isCertUnlocked ? 100 : Math.max(serverProg.percentage || 0, calcPercentage);
 
             return {
               ...crs,
-              progressPercentage: calcPercentage,
+              progressPercentage: finalPercentage,
               completedCount,
               totalLessonsCount,
-              quizPassed: Boolean(progRes.data?.quizPassed || progRes.data?.certificateEarned),
-              quizScore: progRes.data?.quizScore || 0,
+              quizPassed: Boolean(serverProg.quizPassed || isCertUnlocked),
+              quizScore: serverProg.quizScore || (isCertUnlocked ? 100 : 0),
               isCompleted: isCertUnlocked,
             };
           } catch (err) {
@@ -80,6 +82,7 @@ export default function MyCoursesPage() {
           }
         })
       );
+
 
       setEnrolledCoursesData(coursesWithProgress);
     } catch (err) {
