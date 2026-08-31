@@ -362,8 +362,8 @@ export default function AdminCoursesPage() {
           {/* Header Bar */}
           <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
             <div>
-              <h1 className="font-display-lg-mobile text-on-surface fw-bold m-0" style={{ fontSize: '30px' }}>
-                Course Management
+              <h1 className="font-display-lg-mobile text-on-surface fw-bold m-0" style={{ fontSize: '32px' }}>
+                Course Management ({courses.length})
               </h1>
             </div>
 
