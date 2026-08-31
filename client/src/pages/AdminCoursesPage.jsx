@@ -362,17 +362,9 @@ export default function AdminCoursesPage() {
           {/* Header Bar */}
           <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
             <div>
-              <div className="d-flex align-items-center gap-2">
-                <h1 className="font-display-lg-mobile text-on-surface fw-bold m-0" style={{ fontSize: '30px' }}>
-                  Course Management
-                </h1>
-                <span className="badge bg-primary-container text-primary font-label-caps px-3 py-1.5 rounded-pill fs-6">
-                  {courses.length} Active Courses (Unlimited)
-                </span>
-              </div>
-              <p className="font-body-sm text-on-surface-variant m-0 mt-1">
-                Add, edit, manage and publish unlimited custom courses with custom video modules and YouTube lectures.
-              </p>
+              <h1 className="font-display-lg-mobile text-on-surface fw-bold m-0" style={{ fontSize: '30px' }}>
+                Course Management
+              </h1>
             </div>
 
             <div className="d-flex align-items-center gap-2">
@@ -634,12 +626,12 @@ export default function AdminCoursesPage() {
               <div className="modal-header border-0 pb-2">
                 <div>
                   <h5 className="modal-title font-headline-md fw-bold text-on-surface fs-4">
-                    {modalMode === 'edit' ? '✏️ Edit Course Details' : '✨ Publish New Course (Unlimited Capacity)'}
+                    {modalMode === 'edit' ? '✏️ Edit Course Details' : '✨ Publish New Course'}
                   </h5>
                   <p className="font-body-sm text-on-surface-variant m-0">
                     {modalMode === 'edit'
                       ? 'Modify course curriculum, metadata, videos and syllabus.'
-                      : 'Create a 100% custom course from scratch or quickly pick from pre-configured curricula.'}
+                      : 'Create a custom course from scratch or pick from pre-configured curricula.'}
                   </p>
                 </div>
                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
@@ -807,7 +799,7 @@ export default function AdminCoursesPage() {
                     />
                   </div>
 
-                  {/* UNLIMITED MODULES & LESSONS EDITOR */}
+                  {/* MODULES & LESSONS EDITOR */}
                   <div className="col-12 mt-4">
                     <div className="d-flex align-items-center justify-content-between mb-3 bg-surface-container-low p-2.5 rounded-3 border border-outline-variant/30">
                       <div>
@@ -815,7 +807,7 @@ export default function AdminCoursesPage() {
                           📹 MODULES & LESSONS ({formData.modules?.length || 0} Modules, {formData.modules?.reduce((acc, m) => acc + (m.lessons?.length || 0), 0) || 0} Lessons)
                         </span>
                         <span className="font-body-sm text-muted" style={{ fontSize: '11px' }}>
-                          Add unlimited modules and unlimited lessons with synchronized YouTube video links.
+                          Organize modules and synchronize video lessons.
                         </span>
                       </div>
                       <button
