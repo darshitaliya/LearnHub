@@ -351,10 +351,9 @@ export default function VideoPlayerPage() {
     return `https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&enablejsapi=1&controls=1&playsinline=1`;
   };
 
-  // Helper for Direct MP4 CDN Backup Stream
+  // Helper for Direct MP4 CDN Backup Stream (multiple fallbacks to prevent unsupported codec errors)
   const getDirectVideoSource = (lesson) => {
-    if (!lesson) return 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
-    const rawUrl = lesson.videoUrl || lesson.url || '';
+    const rawUrl = lesson?.videoUrl || lesson?.url || '';
     if (String(rawUrl).endsWith('.mp4') || String(rawUrl).includes('.mp4?')) {
       return rawUrl;
     }
@@ -364,7 +363,7 @@ export default function VideoPlayerPage() {
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
       'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
     ];
-    const charCode = (lesson.title || 'a').charCodeAt(0);
+    const charCode = (lesson?.title || 'a').charCodeAt(0);
     return sampleVideos[charCode % sampleVideos.length];
   };
 
@@ -427,13 +426,12 @@ export default function VideoPlayerPage() {
             </div>
           </div>
 
-
           {/* Dual Stream Multi-Server Switcher */}
           <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2 mb-2 px-1">
             <div className="d-flex align-items-center gap-2">
               <span className="badge bg-primary font-label-caps px-2.5 py-1">SYNCHRONIZED VIDEO STREAM ENGINE</span>
               <span className="font-label-caps text-white-50" style={{ fontSize: '11px' }}>
-                Mode: {streamMode === 'youtube' ? '📺 Official YouTube HD Stream' : '⚡ Direct Ultra-HD MP4 Stream'}
+                Mode: {streamMode === 'youtube' ? '📺 Official YouTube HD Stream' : '⚡ Direct Ultra-HD Stream'}
               </span>
             </div>
 
@@ -488,7 +486,7 @@ export default function VideoPlayerPage() {
               </div>
             ) : streamMode === 'youtube' ? (
               <iframe
-                key={(activeLesson?.id || activeLesson?.title) + '_yt_synced'}
+                key={(activeLesson?.id || activeLesson?.title) + '_yt_synced_' + currentYtId}
                 src={syncedYtUrl}
                 title={activeLesson?.title || course?.title || 'Course Video Lesson'}
                 className="w-100 h-100 border-0"
@@ -500,9 +498,7 @@ export default function VideoPlayerPage() {
                 <video
                   ref={videoRef}
                   controls
-                  autoPlay
-                  onPlay={() => setIsPlaying(true)}
-                  onPause={() => setIsPlaying(false)}
+                  playsInline
                   key={(activeLesson?.id || activeLesson?.title) + '_mp4_player'}
                   className="w-100 h-100 object-fit-contain"
                   poster={course?.thumbnail}
@@ -510,23 +506,34 @@ export default function VideoPlayerPage() {
                   <source src={directMp4Source} type="video/mp4" />
                   Your browser does not support HTML5 video playback.
                 </video>
-
-                {!isPlaying && (
-                  <div
-                    onClick={handleStartPlay}
-                    className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center cursor-pointer transition-all"
-                    style={{ backgroundColor: 'rgba(0,0,0,0.4)', zIndex: 10 }}
-                  >
-                    <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-lg hover-scale transition-transform mb-3" style={{ width: '84px', height: '84px' }}>
-                      <span className="material-symbols-outlined fill" style={{ fontSize: '52px', marginLeft: '4px' }}>play_arrow</span>
-                    </div>
-                    <span className="badge bg-primary font-headline-md px-3.5 py-2 rounded-pill fs-6 fw-bold shadow-md">
-                      ▶ Click to Start Playing Video
-                    </span>
-                  </div>
-                )}
               </>
             )}
+          </div>
+
+          {/* Playback Assistance Notice */}
+          <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 rounded-3 bg-white/5 border border-white/10 mb-3" style={{ fontSize: '12px' }}>
+            <div className="d-flex align-items-center gap-1.5 text-white-50">
+              <span className="material-symbols-outlined text-warning fs-6">info</span>
+              <span>Video blocked or says unavailable in your browser?</span>
+            </div>
+            <div className="d-flex align-items-center gap-2">
+              <button
+                onClick={() => setStreamMode(streamMode === 'youtube' ? 'mp4' : 'youtube')}
+                className="btn btn-sm btn-outline-info py-0.5 px-2.5 font-label-caps"
+                style={{ fontSize: '11px' }}
+              >
+                Switch to {streamMode === 'youtube' ? 'Direct Stream' : 'YouTube Stream'}
+              </button>
+              <a
+                href={directWatchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm btn-danger py-0.5 px-2.5 font-label-caps d-flex align-items-center gap-1 text-decoration-none text-white fw-bold"
+                style={{ fontSize: '11px' }}
+              >
+                <span className="material-symbols-outlined fs-6">open_in_new</span> Open on YouTube
+              </a>
+            </div>
           </div>
 
           {/* Player Navigation Bar */}
