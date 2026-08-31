@@ -450,54 +450,65 @@ export default function AdminReportsPage() {
           </div>
 
           {/* Screen Executive Header Bar (Hidden during Print) */}
-          <header className="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 bg-white p-4 rounded-4 border border-outline-variant/30 shadow-sm no-print">
-            <div>
-              <span className="font-label-caps text-primary fw-bold tracking-wider" style={{ fontSize: '11px' }}>
-                EXECUTIVE REPORT GENERATOR & PLATFORM AUDIT • {currentDateFormatted.toUpperCase()}
-              </span>
-              <h1 className="font-headline-md text-on-surface m-0 fw-bold fs-2 mt-1">
-                Data Reports & Analytics Export
-              </h1>
+          <header className="bg-white p-4 rounded-4 border border-outline-variant/30 shadow-sm no-print d-flex flex-column gap-3">
+            <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+              <div>
+                <span className="font-label-caps text-primary fw-bold tracking-wider" style={{ fontSize: '11px' }}>
+                  EXECUTIVE REPORT GENERATOR & PLATFORM AUDIT • {currentDateFormatted.toUpperCase()}
+                </span>
+                <h1 className="font-headline-md text-on-surface m-0 fw-bold fs-2 mt-1">
+                  Data Reports & Analytics Export
+                </h1>
+              </div>
             </div>
 
-            <div className="d-flex flex-wrap align-items-center gap-2">
-              <select
-                value={activeReportType}
-                onChange={(e) => setActiveReportType(e.target.value)}
-                className="form-select font-body-sm rounded-3 py-2 px-3 border-outline-variant/40 fw-bold text-primary w-auto shadow-xs"
-                style={{ minWidth: '250px', cursor: 'pointer' }}
-              >
-                <option value="enrollments">🎓 Student Enrollments ({enrollments.length})</option>
-                <option value="courses">📚 Course Catalog ({courses.length})</option>
-                <option value="users">👥 Registered Users ({users.length})</option>
-                <option value="executive">⚡ Executive Health Summary</option>
-              </select>
+            {/* Action Toolbar in Proper Clean Sequence */}
+            <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 pt-3 border-top border-outline-variant/20">
+              <div className="d-flex align-items-center gap-2 flex-grow-1" style={{ maxWidth: '360px' }}>
+                <span className="font-label-caps text-on-surface-variant text-nowrap" style={{ fontSize: '11px' }}>
+                  Select Report:
+                </span>
+                <select
+                  value={activeReportType}
+                  onChange={(e) => setActiveReportType(e.target.value)}
+                  className="form-select font-body-sm rounded-3 py-2 px-3 border-outline-variant/40 fw-bold text-primary shadow-xs w-100"
+                  style={{ cursor: 'pointer' }}
+                >
+                  <option value="enrollments">🎓 Student Enrollments ({enrollments.length})</option>
+                  <option value="courses">📚 Course Catalog ({courses.length})</option>
+                  <option value="users">👥 Registered Users ({users.length})</option>
+                  <option value="executive">⚡ Executive Health Summary</option>
+                </select>
+              </div>
 
-              <button
-                onClick={handleExportCSV}
-                disabled={exporting}
-                className="btn btn-success text-white font-body-sm px-3.5 py-2 rounded-3 d-flex align-items-center gap-1.5 shadow-xs fw-bold"
-                title="Download CSV spreadsheet with full raw data"
-              >
-                <span className="material-symbols-outlined fs-5">table_view</span>
-                {exporting ? 'Exporting...' : 'Export CSV'}
-              </button>
+              {/* Action Buttons in Clean Sequence */}
+              <div className="d-flex flex-wrap align-items-center gap-2">
+                <button
+                  onClick={handlePrintReport}
+                  className="btn btn-primary font-body-sm px-3.5 py-2 rounded-3 d-flex align-items-center gap-1.5 shadow-xs fw-bold"
+                  title="Print or Save PDF report directly"
+                >
+                  <span className="material-symbols-outlined fs-5">print</span> Print / PDF Report
+                </button>
 
-              <button
-                onClick={handleExportJSON}
-                className="btn btn-outline-secondary font-body-sm px-3.5 py-2 rounded-3 d-flex align-items-center gap-1.5"
-                title="Download JSON structured data payload"
-              >
-                <span className="material-symbols-outlined fs-5">data_object</span> JSON Data
-              </button>
+                <button
+                  onClick={handleExportCSV}
+                  disabled={exporting}
+                  className="btn btn-success text-white font-body-sm px-3.5 py-2 rounded-3 d-flex align-items-center gap-1.5 shadow-xs fw-bold"
+                  title="Download CSV spreadsheet with full raw data"
+                >
+                  <span className="material-symbols-outlined fs-5">table_view</span>
+                  {exporting ? 'Exporting...' : 'Export CSV'}
+                </button>
 
-              <button
-                onClick={handlePrintReport}
-                className="btn btn-primary font-body-sm px-3.5 py-2 rounded-3 d-flex align-items-center gap-1.5 shadow-xs fw-bold"
-                title="Print or Save PDF report directly"
-              >
-                <span className="material-symbols-outlined fs-5">print</span> Print / PDF Report
-              </button>
+                <button
+                  onClick={handleExportJSON}
+                  className="btn btn-outline-secondary font-body-sm px-3.5 py-2 rounded-3 d-flex align-items-center gap-1.5"
+                  title="Download JSON structured data payload"
+                >
+                  <span className="material-symbols-outlined fs-5">data_object</span> JSON Data
+                </button>
+              </div>
             </div>
           </header>
 
