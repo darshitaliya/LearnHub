@@ -556,9 +556,6 @@ export default function AdminReportsPage() {
           <section className="bg-white border border-outline-variant/30 rounded-4 p-4 shadow-sm print-card-container">
             <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-4 pb-3 border-bottom border-outline-variant/20 no-print">
               <div>
-                <span className="badge bg-primary-container text-primary font-label-caps px-3 py-1 rounded-pill mb-1">
-                  OFFICIAL AUDIT REPORT
-                </span>
                 <h3 className="font-headline-md text-on-surface m-0 fw-bold fs-4">
                   {getReportTitle()}
                 </h3>
