@@ -14,7 +14,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: React 18 & Component Architecture',
         lessons: [
-          { title: 'React 18 Architecture & Hooks Overview', duration: '22:15', videoUrl: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8', type: 'video' },
+          { title: 'React 18 Architecture & Hooks Overview', duration: '22:15', videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8', type: 'video' },
           { title: 'State Management & Custom Hook Patterns', duration: '18:40', videoUrl: 'https://www.youtube.com/watch?v=Oe421EPjeBE', type: 'video' },
         ],
       },
