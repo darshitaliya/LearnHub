@@ -38,6 +38,9 @@ export const createCourse = async (req, res, next) => {
       : ['Software Engineering'];
 
     const courseId = `crs_${Date.now()}`;
+    const calculatedLessonsCount = modules && Array.isArray(modules)
+      ? modules.reduce((acc, m) => acc + (m.lessons ? m.lessons.length : 0), 0)
+      : 1;
 
     const newCourse = await dbStore.createCourse({
       id: courseId,
@@ -46,21 +49,21 @@ export const createCourse = async (req, res, next) => {
       description: description || '',
       category: category.trim(),
       level: level || 'Beginner',
-      price: 0,
-      originalPrice: 0,
+      price: req.body.price !== undefined ? Number(req.body.price) : 0,
+      originalPrice: req.body.originalPrice !== undefined ? Number(req.body.originalPrice) : 0,
       rating: 5.0,
       reviewsCount: 1,
-      hours: 12,
-      lessonsCount: modules ? modules.reduce((acc, m) => acc + (m.lessons ? m.lessons.length : 0), 0) : 5,
-      languages: ['English'],
+      hours: req.body.hours ? Number(req.body.hours) : Math.max(1, Math.round(calculatedLessonsCount * 0.75)),
+      lessonsCount: calculatedLessonsCount,
+      languages: req.body.languages || ['English'],
       techStack: parsedTechStack,
-      instructorName: user ? user.name : 'Dr. Elena Rostova',
-      instructorRole: 'Principal Platform Engineer',
-      instructorBio: 'Expert instructor teaching modern software architecture.',
+      instructorName: req.body.instructorName || (user ? user.name : 'Dr. Elena Rostova'),
+      instructorRole: req.body.instructorRole || 'Principal Platform Engineer',
+      instructorBio: req.body.instructorBio || 'Expert instructor teaching modern software architecture.',
       instructorAvatar: user ? user.avatar : '',
-      thumbnail: thumbnail || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCc_P4bDonDSVnHhQab5Iw5rgqL2FAg1YI9MYUOdkuuHogQ9yokQeqxsakBi3ghU_SkEsswrJXOsiDE0eephEXqbAPWnwm-HVr-n6KQl44LkfqSd0bw3cqp4f73eaOQj9iNCV5879MGfNdPVgSr_qD-Q9Yuj3b52KGmh_y1v4y143OHehRzZtU9dd2EDtWwqYsl9Qh-wtSI3bXsIe2_iu4OXD6vJMxsjiFaaJhgln9n9TkKdJRzDPIW',
-      status: 'published',
-      featured: true,
+      thumbnail: thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
+      status: req.body.status || 'published',
+      featured: req.body.featured !== undefined ? req.body.featured : true,
       modules: modules || [
         {
           id: `mod_${Date.now()}`,
@@ -70,10 +73,54 @@ export const createCourse = async (req, res, next) => {
           ],
         },
       ],
-      includes: ['Full HD Video Access', 'Certificate of completion', 'Lifetime Access'],
+      includes: req.body.includes || ['Full HD Video Access', 'Certificate of completion', 'Lifetime Access'],
     });
 
     return res.status(201).json(newCourse);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateCourse = async (req, res, next) => {
+  try {
+    const courseId = req.params.id;
+    const { title, category, level, description, thumbnail, techStack, modules, price, hours, instructorName, status } = req.body;
+
+    const updateData = {};
+    if (title !== undefined) updateData.title = title.trim();
+    if (category !== undefined) updateData.category = category.trim();
+    if (level !== undefined) updateData.level = level;
+    if (description !== undefined) {
+      updateData.description = description;
+      updateData.subtitle = description.slice(0, 100);
+    }
+    if (thumbnail !== undefined) updateData.thumbnail = thumbnail;
+    if (price !== undefined) updateData.price = Number(price);
+    if (status !== undefined) updateData.status = status;
+    if (instructorName !== undefined) updateData.instructorName = instructorName;
+
+    if (techStack !== undefined) {
+      updateData.techStack = Array.isArray(techStack)
+        ? techStack
+        : typeof techStack === 'string'
+        ? techStack.split(',').map((s) => s.trim())
+        : ['Software Engineering'];
+    }
+
+    if (modules !== undefined && Array.isArray(modules)) {
+      updateData.modules = modules;
+      updateData.lessonsCount = modules.reduce((acc, m) => acc + (m.lessons ? m.lessons.length : 0), 0);
+      updateData.hours = hours ? Number(hours) : Math.max(1, Math.round(updateData.lessonsCount * 0.75));
+    } else if (hours !== undefined) {
+      updateData.hours = Number(hours);
+    }
+
+    const updated = await dbStore.updateCourse(courseId, updateData);
+    if (!updated) {
+      return res.status(404).json({ success: false, error: 'Course not found' });
+    }
+    return res.status(200).json({ success: true, message: 'Course updated successfully', course: updated });
   } catch (err) {
     next(err);
   }
