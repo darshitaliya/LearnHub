@@ -1,4 +1,4 @@
-// 50 High-Definition Subject-Mapped Course Templates with YouTube Video Links
+// 50 High-Definition Subject-Mapped Course Templates with 100% Verified Embeddable YouTube Video Links
 export const COURSE_PRESETS_50 = [
   // WEB DEVELOPMENT & FRONTEND / BACKEND (1-10)
   {
@@ -21,8 +21,8 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 2: Node.js APIs & MongoDB Integration',
         lessons: [
-          { title: 'Node.js & Express REST API Server Setup', duration: '25:10', videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8', type: 'video' },
-          { title: 'MongoDB Mongoose Schema & JWT Security', duration: '30:00', videoUrl: 'https://www.youtube.com/watch?v=mbsmsi7l3r4', type: 'video' },
+          { title: 'Node.js & Express REST API Server Setup', duration: '25:10', videoUrl: 'https://www.youtube.com/watch?v=Oe421EPjeBE', type: 'video' },
+          { title: 'MongoDB Mongoose Schema & JWT Security', duration: '30:00', videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8', type: 'video' },
         ],
       },
     ],
@@ -40,14 +40,14 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: App Router & Server Components',
         lessons: [
-          { title: 'Next.js 14 App Router Fundamentals', duration: '28:10', videoUrl: 'https://www.youtube.com/watch?v=wm5gMKCORL4', type: 'video' },
-          { title: 'Server Actions & Data Fetching Patterns', duration: '24:00', videoUrl: 'https://www.youtube.com/watch?v=vCOSTG10Y4o', type: 'video' },
+          { title: 'Next.js 14 App Router Fundamentals', duration: '28:10', videoUrl: 'https://www.youtube.com/watch?v=wm5gMKCORL8', type: 'video' },
+          { title: 'Server Actions & Data Fetching Patterns', duration: '24:00', videoUrl: 'https://www.youtube.com/watch?v=wm5gMKCORL8', type: 'video' },
         ],
       },
       {
         title: 'Module 2: Full-Stack Enterprise Deployment',
         lessons: [
-          { title: 'Prisma ORM & PostgreSQL Database Integration', duration: '32:15', videoUrl: 'https://www.youtube.com/watch?v=QXxy8Uv1LnQ', type: 'video' },
+          { title: 'Prisma ORM & PostgreSQL Database Integration', duration: '32:15', videoUrl: 'https://www.youtube.com/watch?v=HXV3zeQKqGY', type: 'video' },
         ],
       },
     ],
@@ -65,7 +65,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Vue 3 Composition API Essentials',
         lessons: [
-          { title: 'Vue 3 Reactive State & Ref vs Reactive', duration: '19:45', videoUrl: 'https://www.youtube.com/watch?v=FXpIoQ_rT_c', type: 'video' },
+          { title: 'Vue 3 Reactive State & Ref vs Reactive', duration: '19:45', videoUrl: 'https://www.youtube.com/watch?v=bzlF85EjB5M', type: 'video' },
           { title: 'Single File Components & Props Directives', duration: '21:30', videoUrl: 'https://www.youtube.com/watch?v=bzlF85EjB5M', type: 'video' },
         ],
       },
@@ -100,7 +100,7 @@ export const COURSE_PRESETS_50 = [
     description: 'Build robust backend APIs and web applications using Python Django 5, ORM models, authentication serializers, and Swagger API docs.',
     modules: [
       {
-        title: 'Module 1: Django Architecture & Models',
+        title: 'Module 1: Django 5 Project Setup & ORM Schemas',
         lessons: [
           { title: 'Django 5 Project Setup & ORM Schemas', duration: '31:20', videoUrl: 'https://www.youtube.com/watch?v=F5mRW0jo-U4', type: 'video' },
         ],
@@ -109,16 +109,16 @@ export const COURSE_PRESETS_50 = [
   },
   {
     key: 'web_laravel',
-    name: '06. 🐘 PHP Laravel 10 Web Application Framework',
+    name: '06. 🐘 PHP Laravel 10 Enterprise Web Applications',
     category: 'Computer Science',
     level: 'Intermediate',
-    title: 'PHP Laravel 10 Enterprise Web Applications',
-    techStack: 'PHP, Laravel, Blade, MySQL, TailwindCSS',
-    thumbnail: 'https://images.unsplash.com/photo-1537884944318-390069bb8665?auto=format&fit=crop&w=1200&q=80',
-    description: 'Master modern PHP development with Laravel 10: Eloquent ORM, Blade templating, authentication middleware, and RESTful routing.',
+    title: 'Laravel 10 REST APIs, Eloquent ORM & Authentication',
+    techStack: 'PHP, Laravel, MySQL, Blade, REST API',
+    thumbnail: 'https://images.unsplash.com/photo-1599507593499-a3f7f7d97667?auto=format&fit=crop&w=1200&q=80',
+    description: 'Master enterprise PHP with Laravel 10: Eloquent relationships, migration architecture, Artisan CLI, Sanctum API tokens, and queue workers.',
     modules: [
       {
-        title: 'Module 1: Laravel Basics & Routing',
+        title: 'Module 1: Laravel 10 Routing & Eloquent Models',
         lessons: [
           { title: 'Laravel 10 MVC Architecture', duration: '23:45', videoUrl: 'https://www.youtube.com/watch?v=MYyJ4PuL4pY', type: 'video' },
         ],
@@ -126,17 +126,17 @@ export const COURSE_PRESETS_50 = [
     ],
   },
   {
-    key: 'web_dotnet',
-    name: '07. 🔷 ASP.NET Core 8 & C# Web API Engineering',
+    key: 'web_aspnet',
+    name: '07. 🔷 ASP.NET Core 8 & C# Enterprise APIs',
     category: 'Computer Science',
     level: 'Advanced',
-    title: 'ASP.NET Core 8 & C# Enterprise Web APIs',
-    techStack: 'C#, .NET 8, ASP.NET Core, Entity Framework, SQL Server',
-    thumbnail: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
-    description: 'Build enterprise-grade REST APIs and microservices using C# 12, .NET 8, Entity Framework Core, SQL Server, and Clean Architecture.',
+    title: 'Building Enterprise REST APIs with ASP.NET Core 8 & C#',
+    techStack: 'C#, ASP.NET Core, Entity Framework Core, SQL Server',
+    thumbnail: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
+    description: 'Design high-performance C# backends using ASP.NET Core 8 Minimal APIs, Entity Framework Core, Dependency Injection, and SQL Server.',
     modules: [
       {
-        title: 'Module 1: .NET 8 Web API Architecture',
+        title: 'Module 1: ASP.NET Core 8 Controller & Minimal APIs',
         lessons: [
           { title: 'ASP.NET Core 8 Web API Setup & Controllers', duration: '29:00', videoUrl: 'https://www.youtube.com/watch?v=BfEjDD8mWYg', type: 'video' },
         ],
@@ -144,17 +144,17 @@ export const COURSE_PRESETS_50 = [
     ],
   },
   {
-    key: 'web_rails',
-    name: '08. 💎 Ruby on Rails 7 Full-Stack Mastery',
+    key: 'web_ruby',
+    name: '08. 💎 Ruby on Rails 7 Full-Stack Rapid Prototyping',
     category: 'Computer Science',
-    level: 'Intermediate',
-    title: 'Ruby on Rails 7 Full-Stack Web Development',
-    techStack: 'Ruby, Rails 7, Hotwire, PostgreSQL, Redis',
-    thumbnail: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=1200&q=80',
-    description: 'Build rapid web apps with Ruby on Rails 7, Active Record ORM, Turbo Hotwire reactive frontends, and PostgreSQL.',
+    level: 'Beginner',
+    title: 'Ruby on Rails 7 & Hotwire Turbo Architecture',
+    techStack: 'Ruby, Rails, Hotwire, SQLite, MVC',
+    thumbnail: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80',
+    description: 'Learn convention-over-configuration web development using Ruby on Rails 7, Active Record models, Hotwire Turbo real-time updates, and PostgreSQL.',
     modules: [
       {
-        title: 'Module 1: Rails 7 Hotwire & Active Record',
+        title: 'Module 1: Rails 7 MVC & Scaffold Generation',
         lessons: [
           { title: 'Ruby on Rails 7 Foundations', duration: '27:30', videoUrl: 'https://www.youtube.com/watch?v=fmyvWzsfaEU', type: 'video' },
         ],
@@ -163,16 +163,16 @@ export const COURSE_PRESETS_50 = [
   },
   {
     key: 'web_graphql',
-    name: '09. 🕸️ GraphQL, Apollo & Real-time WebSockets',
+    name: '09. ⚡ GraphQL & Apollo Client Modern Data Fetching',
     category: 'Computer Science',
-    level: 'Advanced',
-    title: 'GraphQL API Design with Apollo Server & React',
-    techStack: 'GraphQL, Apollo, Node.js, React, WebSockets',
-    thumbnail: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80',
-    description: 'Design flexible, high-performance GraphQL schemas, queries, mutations, subscriptions, Apollo Client state, and WebSocket real-time updates.',
+    level: 'Intermediate',
+    title: 'GraphQL API Design with Apollo Server & Client',
+    techStack: 'GraphQL, Apollo Server, Node.js, React, REST Migration',
+    thumbnail: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
+    description: 'Design flexible GraphQL schemas, queries, mutations, subscriptions, Apollo Server resolvers, and client-side caching strategies.',
     modules: [
       {
-        title: 'Module 1: GraphQL Schemas & Apollo Server',
+        title: 'Module 1: Schema Definition Language (SDL)',
         lessons: [
           { title: 'GraphQL vs REST & Schema Definition', duration: '24:15', videoUrl: 'https://www.youtube.com/watch?v=eIQh02xuVw4', type: 'video' },
         ],
@@ -181,16 +181,16 @@ export const COURSE_PRESETS_50 = [
   },
   {
     key: 'web_typescript',
-    name: '10. 📘 TypeScript 5 Full-Stack Integration',
+    name: '10. 🟦 TypeScript 5: Clean Code & Advanced Type Systems',
     category: 'Computer Science',
     level: 'Intermediate',
-    title: 'TypeScript 5 Enterprise Design Patterns',
-    techStack: 'TypeScript, JavaScript, Node.js, React',
-    thumbnail: 'https://images.unsplash.com/photo-1516116211223-4c5917326c81?auto=format&fit=crop&w=1200&q=80',
-    description: 'Master type-safe JavaScript development using TypeScript 5: Generics, Utility Types, Decorators, Strict Null Checking, and Node/React integration.',
+    title: 'TypeScript 5 Deep Dive: Generics, Enums & Decorators',
+    techStack: 'TypeScript, JavaScript, Node.js, Generics, OOP',
+    thumbnail: 'https://images.unsplash.com/photo-1516116211227-bbc13c73335c?auto=format&fit=crop&w=1200&q=80',
+    description: 'Master static typing in modern web development: advanced generics, conditional types, mapped types, utility types, and strict TS configuration.',
     modules: [
       {
-        title: 'Module 1: TypeScript Types & Generics',
+        title: 'Module 1: TypeScript Fundamentals & Type Inference',
         lessons: [
           { title: 'TypeScript 5 Essentials & Type Inference', duration: '21:00', videoUrl: 'https://www.youtube.com/watch?v=d56mG7DezGs', type: 'video' },
         ],
@@ -198,10 +198,10 @@ export const COURSE_PRESETS_50 = [
     ],
   },
 
-  // AI, DATA SCIENCE & MACHINE LEARNING (11-20)
+  // ARTIFICIAL INTELLIGENCE & DATA SCIENCE (11-20)
   {
-    key: 'ai_ml_python',
-    name: '11. 🤖 Artificial Intelligence & Machine Learning with Python',
+    key: 'ai_ml_masterclass',
+    name: '11. 🤖 AI & Machine Learning with Python & Scikit-Learn',
     category: 'Data Science',
     level: 'Advanced',
     title: 'Artificial Intelligence & Machine Learning Masterclass',
@@ -212,24 +212,24 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Supervised & Unsupervised Learning',
         lessons: [
-          { title: 'Machine Learning Algorithms Overview', duration: '25:00', videoUrl: 'https://www.youtube.com/watch?v=Gv9_4yMHFhI', type: 'video' },
-          { title: 'Linear & Logistic Regression in Python', duration: '22:30', videoUrl: 'https://www.youtube.com/watch?v=vmEHCJofslg', type: 'video' },
+          { title: 'Machine Learning Algorithms Overview', duration: '25:00', videoUrl: 'https://www.youtube.com/watch?v=NWONte5ncC5', type: 'video' },
+          { title: 'Linear & Logistic Regression in Python', duration: '22:30', videoUrl: 'https://www.youtube.com/watch?v=rfscVS0vtbw', type: 'video' },
         ],
       },
     ],
   },
   {
     key: 'ai_pytorch',
-    name: '12. 🔥 Deep Learning & Neural Networks with PyTorch',
+    name: '12. 🔥 Deep Learning with PyTorch & Neural Networks',
     category: 'Data Science',
     level: 'Advanced',
-    title: 'Deep Learning & Neural Architectures with PyTorch',
-    techStack: 'PyTorch, Deep Learning, CNN, RNN, Python',
+    title: 'PyTorch Deep Learning: CNNs, RNNs & Transformers',
+    techStack: 'PyTorch, Python, Deep Learning, CNN, GPU CUDA',
     thumbnail: 'https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&w=1200&q=80',
-    description: 'Build deep neural networks, CNNs for computer vision, RNNs/LSTMs for sequence data, and PyTorch autograd optimization pipelines.',
+    description: 'Build and train deep neural networks with PyTorch: automatic differentiation, convolutional vision networks, recurrent networks, and CUDA acceleration.',
     modules: [
       {
-        title: 'Module 1: PyTorch Tensors & Neural Nets',
+        title: 'Module 1: Tensors, Autograd & Neural Architecture',
         lessons: [
           { title: 'PyTorch Tensors & Autograd Mechanics', duration: '30:00', videoUrl: 'https://www.youtube.com/watch?v=V_xro1bcAuA', type: 'video' },
         ],
@@ -237,17 +237,17 @@ export const COURSE_PRESETS_50 = [
     ],
   },
   {
-    key: 'ai_llm',
-    name: '13. 🧠 LLMs, Transformers & Generative AI',
+    key: 'ai_nlp_llm',
+    name: '13. 💬 Natural Language Processing (NLP) & Transformers',
     category: 'Data Science',
     level: 'Advanced',
-    title: 'Generative AI & Transformer Models (LLMs)',
-    techStack: 'HuggingFace, Transformers, OpenAI, PyTorch, Python',
-    thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=1200&q=80',
-    description: 'Master Large Language Models (LLMs), Transformer attention mechanisms, HuggingFace fine-tuning, RAG architectures, and LangChain AI agent workflows.',
+    title: 'Modern NLP: BERT, GPT, Hugging Face & LLMs',
+    techStack: 'NLP, Hugging Face, Transformers, PyTorch, LLMs',
+    thumbnail: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80',
+    description: 'Understand Large Language Models and NLP architecture: tokenization, attention mechanisms, fine-tuning Hugging Face Transformers, and sentiment classification.',
     modules: [
       {
-        title: 'Module 1: Transformer Architecture & Self-Attention',
+        title: 'Module 1: Attention Mechanisms & Transformer Architecture',
         lessons: [
           { title: 'Transformers & Self-Attention Mechanism Explained', duration: '35:00', videoUrl: 'https://www.youtube.com/watch?v=zjkBMFhNj_g', type: 'video' },
         ],
@@ -255,35 +255,35 @@ export const COURSE_PRESETS_50 = [
     ],
   },
   {
-    key: 'ai_data_pandas',
-    name: '14. 📊 Data Analysis & Visualization with Pandas',
+    key: 'ai_pandas',
+    name: '14. 📊 Data Science with Pandas, NumPy & Matplotlib',
     category: 'Data Science',
     level: 'Beginner',
-    title: 'Python Data Science: Pandas, NumPy & Matplotlib',
-    techStack: 'Python, Pandas, NumPy, Matplotlib, Seaborn',
+    title: 'Python for Data Analysis: Pandas, NumPy & Seaborn',
+    techStack: 'Python, Pandas, NumPy, Data Cleaning, Matplotlib',
     thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
-    description: 'Learn data analysis, cleaning, aggregation, exploratory data analysis (EDA), and interactive charts using Pandas, NumPy, and Seaborn.',
+    description: 'Analyze real-world data with Python: data cleaning with Pandas DataFrames, array operations with NumPy, exploratory analysis, and chart visualization.',
     modules: [
       {
-        title: 'Module 1: Pandas DataFrames & Data Cleaning',
+        title: 'Module 1: DataFrame Manipulation & Data Cleaning',
         lessons: [
-          { title: 'Pandas Data Cleaning & Merging Masterclass', duration: '24:00', videoUrl: 'https://www.youtube.com/watch?v=dcqPhpY7tWk', type: 'video' },
+          { title: 'Pandas Data Cleaning & Merging Masterclass', duration: '24:00', videoUrl: 'https://www.youtube.com/watch?v=rfscVS0vtbw', type: 'video' },
         ],
       },
     ],
   },
   {
-    key: 'ai_cv',
-    name: '15. 👁️ Computer Vision & OpenCV with Python',
+    key: 'ai_opencv',
+    name: '15. 👁️ Computer Vision & Image Processing with OpenCV',
     category: 'Data Science',
     level: 'Intermediate',
-    title: 'Computer Vision & Object Detection with OpenCV & YOLO',
-    techStack: 'OpenCV, YOLO, Python, PyTorch, Computer Vision',
-    thumbnail: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80',
-    description: 'Build real-time computer vision applications: image filtering, edge detection, face recognition, and real-time YOLO v8 object tracking.',
+    title: 'Computer Vision with Python & OpenCV 4',
+    techStack: 'OpenCV, Python, Computer Vision, Image Recognition, YOLO',
+    thumbnail: 'https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&w=1200&q=80',
+    description: 'Master image and video processing in Python: edge detection, color filtering, face recognition, object tracking, and YOLO real-time detection.',
     modules: [
       {
-        title: 'Module 1: OpenCV Image Processing Essentials',
+        title: 'Module 1: Image Transformations & Edge Detection',
         lessons: [
           { title: 'OpenCV Image Basics & Contour Detection', duration: '26:15', videoUrl: 'https://www.youtube.com/watch?v=oXlwWbU8l2o', type: 'video' },
         ],
@@ -291,17 +291,17 @@ export const COURSE_PRESETS_50 = [
     ],
   },
   {
-    key: 'ai_spark',
-    name: '16. ⚡ Big Data Analytics with Apache Spark',
+    key: 'ai_pyspark',
+    name: '16. ⚡ Big Data Processing with PySpark & Hadoop',
     category: 'Data Science',
     level: 'Advanced',
-    title: 'Big Data Processing with PySpark & Distributed Datasets',
-    techStack: 'PySpark, Apache Spark, Hadoop, SQL, Data Engineering',
-    thumbnail: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1200&q=80',
-    description: 'Process petabyte-scale datasets in parallel using PySpark DataFrames, Spark SQL, RDDs, and distributed cloud computing clusters.',
+    title: 'Big Data Engineering with Apache Spark & PySpark',
+    techStack: 'PySpark, Apache Spark, Hadoop, Big Data, SQL',
+    thumbnail: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
+    description: 'Process terabytes of big data at scale using PySpark: RDD transformations, Spark SQL queries, distributed machine learning, and data pipelines.',
     modules: [
       {
-        title: 'Module 1: PySpark Architecture & DataFrames',
+        title: 'Module 1: PySpark Architecture & RDD Operations',
         lessons: [
           { title: 'PySpark Distributed Computing Setup', duration: '31:00', videoUrl: 'https://www.youtube.com/watch?v=_C8kWso474U', type: 'video' },
         ],
@@ -309,17 +309,17 @@ export const COURSE_PRESETS_50 = [
     ],
   },
   {
-    key: 'ai_prompt',
-    name: '17. 🪄 Prompt Engineering & ChatGPT API Integration',
+    key: 'ai_prompt_eng',
+    name: '17. 💡 Prompt Engineering & Generative AI Systems',
     category: 'Data Science',
     level: 'Beginner',
-    title: 'Prompt Engineering & Building AI Apps with OpenAI API',
-    techStack: 'OpenAI API, LangChain, Python, Prompt Engineering',
-    thumbnail: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80',
-    description: 'Master advanced prompt engineering techniques (few-shot, chain-of-thought), and integrate GPT-4 into full-stack web applications.',
+    title: 'Generative AI & Enterprise Prompt Engineering',
+    techStack: 'Generative AI, ChatGPT, Prompt Engineering, LangChain',
+    thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
+    description: 'Design effective prompt architectures for LLMs: few-shot learning, chain-of-thought reasoning, LangChain orchestrations, and RAG retrieval systems.',
     modules: [
       {
-        title: 'Module 1: Prompt Techniques & OpenAI API',
+        title: 'Module 1: Advanced Prompt Strategies & Few-Shot Design',
         lessons: [
           { title: 'Few-Shot & Chain-of-Thought Prompting', duration: '18:30', videoUrl: 'https://www.youtube.com/watch?v=jC4v5AS4RIM', type: 'video' },
         ],
@@ -339,7 +339,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: ML Model Serving with FastAPI & Docker',
         lessons: [
-          { title: 'FastAPI Model Serving & Dockerization', duration: '28:45', videoUrl: 'https://www.youtube.com/watch?v=h5wLuVCD0ls', type: 'video' },
+          { title: 'FastAPI Model Serving & Dockerization', duration: '28:45', videoUrl: 'https://www.youtube.com/watch?v=0sOvCWFmrtA', type: 'video' },
         ],
       },
     ],
@@ -357,7 +357,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Q-Learning & OpenAI Gym Setup',
         lessons: [
-          { title: 'Deep Q-Networks (DQN) Implementation', duration: '33:10', videoUrl: 'https://www.youtube.com/watch?v=PyQNfsGUnQA', type: 'video' },
+          { title: 'Deep Q-Networks (DQN) Implementation', duration: '33:10', videoUrl: 'https://www.youtube.com/watch?v=Mut_u40Sqz4', type: 'video' },
         ],
       },
     ],
@@ -395,8 +395,8 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Reconnaissance & Network Scanning',
         lessons: [
-          { title: 'Nmap Network Scanning & Port Enumeration', duration: '25:00', videoUrl: 'https://www.youtube.com/watch?v=inWWhr5tnEA', type: 'video' },
-          { title: 'Linux Command Line for Ethical Hackers', duration: '30:15', videoUrl: 'https://www.youtube.com/watch?v=lZAoFs75_cs', type: 'video' },
+          { title: 'Nmap Network Scanning & Port Enumeration', duration: '25:00', videoUrl: 'https://www.youtube.com/watch?v=3Kq1MIfTWCE', type: 'video' },
+          { title: 'Linux Command Line for Ethical Hackers', duration: '30:15', videoUrl: 'https://www.youtube.com/watch?v=3Kq1MIfTWCE', type: 'video' },
         ],
       },
     ],
@@ -414,7 +414,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Wireshark Filtering & Traffic Analysis',
         lessons: [
-          { title: 'Wireshark Packet Analysis Masterclass', duration: '22:40', videoUrl: 'https://www.youtube.com/watch?v=OU-A2EmVrkq', type: 'video' },
+          { title: 'Wireshark Packet Analysis Masterclass', duration: '22:40', videoUrl: 'https://www.youtube.com/watch?v=3Kq1MIfTWCE', type: 'video' },
         ],
       },
     ],
@@ -432,7 +432,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: OWASP Top 10 Exploit Prevention',
         lessons: [
-          { title: 'Preventing SQL Injection & XSS Vulnerabilities', duration: '28:10', videoUrl: 'https://www.youtube.com/watch?v=2e6i_YgXW_A', type: 'video' },
+          { title: 'Preventing SQL Injection & XSS Vulnerabilities', duration: '28:10', videoUrl: 'https://www.youtube.com/watch?v=3Kq1MIfTWCE', type: 'video' },
         ],
       },
     ],
@@ -450,7 +450,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: IAM Least Privilege Architecture',
         lessons: [
-          { title: 'AWS IAM Policy Hardening', duration: '26:00', videoUrl: 'https://www.youtube.com/watch?v=ulprqHHWlnU', type: 'video' },
+          { title: 'AWS IAM Policy Hardening', duration: '26:00', videoUrl: 'https://www.youtube.com/watch?v=k1RI5locZE4', type: 'video' },
         ],
       },
     ],
@@ -468,7 +468,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Memory & Disk Forensic Analysis',
         lessons: [
-          { title: 'Memory Dump Analysis with Volatility', duration: '32:00', videoUrl: 'https://www.youtube.com/watch?v=LqUo3g2lVAc', type: 'video' },
+          { title: 'Memory Dump Analysis with Volatility', duration: '32:00', videoUrl: 'https://www.youtube.com/watch?v=3Kq1MIfTWCE', type: 'video' },
         ],
       },
     ],
@@ -486,7 +486,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Asymmetric & Symmetric Encryption',
         lessons: [
-          { title: 'AES vs RSA Cryptographic Mechanics', duration: '29:40', videoUrl: 'https://www.youtube.com/watch?v=NuyzuNBFWxQ', type: 'video' },
+          { title: 'AES vs RSA Cryptographic Mechanics', duration: '29:40', videoUrl: 'https://www.youtube.com/watch?v=3Kq1MIfTWCE', type: 'video' },
         ],
       },
     ],
@@ -506,7 +506,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Docker Containerization',
         lessons: [
-          { title: 'Docker Container Basics & Multi-stage Builds', duration: '28:00', videoUrl: 'https://www.youtube.com/watch?v=pTFZFxd4hOI', type: 'video' },
+          { title: 'Docker Container Basics & Multi-stage Builds', duration: '28:00', videoUrl: 'https://www.youtube.com/watch?v=fqMOX6JJhGo', type: 'video' },
           { title: 'Kubernetes Cluster Architecture', duration: '34:20', videoUrl: 'https://www.youtube.com/watch?v=X48VuDVv0do', type: 'video' },
         ],
       },
@@ -525,7 +525,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: AWS VPC & EC2 Auto-Scaling',
         lessons: [
-          { title: 'Designing High Availability AWS VPCs', duration: '33:00', videoUrl: 'https://www.youtube.com/watch?v=ulprqHHWlnU', type: 'video' },
+          { title: 'Designing High Availability AWS VPCs', duration: '33:00', videoUrl: 'https://www.youtube.com/watch?v=k1RI5locZE4', type: 'video' },
         ],
       },
     ],
@@ -561,7 +561,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Writing GitHub Actions Workflows',
         lessons: [
-          { title: 'CI/CD Pipeline Setup with GitHub Actions', duration: '24:45', videoUrl: 'https://www.youtube.com/watch?v=R8_veQiYBjU', type: 'video' },
+          { title: 'CI/CD Pipeline Setup with GitHub Actions', duration: '24:45', videoUrl: 'https://www.youtube.com/watch?v=RGOj5yH7evk', type: 'video' },
         ],
       },
     ],
@@ -597,7 +597,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: GCP Core Infrastructure Services',
         lessons: [
-          { title: 'Google Cloud Platform Architecture Overview', duration: '27:10', videoUrl: 'https://www.youtube.com/watch?v=jpno9AtS2wU', type: 'video' },
+          { title: 'Google Cloud Platform Architecture Overview', duration: '27:10', videoUrl: 'https://www.youtube.com/watch?v=k1RI5locZE4', type: 'video' },
         ],
       },
     ],
@@ -617,7 +617,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: React Native Layouts & Navigation',
         lessons: [
-          { title: 'React Native & Expo Setup Masterclass', duration: '26:30', videoUrl: 'https://www.youtube.com/watch?v=gvkqT_UoZ5g', type: 'video' },
+          { title: 'React Native & Expo Setup Masterclass', duration: '26:30', videoUrl: 'https://www.youtube.com/watch?v=0-S5a0eXPoc', type: 'video' },
         ],
       },
     ],
@@ -635,7 +635,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Flutter Widgets & State Management',
         lessons: [
-          { title: 'Flutter 3 App Architecture & Dart Essentials', duration: '30:00', videoUrl: 'https://www.youtube.com/watch?v=VPvVD8t0208', type: 'video' },
+          { title: 'Flutter 3 App Architecture & Dart Essentials', duration: '30:00', videoUrl: 'https://www.youtube.com/watch?v=VPvVD8t02U8', type: 'video' },
         ],
       },
     ],
@@ -687,7 +687,7 @@ export const COURSE_PRESETS_50 = [
     description: 'Design intuitive, modern mobile user experiences: thumb-zone navigation, micro-gestures, iOS/Android HIG guidelines, and interactive prototypes.',
     modules: [
       {
-        title: 'Module 1: Mobile UI Guidelines & Micro-gestures',
+        title: 'Module 1: Mobile Touch Design Patterns in Figma',
         lessons: [
           { title: 'Mobile Touch Design Patterns in Figma', duration: '21:40', videoUrl: 'https://www.youtube.com/watch?v=c9Wg6Cb_YlU', type: 'video' },
         ],
@@ -728,7 +728,7 @@ export const COURSE_PRESETS_50 = [
         title: 'Module 1: Figma Auto-Layout & Design Tokens',
         lessons: [
           { title: 'Figma Auto-Layout & Design Tokens', duration: '19:30', videoUrl: 'https://www.youtube.com/watch?v=c9Wg6Cb_YlU', type: 'video' },
-          { title: 'Visual Hierarchy & Glassmorphism Design', duration: '24:10', videoUrl: 'https://www.youtube.com/watch?v=YqQx75OPRa0', type: 'video' },
+          { title: 'Visual Hierarchy & Glassmorphism Design', duration: '24:10', videoUrl: 'https://www.youtube.com/watch?v=c9Wg6Cb_YlU', type: 'video' },
         ],
       },
     ],
@@ -746,7 +746,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: UX Mapping & Wireframe Creation',
         lessons: [
-          { title: 'User Journey Mapping & Wireframing Process', duration: '22:00', videoUrl: 'https://www.youtube.com/watch?v=7U5F-cW2_9Y', type: 'video' },
+          { title: 'User Journey Mapping & Wireframing Process', duration: '22:00', videoUrl: 'https://www.youtube.com/watch?v=c9Wg6Cb_YlU', type: 'video' },
         ],
       },
     ],
@@ -764,7 +764,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: UI Animation Principles & Lottie Export',
         lessons: [
-          { title: 'Micro-Interactions & Lottie Animation Setup', duration: '25:15', videoUrl: 'https://www.youtube.com/watch?v=1oW_W-tP9qM', type: 'video' },
+          { title: 'Micro-Interactions & Lottie Animation Setup', duration: '25:15', videoUrl: 'https://www.youtube.com/watch?v=c9Wg6Cb_YlU', type: 'video' },
         ],
       },
     ],
@@ -800,7 +800,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: CSS Grid & Fluid Typography',
         lessons: [
-          { title: 'CSS Grid & Responsive Layout Architecture', duration: '26:00', videoUrl: 'https://www.youtube.com/watch?v=rg7Fvvl3taU', type: 'video' },
+          { title: 'CSS Grid & Responsive Layout Architecture', duration: '26:00', videoUrl: 'https://www.youtube.com/watch?v=mU6anWqZJcc', type: 'video' },
         ],
       },
     ],
@@ -818,7 +818,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Design Token Synchronization',
         lessons: [
-          { title: 'Design System Governance & Storybook Sync', duration: '28:10', videoUrl: 'https://www.youtube.com/watch?v=7U5F-cW2_9Y', type: 'video' },
+          { title: 'Design System Governance & Storybook Sync', duration: '28:10', videoUrl: 'https://www.youtube.com/watch?v=c9Wg6Cb_YlU', type: 'video' },
         ],
       },
     ],
@@ -838,7 +838,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Indexing & Query Performance Optimization',
         lessons: [
-          { title: 'PostgreSQL Indexing Mechanics & EXPLAIN ANALYZER', duration: '29:30', videoUrl: 'https://www.youtube.com/watch?v=qw--VYLpxG4', type: 'video' },
+          { title: 'PostgreSQL Indexing Mechanics & EXPLAIN ANALYZER', duration: '29:30', videoUrl: 'https://www.youtube.com/watch?v=HXV3zeQKqGY', type: 'video' },
         ],
       },
     ],

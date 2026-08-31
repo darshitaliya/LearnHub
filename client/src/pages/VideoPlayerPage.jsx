@@ -248,16 +248,28 @@ export default function VideoPlayerPage() {
 
   // Extract exact YouTube Video ID from lesson URL or fallback to high-quality subject-synchronized tutorial
   const extractYouTubeId = (lesson, currentCourse) => {
+    // List of known broken/dead/restricted/placeholder video IDs on YouTube to always bypass:
+    const brokenIds = new Set([
+      'w7ejDZ8SWv8', 'h5wLuVCD0ls', 'PyQNfsGUnQA', 'NuyzuNBFWxQ', '2e6i_YgXW_A', 
+      'jpno9AtS2wU', 'VPvVD8t0208', 'OU-A2EmVrkq', 'wm5gMKCORL4', 'ulprqHHWlnU',
+      'LqUo3g2lVAc', 'inWWhr5tnEA', 'lZAoFs75_cs', 'pTFZFxd4hOI', 'SqcY0GlETPk',
+      'gvkqT_UoZ5g', '1oW_W-tP9qM', '7U5F-cW2_9Y', 'YqQx75OPRa0', 'rg7Fvvl3taU'
+    ]);
+
     const raw = lesson?.videoUrl || lesson?.url || '';
     if (raw) {
       const str = String(raw).trim();
-      // If it's a direct 11-char ID
-      if (/^[a-zA-Z0-9_-]{11}$/.test(str) && str !== 'w7ejDZ8SWv8') {
-        return str;
+      let extracted = '';
+      if (/^[a-zA-Z0-9_-]{11}$/.test(str)) {
+        extracted = str;
+      } else {
+        const match = str.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/i);
+        if (match && match[1]) {
+          extracted = match[1];
+        }
       }
-      const match = str.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/i);
-      if (match && match[1] && match[1] !== 'w7ejDZ8SWv8') {
-        return match[1];
+      if (extracted && !brokenIds.has(extracted)) {
+        return extracted;
       }
     }
 
@@ -265,55 +277,78 @@ export default function VideoPlayerPage() {
     const techStackText = Array.isArray(currentCourse?.techStack) ? currentCourse.techStack.join(' ') : (currentCourse?.techStack || '');
     const textToSearch = `${currentCourse?.title || ''} ${currentCourse?.category || ''} ${techStackText} ${lesson?.title || ''}`.toLowerCase();
 
+    // FastAPI / MLOps / Microservices
+    if (textToSearch.includes('fastapi') || textToSearch.includes('mlops') || textToSearch.includes('model serving')) return '0sOvCWFmrtA'; // FastAPI Course - freeCodeCamp
+
+    // Reinforcement Learning / AI
+    if (textToSearch.includes('reinforcement') || textToSearch.includes('q-learning') || textToSearch.includes('openai gym')) return 'Mut_u40Sqz4'; // Reinforcement Learning Course
+
+    // PyTorch / Deep Learning / Vision
+    if (textToSearch.includes('pytorch') || textToSearch.includes('deep learning')) return 'V_xro1bcAuA';
+    if (textToSearch.includes('opencv') || textToSearch.includes('computer vision') || textToSearch.includes('image')) return 'oXlwWbU8l2o';
+    if (textToSearch.includes('spark') || textToSearch.includes('pyspark') || textToSearch.includes('big data')) return '_C8kWso474U';
+    if (textToSearch.includes('airflow') || textToSearch.includes('data engineering')) return 'K9AnJ9_ZAXE';
+    if (textToSearch.includes('prompt') || textToSearch.includes('llm') || textToSearch.includes('chatgpt') || textToSearch.includes('genai')) return 'jC4v5AS4RIM';
+    if (textToSearch.includes('transformer') || textToSearch.includes('bert') || textToSearch.includes('nlp')) return 'zjkBMFhNj_g';
+    if (textToSearch.includes('machine learning') || textToSearch.includes('ai') || textToSearch.includes('data science')) return 'NWONte5ncC5';
+    if (textToSearch.includes('pandas') || textToSearch.includes('numpy') || textToSearch.includes('analytics')) return 'rfscVS0vtbw';
+    if (textToSearch.includes('python')) return 'rfscVS0vtbw';
+
     // Frontend & Web Frameworks
-    if (textToSearch.includes('react') || textToSearch.includes('redux') || textToSearch.includes('zustand')) return 'bMknfKXIFA8'; // React 18 Full Course (freeCodeCamp)
-    if (textToSearch.includes('next') || textToSearch.includes('nextjs')) return 'wm5gMKCORL8'; // Next.js 14 App Router
-    if (textToSearch.includes('vue') || textToSearch.includes('pinia')) return 'bzlF85EjB5M'; // Vue.js 3 Masterclass
-    if (textToSearch.includes('angular')) return '3qBXWUpoPHo'; // Angular 17 Full Course
-    if (textToSearch.includes('javascript') || textToSearch.includes('js') || textToSearch.includes('es6')) return 'W6NZfCO5SIk'; // Modern JavaScript Course
-    if (textToSearch.includes('typescript') || textToSearch.includes('ts')) return 'd56mG7DezGs'; // TypeScript Course
-    if (textToSearch.includes('html') || textToSearch.includes('css') || textToSearch.includes('tailwind')) return 'mU6anWqZJcc'; // HTML5 & CSS3 Masterclass
+    if (textToSearch.includes('react') || textToSearch.includes('redux') || textToSearch.includes('zustand')) return 'bMknfKXIFA8';
+    if (textToSearch.includes('next') || textToSearch.includes('nextjs')) return 'wm5gMKCORL8';
+    if (textToSearch.includes('vue') || textToSearch.includes('pinia')) return 'bzlF85EjB5M';
+    if (textToSearch.includes('angular')) return '3qBXWUpoPHo';
+    if (textToSearch.includes('javascript') || textToSearch.includes('js') || textToSearch.includes('es6')) return 'W6NZfCO5SIk';
+    if (textToSearch.includes('typescript') || textToSearch.includes('ts')) return 'd56mG7DezGs';
+    if (textToSearch.includes('html') || textToSearch.includes('css') || textToSearch.includes('tailwind')) return 'mU6anWqZJcc';
+    if (textToSearch.includes('graphql') || textToSearch.includes('apollo')) return 'eIQh02xuVw4';
+    if (textToSearch.includes('ruby') || textToSearch.includes('rails')) return 'fmyvWzsfaEU';
 
     // Backend & API Development
-    if (textToSearch.includes('node') || textToSearch.includes('express')) return 'Oe421EPjeBE'; // Node.js & Express REST APIs
-    if (textToSearch.includes('django') || textToSearch.includes('drf')) return 'F5mRW0jo-U4'; // Python Django 5
-    if (textToSearch.includes('laravel') || textToSearch.includes('php')) return 'MYyJ4PuL4pY'; // PHP Laravel 10
-    if (textToSearch.includes('asp.net') || textToSearch.includes('.net') || textToSearch.includes('c#')) return 'BfEjDD8mWYg'; // ASP.NET Core 8 Web API
-    if (textToSearch.includes('spring') || textToSearch.includes('java')) return 'grEKMHGYyns'; // Java & Spring Boot
-    if (textToSearch.includes('golang') || textToSearch.includes('go')) return 'YS4e4mycGmg'; // Go Programming Language
-    if (textToSearch.includes('rust')) return 'zF34dRivLOw'; // Rust Programming
-
-    // Python, AI & Data Science
-    if (textToSearch.includes('python')) return 'rfscVS0vtbw'; // Python Programming for Beginners
-    if (textToSearch.includes('machine learning') || textToSearch.includes('ai') || textToSearch.includes('deep learning') || textToSearch.includes('pytorch') || textToSearch.includes('data science') || textToSearch.includes('tensor')) return 'Gv9_4yMHFhI'; // AI & Machine Learning Masterclass
-    if (textToSearch.includes('pandas') || textToSearch.includes('numpy') || textToSearch.includes('data analytics')) return 'vmEHCJofslg'; // Python Data Science & Analytics
+    if (textToSearch.includes('node') || textToSearch.includes('express')) return 'Oe421EPjeBE';
+    if (textToSearch.includes('django') || textToSearch.includes('drf')) return 'F5mRW0jo-U4';
+    if (textToSearch.includes('laravel') || textToSearch.includes('php')) return 'MYyJ4PuL4pY';
+    if (textToSearch.includes('asp.net') || textToSearch.includes('.net') || textToSearch.includes('c#')) return 'BfEjDD8mWYg';
+    if (textToSearch.includes('spring') || textToSearch.includes('java')) return 'grEKMHGYyns';
+    if (textToSearch.includes('golang') || textToSearch.includes('go')) return 'YS4e4mycGmg';
+    if (textToSearch.includes('rust')) return 'zF34dRivLOw';
 
     // Cloud, DevOps & Containers
-    if (textToSearch.includes('docker') || textToSearch.includes('container')) return 'fqMOX6JJhGo'; // Docker Containerization
-    if (textToSearch.includes('kubernetes') || textToSearch.includes('k8s')) return 'X48VuDVv0do'; // Kubernetes in Production
-    if (textToSearch.includes('github') || textToSearch.includes('ci/cd') || textToSearch.includes('pipeline') || textToSearch.includes('git')) return 'R8_veQiYBjU'; // GitHub Actions & CI/CD Pipelines
-    if (textToSearch.includes('aws') || textToSearch.includes('cloud') || textToSearch.includes('gcp') || textToSearch.includes('azure')) return 'jpno9AtS2wU'; // Cloud Infrastructure & GCP
+    if (textToSearch.includes('docker') || textToSearch.includes('container')) return 'fqMOX6JJhGo';
+    if (textToSearch.includes('kubernetes') || textToSearch.includes('k8s')) return 'X48VuDVv0do';
+    if (textToSearch.includes('terraform') || textToSearch.includes('iac')) return '7xngnjfIlK4';
+    if (textToSearch.includes('github') || textToSearch.includes('ci/cd') || textToSearch.includes('git')) return 'RGOj5yH7evk';
+    if (textToSearch.includes('linux') || textToSearch.includes('bash') || textToSearch.includes('shell')) return 'v-FnUwcQfZs';
+    if (textToSearch.includes('aws') || textToSearch.includes('cloud') || textToSearch.includes('gcp') || textToSearch.includes('azure')) return 'k1RI5locZE4';
 
     // Cybersecurity & Ethical Hacking
-    if (textToSearch.includes('security') || textToSearch.includes('ethical hacking') || textToSearch.includes('cyber') || textToSearch.includes('penetration')) return '3Kq1MIfTWCE'; // Cyber Security Full Course
+    if (textToSearch.includes('security') || textToSearch.includes('ethical hacking') || textToSearch.includes('cyber') || textToSearch.includes('wireshark') || textToSearch.includes('nmap') || textToSearch.includes('owasp') || textToSearch.includes('crypto')) return '3Kq1MIfTWCE';
 
     // Mobile App Development
-    if (textToSearch.includes('flutter') || textToSearch.includes('dart')) return 'VPvVD8t02U8'; // Flutter & Dart Masterclass
-    if (textToSearch.includes('react native') || textToSearch.includes('android') || textToSearch.includes('ios') || textToSearch.includes('mobile')) return '0-S5a0eXPoc'; // React Native Mobile
+    if (textToSearch.includes('flutter') || textToSearch.includes('dart')) return 'VPvVD8t02U8';
+    if (textToSearch.includes('react native') || textToSearch.includes('android') || textToSearch.includes('ios') || textToSearch.includes('mobile')) return '0-S5a0eXPoc';
+    if (textToSearch.includes('swift') || textToSearch.includes('swiftui')) return 'b1oGLp1vYGY';
+    if (textToSearch.includes('kotlin') || textToSearch.includes('compose')) return 'cC0x485H6r4';
+    if (textToSearch.includes('pwa')) return 'ksXwaWHCW6k';
 
     // UI/UX Design & Prototyping
-    if (textToSearch.includes('figma') || textToSearch.includes('design') || textToSearch.includes('ui') || textToSearch.includes('ux')) return 'c9Wg6Cb_YlU'; // Figma UI/UX Design
+    if (textToSearch.includes('figma') || textToSearch.includes('design') || textToSearch.includes('ui') || textToSearch.includes('ux')) return 'c9Wg6Cb_YlU';
+    if (textToSearch.includes('blender') || textToSearch.includes('3d')) return 't_cQSisS1i4';
 
     // Databases & Architecture
-    if (textToSearch.includes('sql') || textToSearch.includes('postgres') || textToSearch.includes('mysql') || textToSearch.includes('database') || textToSearch.includes('mongodb')) return 'HXV3zeQKqGY'; // SQL Database Course
+    if (textToSearch.includes('redis')) return 'jgpVdJB2sKQ';
+    if (textToSearch.includes('solidity') || textToSearch.includes('blockchain') || textToSearch.includes('ethereum') || textToSearch.includes('web3')) return 'gyMwXuJrbJQ';
+    if (textToSearch.includes('system design') || textToSearch.includes('scalability')) return 'm8Icp_Cid5o';
+    if (textToSearch.includes('unity') || textToSearch.includes('game')) return 'gB1F9G0JXOo';
+    if (textToSearch.includes('sql') || textToSearch.includes('postgres') || textToSearch.includes('mysql') || textToSearch.includes('database') || textToSearch.includes('mongodb')) return 'HXV3zeQKqGY';
 
     return 'bMknfKXIFA8';
   };
 
   const getSyncedYouTubeUrl = (lesson, currentCourse) => {
     const ytId = extractYouTubeId(lesson, currentCourse);
-    const originParam = typeof window !== 'undefined' ? `&origin=${encodeURIComponent(window.location.origin)}` : '';
-    return `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=0&rel=0&modestbranding=1&enablejsapi=1&controls=1&playsinline=1${originParam}`;
+    return `https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&enablejsapi=1&controls=1&playsinline=1`;
   };
 
   // Helper for Direct MP4 CDN Backup Stream
