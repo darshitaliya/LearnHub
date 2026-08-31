@@ -275,18 +275,29 @@ export default function AdminCoursesPage() {
       };
 
       if (modalMode === 'edit' && editingCourseId) {
-        await api.put(`/courses/${editingCourseId}`, payload);
+        const updateRes = await api.put(`/courses/${editingCourseId}`, payload);
+        const updatedCourse = updateRes.data?.course || updateRes.data;
+        if (updatedCourse) {
+          setCourses((prev) =>
+            prev.map((c) => (c.id === editingCourseId || c._id === editingCourseId ? updatedCourse : c))
+          );
+        }
         alert('✅ Course updated successfully!');
       } else {
-        await api.post('/courses', payload);
+        const createRes = await api.post('/courses', payload);
+        const newCourse = createRes.data?.course || createRes.data;
+        if (newCourse) {
+          setCourses((prev) => [newCourse, ...prev.filter((c) => (c.id || c._id) !== (newCourse.id || newCourse._id))]);
+        }
         alert('✅ New Course Published Successfully! You can add unlimited courses to LearnHub.');
       }
 
       setShowModal(false);
       fetchCourses();
     } catch (err) {
-      console.error(err);
-      alert('Failed to save course: ' + (err.response?.data?.error || err.message));
+      console.error('Failed to save course:', err);
+      const errMsg = err.response?.data?.error || err.response?.data?.message || err.message;
+      alert('Failed to save course: ' + errMsg);
     } finally {
       setSaving(false);
     }

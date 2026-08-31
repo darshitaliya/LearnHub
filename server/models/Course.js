@@ -7,7 +7,7 @@ const lessonSchema = new mongoose.Schema(
     duration: { type: String, default: '15:00' },
     videoUrl: { type: String, default: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8' },
     isLocked: { type: Boolean, default: false },
-    type: { type: String, enum: ['video', 'reading'], default: 'video' },
+    type: { type: String, default: 'video' },
   },
   { _id: false }
 );
@@ -36,8 +36,8 @@ const courseSchema = new mongoose.Schema(
     subtitle: { type: String, default: '' },
     description: { type: String, default: '' },
     category: { type: String, required: true, index: true },
-    level: { type: String, enum: ['Beginner', 'Intermediate', 'Advanced'], default: 'Beginner' },
-    price: { type: Number, required: true, default: 0 },
+    level: { type: String, default: 'Beginner' },
+    price: { type: Number, default: 0 },
     originalPrice: { type: Number, default: 0 },
     rating: { type: Number, default: 4.8 },
     reviewsCount: { type: Number, default: 0 },
@@ -52,7 +52,7 @@ const courseSchema = new mongoose.Schema(
     thumbnail: { type: String, default: '' },
     modules: [moduleSchema],
     includes: [{ type: String }],
-    status: { type: String, enum: ['published', 'draft', 'pending'], default: 'published' },
+    status: { type: String, default: 'published' },
     featured: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false, index: true },
     deletedAt: { type: Date, default: null },

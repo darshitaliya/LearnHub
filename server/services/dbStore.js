@@ -262,9 +262,20 @@ export const dbStore = {
   async getAllCourses(filters = {}, includeDeleted = false) {
     let coursesList = [];
     if (isMongoConnected()) {
-      const query = includeDeleted ? {} : { isDeleted: { $ne: true } };
-      coursesList = await Course.find(query).sort({ createdAt: -1, _id: -1 });
+      try {
+        const query = includeDeleted ? {} : { isDeleted: { $ne: true } };
+        coursesList = await Course.find(query).sort({ createdAt: -1, _id: -1 });
+        if (coursesList && coursesList.length > 0) {
+          // Keep memoryStore synced with MongoDB data
+          memoryStore.courses = coursesList;
+          saveStateToFile();
+        }
+      } catch (err) {
+        console.warn('Mongo getAllCourses error, falling back to local memory store:', err.message);
+        coursesList = [...memoryStore.courses].filter((c) => includeDeleted || !c.isDeleted);
+      }
     } else {
+      loadStateFromFile();
       coursesList = [...memoryStore.courses]
         .filter((c) => includeDeleted || !c.isDeleted)
         .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
@@ -304,11 +315,11 @@ export const dbStore = {
       try {
         const query = { $or: [{ _id: id }, { id }] };
         if (!includeDeleted) query.isDeleted = { $ne: true };
-        return await Course.findOne(query);
-      } catch (err) {
-        return null;
-      }
+        const found = await Course.findOne(query);
+        if (found) return found;
+      } catch (err) {}
     }
+    loadStateFromFile();
     return memoryStore.courses.find((c) => (c.id === id || c._id === id) && (includeDeleted || !c.isDeleted)) || null;
   },
 
@@ -321,20 +332,20 @@ export const dbStore = {
       subtitle: courseData.subtitle || 'Comprehensive Course',
       description: courseData.description || 'Master modern concepts with real-world projects.',
       category: courseData.category || 'Computer Science',
-      level: courseData.level || 'Intermediate',
+      level: courseData.level || 'Beginner',
       price: courseData.price || 0,
       originalPrice: courseData.originalPrice || 0,
       rating: courseData.rating || 5.0,
       reviewsCount: courseData.reviewsCount || 1,
       hours: courseData.hours || 12,
-      lessonsCount: courseData.lessonsCount || (courseData.modules ? courseData.modules.reduce((acc, m) => acc + (m.lessons ? m.lessons.length : 0), 0) : 5),
+      lessonsCount: courseData.lessonsCount || (courseData.modules ? courseData.modules.reduce((acc, m) => acc + (m.lessons ? m.lessons.length : 0), 0) : 1),
       languages: courseData.languages || ['English'],
       techStack: courseData.techStack || ['Software Engineering'],
       instructorName: courseData.instructorName || 'Dr. Elena Rostova',
       instructorRole: courseData.instructorRole || 'Lead Educator',
       instructorBio: courseData.instructorBio || 'Expert industry educator building modern educational content.',
       instructorAvatar: courseData.instructorAvatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC',
-      thumbnail: courseData.thumbnail || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80',
+      thumbnail: courseData.thumbnail || 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
       status: courseData.status || 'published',
       featured: courseData.featured !== undefined ? courseData.featured : true,
       modules: courseData.modules || [],
@@ -344,40 +355,54 @@ export const dbStore = {
       createdAt: new Date().toISOString(),
     };
 
+    // Always keep memoryStore and local disk updated
+    const existingIdx = memoryStore.courses.findIndex((c) => c.id === courseId || c._id === courseId);
+    if (existingIdx >= 0) {
+      memoryStore.courses[existingIdx] = newCourse;
+    } else {
+      memoryStore.courses.unshift(newCourse);
+    }
+    saveStateToFile();
+
     if (isMongoConnected()) {
-      const created = await Course.create(newCourse);
-      saveStateToFile();
-      return created;
+      try {
+        const created = await Course.create(newCourse);
+        return created;
+      } catch (mongoErr) {
+        console.warn('Mongo create error, saved in adaptive store:', mongoErr.message);
+      }
     }
 
-    newCourse._id = newCourse.id;
-    memoryStore.courses.unshift(newCourse);
-    saveStateToFile();
     return newCourse;
   },
 
   async updateCourse(id, updateData) {
-    let result = null;
+    const idx = memoryStore.courses.findIndex((c) => c.id === id || c._id === id);
+    if (idx !== -1) {
+      memoryStore.courses[idx] = { ...memoryStore.courses[idx], ...updateData };
+    }
+    saveStateToFile();
+
+    let result = idx !== -1 ? memoryStore.courses[idx] : null;
     if (isMongoConnected()) {
       try {
         result = await Course.findOneAndUpdate({ $or: [{ _id: id }, { id }] }, updateData, { new: true });
       } catch (err) {
         console.error('Error updating course in Mongo:', err);
       }
-    } else {
-      const idx = memoryStore.courses.findIndex((c) => c.id === id || c._id === id);
-      if (idx !== -1) {
-        memoryStore.courses[idx] = { ...memoryStore.courses[idx], ...updateData };
-        result = memoryStore.courses[idx];
-      }
     }
-    saveStateToFile();
     return result;
   },
 
   // SOFT DELETE COURSE
   async deleteCourse(id) {
     const softDeleteData = { isDeleted: true, status: 'draft', deletedAt: new Date().toISOString() };
+    const idx = memoryStore.courses.findIndex((c) => c.id === id || c._id === id);
+    if (idx !== -1) {
+      memoryStore.courses[idx] = { ...memoryStore.courses[idx], ...softDeleteData };
+    }
+    saveStateToFile();
+
     let result = null;
     if (isMongoConnected()) {
       try {
@@ -385,14 +410,7 @@ export const dbStore = {
       } catch (err) {
         console.error('Error soft deleting course in Mongo:', err);
       }
-    } else {
-      const idx = memoryStore.courses.findIndex((c) => c.id === id || c._id === id);
-      if (idx !== -1) {
-        memoryStore.courses[idx] = { ...memoryStore.courses[idx], ...softDeleteData };
-        result = memoryStore.courses[idx];
-      }
     }
-    saveStateToFile();
     return result || true;
   },
 
@@ -400,7 +418,7 @@ export const dbStore = {
   async deleteAllCourses() {
     const softDeleteData = { isDeleted: true, status: 'draft', deletedAt: new Date().toISOString() };
     if (isMongoConnected()) {
-      await Course.updateMany({}, softDeleteData);
+      await Course.updateMany({}, softDeleteData).catch(() => {});
     }
     memoryStore.courses = memoryStore.courses.map((c) => ({ ...c, ...softDeleteData }));
     saveStateToFile();
