@@ -54,7 +54,8 @@
         "crs_1787469340460",
         "crs_1787468529801",
         "crs_1787477280878",
-        "crs_1787480410655"
+        "crs_1787480410655",
+        "crs_1788255415633"
       ],
       "wishlist": [],
       "createdAt": "2026-08-23T08:23:06.811Z",
@@ -81,6 +82,70 @@
     }
   ],
   "courses": [
+    {
+      "_id": "crs_1788255415633",
+      "id": "crs_1788255415633",
+      "title": "UI/UX Design Systems & Figma Prototyping Masterclass",
+      "subtitle": "Learn modern UI/UX design systems, micro-interactions, color theory, glassmorphism, responsive typog",
+      "description": "Learn modern UI/UX design systems, micro-interactions, color theory, glassmorphism, responsive typography, Figma auto-layout, wireframing, and user research.",
+      "category": "Design",
+      "level": "Beginner",
+      "price": 0,
+      "originalPrice": 0,
+      "rating": 5,
+      "reviewsCount": 1,
+      "hours": 2,
+      "lessonsCount": 2,
+      "languages": [
+        "English"
+      ],
+      "techStack": [
+        "Figma",
+        "UI/UX",
+        "Design Systems",
+        "Glassmorphism",
+        "CSS3"
+      ],
+      "instructorName": "Dr. Elena Rostova",
+      "instructorRole": "Principal Platform Engineer",
+      "instructorBio": "Expert instructor teaching modern software architecture.",
+      "instructorAvatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "thumbnail": "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=1200&q=80",
+      "status": "published",
+      "featured": true,
+      "modules": [
+        {
+          "id": "mod_1788255412606_0",
+          "title": "Module 1: Figma Auto-Layout & Design Tokens",
+          "lessons": [
+            {
+              "id": "les_1788255412606_0_0",
+              "title": "Figma Auto-Layout & Design Tokens",
+              "duration": "19:30",
+              "videoUrl": "https://www.youtube.com/watch?v=c9Wg6Cb_YlU",
+              "isLocked": false,
+              "type": "video"
+            },
+            {
+              "id": "les_1788255412606_0_1",
+              "title": "Visual Hierarchy & Glassmorphism Design",
+              "duration": "24:10",
+              "videoUrl": "https://www.youtube.com/watch?v=c9Wg6Cb_YlU",
+              "isLocked": false,
+              "type": "video"
+            }
+          ]
+        }
+      ],
+      "includes": [
+        "Full HD Video Access",
+        "Certificate of completion",
+        "Lifetime Access"
+      ],
+      "isDeleted": false,
+      "deletedAt": null,
+      "createdAt": "2026-09-01T09:36:55.633Z"
+    },
     {
       "id": "crs_1787480497023",
       "title": "Automated CI/CD Pipelines with GitHub Actions & Docker",
@@ -749,9 +814,42 @@
       "certificateEarned": false,
       "quizPassed": false,
       "quizScore": 0
+    },
+    "usr_1787473386811_crs_1788255415633": {
+      "key": "usr_1787473386811_crs_1788255415633",
+      "userId": "usr_1787473386811",
+      "courseId": "crs_1788255415633",
+      "completedLessons": [
+        "les_1788255412606_0_0",
+        "les_1788255412606_0_1"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "quizPassed": true,
+      "quizScore": 80,
+      "lastWatchedLesson": "les_1788255412606_0_1",
+      "updatedAt": "2026-09-01T09:38:02.627Z",
+      "quizCompleted": true,
+      "quizSubmittedAt": "2026-09-01T09:38:18.466Z"
     }
   },
   "enrollments": [
+    {
+      "_id": "enr_1788255476090_98jy1",
+      "id": "enr_1788255476090_98jy1",
+      "userId": "usr_1787473386811",
+      "userName": "Darsh Italiya",
+      "userEmail": "darshitaliya3@gmail.com",
+      "userPhone": "+919409970864",
+      "profession": "Student",
+      "goal": "Skill Upgrade & Professional Certification",
+      "courseId": "crs_1788255415633",
+      "courseTitle": "UI/UX Design Systems & Figma Prototyping Masterclass",
+      "status": "Active",
+      "isDeleted": false,
+      "deletedAt": null,
+      "createdAt": "2026-09-01T09:37:56.090Z"
+    },
     {
       "_id": "enr_1788253469299_p7t9w",
       "id": "enr_1788253469299_p7t9w",

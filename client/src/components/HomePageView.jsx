@@ -122,19 +122,19 @@ export default function HomePageView({ onNavigate }) {
 
               {/* Floating Glass Card 1 - Left Top */}
               <div
-                className="position-absolute glass-panel p-3 rounded-4 glass-card"
+                className="position-absolute glass-panel p-3 rounded-4 glass-card shadow-lg"
                 style={{ top: '10%', left: '-30px', width: '210px', zIndex: 10 }}
               >
                 <div className="d-flex align-items-center gap-2 mb-2">
                   <div
-                    className="rounded-circle bg-primary-container/20 d-flex align-items-center justify-content-center text-primary"
-                    style={{ width: '38px', height: '38px', backgroundColor: 'rgba(79, 70, 229, 0.15)' }}
+                    className="rounded-circle d-flex align-items-center justify-content-center text-primary"
+                    style={{ width: '38px', height: '38px', backgroundColor: 'rgba(79, 70, 229, 0.18)' }}
                   >
                     <span className="material-symbols-outlined fs-5 fill">code</span>
                   </div>
                   <div>
-                    <p className="font-label-caps text-on-surface m-0" style={{ fontSize: '11px' }}>Web Dev Bootcamp</p>
-                    <p className="font-body-sm text-on-surface-variant m-0" style={{ fontSize: '10px' }}>Next JS & React</p>
+                    <p className="font-label-caps text-on-surface m-0 fw-bold" style={{ fontSize: '11px' }}>Web Dev Bootcamp</p>
+                    <p className="font-body-sm text-on-surface-variant m-0 fw-medium" style={{ fontSize: '11px' }}>Next JS & React</p>
                   </div>
                 </div>
                 <div className="w-100 bg-surface-container rounded-pill" style={{ height: '6px' }}>
@@ -144,13 +144,13 @@ export default function HomePageView({ onNavigate }) {
 
               {/* Floating Glass Card 2 - Right Bottom */}
               <div
-                className="position-absolute glass-panel p-3 rounded-4 glass-card"
+                className="position-absolute glass-panel p-3 rounded-4 glass-card shadow-lg"
                 style={{ bottom: '15%', right: '-20px', zIndex: 10 }}
               >
                 <div className="d-flex align-items-center gap-3">
                   <div className="d-flex flex-column">
-                    <span className="font-headline-md text-on-surface fw-bold">4.9/5</span>
-                    <div className="d-flex text-tertiary-fixed-dim">
+                    <span className="font-headline-md text-on-surface fw-bold fs-4">4.9/5</span>
+                    <div className="d-flex text-warning">
                       <span className="material-symbols-outlined fs-6 fill">star</span>
                       <span className="material-symbols-outlined fs-6 fill">star</span>
                       <span className="material-symbols-outlined fs-6 fill">star</span>
@@ -160,7 +160,7 @@ export default function HomePageView({ onNavigate }) {
                   </div>
                   <div className="ps-3 border-start border-outline-variant/30">
                     <p className="font-body-sm text-on-surface-variant m-0" style={{ fontSize: '11px', lineHeight: '1.3' }}>
-                      Based on<br />1,200+ reviews
+                      Based on<br /><strong className="text-on-surface">1,200+</strong> reviews
                     </p>
                   </div>
                 </div>
