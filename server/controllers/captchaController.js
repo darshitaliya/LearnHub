@@ -23,7 +23,8 @@ export const getNewCaptcha = async (req, res, next) => {
  */
 export const validateCaptcha = async (req, res, next) => {
   try {
-    const { captchaToken, captchaInput } = req.body;
+    const captchaToken = req.body.captchaToken || req.body.token;
+    const captchaInput = req.body.captchaInput || req.body.input;
     const result = verifyCaptchaToken(captchaToken, captchaInput);
 
     if (!result.valid) {

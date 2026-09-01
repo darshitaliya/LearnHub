@@ -960,6 +960,21 @@
   ],
   "contacts": [
     {
+      "_id": "msg_1788260862268_pcs56",
+      "id": "msg_1788260862268_pcs56",
+      "name": "Darsh Italiya",
+      "email": "darshitaliya3@gmail.com",
+      "category": "General Inquiry",
+      "subject": "NA",
+      "message": "NA",
+      "status": "Read",
+      "responseNotes": "",
+      "isDeleted": true,
+      "deletedAt": "2026-09-01T11:14:33.857Z",
+      "createdAt": "2026-09-01T11:07:42.268Z",
+      "updatedAt": "2026-09-01T11:10:17.314Z"
+    },
+    {
       "_id": "msg_1788257000001_a1b2c",
       "id": "msg_1788257000001_a1b2c",
       "name": "Aarav Sharma",
@@ -967,12 +982,12 @@
       "category": "Certificate Verification",
       "subject": "Verification Request for UI/UX Design System Certificate",
       "message": "Hello LearnHub team, I completed the UI/UX Design Systems masterclass and would like to verify my certificate ID for my LinkedIn profile and university submission. Thank you!",
-      "status": "Unread",
+      "status": "Read",
       "responseNotes": "",
-      "isDeleted": false,
-      "deletedAt": null,
+      "isDeleted": true,
+      "deletedAt": "2026-09-01T11:02:55.498Z",
       "createdAt": "2026-09-01T09:45:00.000Z",
-      "updatedAt": "2026-09-01T09:45:00.000Z"
+      "updatedAt": "2026-09-01T11:02:17.110Z"
     },
     {
       "_id": "msg_1788257000002_d3e4f",
@@ -984,8 +999,8 @@
       "message": "Hi, I am a Principal DevOps Architect with 10+ years experience. I would love to contribute a specialized course on Kubernetes clustering and GitOps to LearnHub.",
       "status": "In Review",
       "responseNotes": "Reviewed resume and curriculum outline. Scheduled call for Friday.",
-      "isDeleted": false,
-      "deletedAt": null,
+      "isDeleted": true,
+      "deletedAt": "2026-09-01T11:03:14.888Z",
       "createdAt": "2026-08-31T14:20:00.000Z",
       "updatedAt": "2026-08-31T16:00:00.000Z"
     }

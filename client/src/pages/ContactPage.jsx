@@ -37,9 +37,16 @@ export default function ContactPage() {
     setLoading(true);
     try {
       // If captcha token is active, verify captcha first
-      if (captchaData.captchaToken && captchaData.captchaInput) {
+      if (captchaData.captchaToken) {
+        if (!captchaData.captchaInput?.trim()) {
+          setCaptchaError('Please enter the CAPTCHA code.');
+          setLoading(false);
+          return;
+        }
         try {
           await api.post('/captcha/verify', {
+            captchaToken: captchaData.captchaToken,
+            captchaInput: captchaData.captchaInput,
             token: captchaData.captchaToken,
             input: captchaData.captchaInput,
           });

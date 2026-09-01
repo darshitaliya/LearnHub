@@ -326,11 +326,13 @@ body {
 @media (min-width: 992px) {
   .main-with-sidebar {
     margin-left: 260px !important;
+    width: calc(100% - 260px) !important;
   }
 }
 @media (max-width: 991.98px) {
   .main-with-sidebar {
     margin-left: 0 !important;
+    width: 100% !important;
   }
 }
 

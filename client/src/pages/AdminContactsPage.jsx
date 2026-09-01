@@ -112,91 +112,119 @@ export default function AdminContactsPage() {
   };
 
   return (
-    <div className="d-flex min-vh-100 bg-surface">
+    <div className="d-flex min-vh-100 bg-surface overflow-hidden">
       <AdminSidebar />
 
-      <main className="flex-grow-1 p-3 p-md-5 ms-lg-auto" style={{ maxWidth: '100%', overflowX: 'hidden' }}>
-        {/* Header Title */}
-        <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
-          <div>
-            <div className="d-flex align-items-center gap-2 mb-1">
-              <span className="badge bg-primary-container text-primary font-label-caps px-2.5 py-1 rounded-pill">
-                DATABASE INQUIRIES
-              </span>
+      <main className="flex-grow-1 main-with-sidebar position-relative overflow-y-auto" style={{ minWidth: 0 }}>
+        <div className="position-relative z-1 p-3 p-md-5 max-w-container-max mx-auto d-flex flex-column gap-4">
+          
+          {/* Header Bar */}
+          <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+            <div>
               {unreadCount > 0 && (
-                <span className="badge bg-danger text-white font-label-caps px-2.5 py-1 rounded-pill">
-                  {unreadCount} NEW UNREAD
-                </span>
+                <div className="d-flex align-items-center gap-2 mb-1">
+                  <span className="badge bg-danger text-white font-label-caps px-2.5 py-1 rounded-pill">
+                    {unreadCount} NEW UNREAD
+                  </span>
+                </div>
               )}
+              <h1 className="font-display-lg-mobile text-on-surface fw-bold m-0" style={{ fontSize: '32px' }}>
+                Contact Messages & Support Inquiries
+              </h1>
+              <p className="font-body-sm text-on-surface-variant m-0 mt-1">
+                Manage incoming learner support requests, partnership inquiries, and feedback stored in database.
+              </p>
             </div>
-            <h1 className="font-headline-md text-on-surface fw-bold fs-2 m-0">
-              Contact Messages & Support Inquiries
-            </h1>
-            <p className="font-body-sm text-on-surface-variant m-0 mt-1">
-              Manage incoming learner support requests, partnership inquiries, and feedback stored in database.
-            </p>
+
+            <button
+              onClick={fetchMessages}
+              disabled={loading}
+              className="btn btn-outline-primary font-body-sm d-flex align-items-center gap-2 px-3.5 py-2.5 rounded-3 align-self-start align-self-md-center shadow-xs"
+            >
+              <span className={`material-symbols-outlined fs-5 ${loading ? 'spin' : ''}`}>sync</span>
+              <span>Refresh Data</span>
+            </button>
           </div>
 
-          <button
-            onClick={fetchMessages}
-            disabled={loading}
-            className="btn btn-outline-primary font-body-sm d-flex align-items-center gap-2 px-3 py-2 rounded-3 align-self-start align-self-md-center shadow-xs"
-          >
-            <span className={`material-symbols-outlined fs-5 ${loading ? 'spin' : ''}`}>sync</span>
-            <span>Refresh Data</span>
-          </button>
-        </div>
+          {/* Alert Feedback */}
+          {alert.message && (
+            <div className={`alert alert-${alert.type} font-body-sm rounded-3 d-flex align-items-center justify-content-between shadow-xs m-0`}>
+              <span>{alert.message}</span>
+              <button onClick={() => setAlert({ type: '', message: '' })} className="btn btn-close btn-sm p-1" />
+            </div>
+          )}
 
-        {/* Alert Feedback */}
-        {alert.message && (
-          <div className={`alert alert-${alert.type} font-body-sm rounded-3 d-flex align-items-center justify-content-between shadow-xs mb-4`}>
-            <span>{alert.message}</span>
-            <button onClick={() => setAlert({ type: '', message: '' })} className="btn btn-close btn-sm p-1" />
-          </div>
-        )}
+          {/* 4 Metric Bento Cards */}
+          <div className="row g-3">
+            <div className="col-6 col-lg-3">
+              <div className="bg-white p-4 rounded-4 border border-outline-variant/30 shadow-sm h-100 d-flex flex-column justify-content-between">
+                <div className="d-flex align-items-center justify-content-between mb-3">
+                  <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-xs" style={{ width: '42px', height: '42px' }}>
+                    <span className="material-symbols-outlined fs-5">mail</span>
+                  </div>
+                  <span className="badge bg-surface-container-high text-on-surface font-label-caps px-2 py-1 rounded-pill" style={{ fontSize: '10px' }}>TOTAL</span>
+                </div>
+                <div>
+                  <h3 className="font-display-lg-mobile text-on-surface fw-bold fs-2 m-0">{totalCount}</h3>
+                  <p className="font-body-sm text-on-surface-variant m-0 mt-1" style={{ fontSize: '12px' }}>Total Inquiries</p>
+                </div>
+              </div>
+            </div>
 
-        {/* 4 Metric Cards */}
-        <div className="row g-3 mb-4">
-          <div className="col-6 col-lg-3">
-            <div className="bg-white p-3.5 rounded-4 border border-outline-variant/30 shadow-xs">
-              <span className="font-label-caps text-on-surface-variant d-block mb-1" style={{ fontSize: '11px' }}>
-                TOTAL INQUIRIES
-              </span>
-              <h3 className="font-headline-md text-on-surface fw-bold fs-3 m-0">{totalCount}</h3>
+            <div className="col-6 col-lg-3">
+              <div className="bg-white p-4 rounded-4 border border-warning/40 shadow-sm h-100 d-flex flex-column justify-content-between">
+                <div className="d-flex align-items-center justify-content-between mb-3">
+                  <div className="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center shadow-xs" style={{ width: '42px', height: '42px' }}>
+                    <span className="material-symbols-outlined fs-5">mark_email_unread</span>
+                  </div>
+                  <span className="badge bg-warning/20 text-warning font-label-caps px-2 py-1 rounded-pill" style={{ fontSize: '10px' }}>UNREAD</span>
+                </div>
+                <div>
+                  <h3 className="font-display-lg-mobile text-warning fw-bold fs-2 m-0">{unreadCount}</h3>
+                  <p className="font-body-sm text-on-surface-variant m-0 mt-1" style={{ fontSize: '12px' }}>Unread Messages</p>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="col-6 col-lg-3">
-            <div className="bg-white p-3.5 rounded-4 border border-warning/40 shadow-xs">
-              <span className="font-label-caps text-warning fw-bold d-block mb-1" style={{ fontSize: '11px' }}>
-                UNREAD MESSAGES
-              </span>
-              <h3 className="font-headline-md text-warning fw-bold fs-3 m-0">{unreadCount}</h3>
-            </div>
-          </div>
-          <div className="col-6 col-lg-3">
-            <div className="bg-white p-3.5 rounded-4 border border-primary/30 shadow-xs">
-              <span className="font-label-caps text-primary d-block mb-1" style={{ fontSize: '11px' }}>
-                IN REVIEW
-              </span>
-              <h3 className="font-headline-md text-primary fw-bold fs-3 m-0">{inReviewCount}</h3>
-            </div>
-          </div>
-          <div className="col-6 col-lg-3">
-            <div className="bg-white p-3.5 rounded-4 border border-success/30 shadow-xs">
-              <span className="font-label-caps text-success d-block mb-1" style={{ fontSize: '11px' }}>
-                RESOLVED
-              </span>
-              <h3 className="font-headline-md text-success fw-bold fs-3 m-0">{resolvedCount}</h3>
-            </div>
-          </div>
-        </div>
 
-        {/* Filter Controls */}
-        <div className="bg-white p-3.5 rounded-4 border border-outline-variant/30 shadow-xs mb-4">
-          <div className="row g-3 align-items-center">
-            <div className="col-12 col-md-5">
-              <div className="position-relative">
-                <span className="material-symbols-outlined position-absolute top-50 start-0 translate-middle-y ms-3 text-muted fs-5">
+            <div className="col-6 col-lg-3">
+              <div className="bg-white p-4 rounded-4 border border-primary/30 shadow-sm h-100 d-flex flex-column justify-content-between">
+                <div className="d-flex align-items-center justify-content-between mb-3">
+                  <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-xs" style={{ width: '42px', height: '42px' }}>
+                    <span className="material-symbols-outlined fs-5">pending_actions</span>
+                  </div>
+                  <span className="badge bg-primary/20 text-primary font-label-caps px-2 py-1 rounded-pill" style={{ fontSize: '10px' }}>IN REVIEW</span>
+                </div>
+                <div>
+                  <h3 className="font-display-lg-mobile text-primary fw-bold fs-2 m-0">{inReviewCount}</h3>
+                  <p className="font-body-sm text-on-surface-variant m-0 mt-1" style={{ fontSize: '12px' }}>In Review</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-6 col-lg-3">
+              <div className="bg-white p-4 rounded-4 border border-success/30 shadow-sm h-100 d-flex flex-column justify-content-between">
+                <div className="d-flex align-items-center justify-content-between mb-3">
+                  <div className="rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-xs" style={{ width: '42px', height: '42px' }}>
+                    <span className="material-symbols-outlined fs-5">check_circle</span>
+                  </div>
+                  <span className="badge bg-success/20 text-success font-label-caps px-2 py-1 rounded-pill" style={{ fontSize: '10px' }}>RESOLVED</span>
+                </div>
+                <div>
+                  <h3 className="font-display-lg-mobile text-success fw-bold fs-2 m-0">{resolvedCount}</h3>
+                  <p className="font-body-sm text-on-surface-variant m-0 mt-1" style={{ fontSize: '12px' }}>Resolved</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content Card (Unified Filters & Table matching AdminUsersPage) */}
+          <div className="bg-white rounded-4 border border-outline-variant/30 p-4 shadow-sm">
+            <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+              <div className="position-relative flex-grow-1" style={{ maxWidth: '360px' }}>
+                <span
+                  className="material-symbols-outlined position-absolute text-outline"
+                  style={{ left: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '20px' }}
+                >
                   search
                 </span>
                 <input
@@ -204,84 +232,69 @@ export default function AdminContactsPage() {
                   placeholder="Search sender, email, subject, text..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="form-control font-body-sm ps-5 rounded-3 input-premium"
+                  className="form-control font-body-sm ps-5 py-2.5 input-premium rounded-3"
                 />
+              </div>
+
+              <div className="d-flex flex-wrap align-items-center gap-2">
+                <select
+                  value={categoryFilter}
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className="form-select font-body-sm input-premium rounded-3 w-auto"
+                >
+                  <option value="All">All Categories</option>
+                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Technical Support">Technical Support</option>
+                  <option value="Instructor Partnership">Instructor Partnership</option>
+                  <option value="Certificate Verification">Certificate Verification</option>
+                </select>
+
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="form-select font-body-sm input-premium rounded-3 w-auto"
+                >
+                  <option value="All">All Statuses</option>
+                  <option value="Unread">Unread Only</option>
+                  <option value="Read">Read</option>
+                  <option value="In Review">In Review</option>
+                  <option value="Resolved">Resolved</option>
+                </select>
+
+                {(search || categoryFilter !== 'All' || statusFilter !== 'All') && (
+                  <button
+                    onClick={() => {
+                      setSearch('');
+                      setCategoryFilter('All');
+                      setStatusFilter('All');
+                    }}
+                    className="btn btn-outline-secondary font-body-sm px-3 rounded-3"
+                    title="Clear filters"
+                  >
+                    Reset
+                  </button>
+                )}
               </div>
             </div>
 
-            <div className="col-6 col-md-3">
-              <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-                className="form-select font-body-sm rounded-3 input-premium"
-              >
-                <option value="All">All Categories</option>
-                <option value="General Inquiry">General Inquiry</option>
-                <option value="Technical Support">Technical Support</option>
-                <option value="Instructor Partnership">Instructor Partnership</option>
-                <option value="Certificate Verification">Certificate Verification</option>
-              </select>
-            </div>
-
-            <div className="col-6 col-md-3">
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="form-select font-body-sm rounded-3 input-premium"
-              >
-                <option value="All">All Statuses</option>
-                <option value="Unread">Unread Only</option>
-                <option value="Read">Read</option>
-                <option value="In Review">In Review</option>
-                <option value="Resolved">Resolved</option>
-              </select>
-            </div>
-
-            <div className="col-12 col-md-1 d-flex justify-content-end">
-              {(search || categoryFilter !== 'All' || statusFilter !== 'All') && (
-                <button
-                  onClick={() => {
-                    setSearch('');
-                    setCategoryFilter('All');
-                    setStatusFilter('All');
-                  }}
-                  className="btn btn-sm btn-link text-primary font-body-sm p-0 text-decoration-none"
-                  title="Clear filters"
-                >
-                  Reset
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Inquiries Table Card */}
-        <div className="bg-white rounded-4 border border-outline-variant/30 shadow-sm overflow-hidden mb-5">
-          <div className="p-3.5 border-bottom border-outline-variant/20 d-flex align-items-center justify-content-between">
-            <span className="font-label-caps text-on-surface fw-bold">
-              INQUIRIES LIST ({filteredMessages.length})
-            </span>
-            <span className="font-body-sm text-on-surface-variant" style={{ fontSize: '12px' }}>
-              Click any message to read full details
-            </span>
-          </div>
-
-          {loading ? (
-            <div className="p-5 text-center">
-              <div className="spinner-border text-primary" role="status" />
-              <p className="font-body-sm text-on-surface-variant mt-2 mb-0">Loading database inquiries...</p>
-            </div>
-          ) : filteredMessages.length === 0 ? (
-            <div className="p-5 text-center">
-              <span className="material-symbols-outlined fs-1 text-muted mb-2">inbox</span>
-              <h5 className="font-headline-md fw-bold text-on-surface mb-1">No Messages Found</h5>
-              <p className="font-body-sm text-on-surface-variant mb-0">
-                {messages.length === 0
-                  ? 'No contact form submissions in database yet. Form submissions on the Contact Page will appear here.'
-                  : 'No inquiries match your current search and filter criteria.'}
-              </p>
-            </div>
-          ) : (
+            {loading ? (
+              <div className="text-center py-5">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading inquiries...</span>
+                </div>
+                <p className="font-body-sm text-on-surface-variant mt-2 mb-0">Loading database inquiries...</p>
+              </div>
+            ) : filteredMessages.length === 0 ? (
+              <div className="text-center py-5 bg-surface-container-low rounded-3">
+                <span className="material-symbols-outlined fs-1 text-muted mb-2">inbox</span>
+                <h5 className="font-headline-md fw-bold text-on-surface mb-1">No Messages Found</h5>
+                <p className="font-body-base text-on-surface-variant m-0">
+                  {messages.length === 0
+                    ? 'No contact form submissions in database yet. Form submissions on the Contact Page will appear here.'
+                    : 'No inquiries match your current search and filter criteria.'}
+                </p>
+              </div>
+            ) : (
             <div className="table-responsive">
               <table className="table table-hover align-middle mb-0">
                 <thead className="bg-surface-container-low border-bottom border-outline-variant/20">
@@ -316,8 +329,8 @@ export default function AdminContactsPage() {
                         <td className="ps-4 py-3">
                           <div className="d-flex align-items-center gap-2">
                             <div
-                              className="rounded-circle bg-primary-container text-primary d-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
-                              style={{ width: '36px', height: '36px', fontSize: '13px' }}
+                              className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center flex-shrink-0 fw-bold shadow-xs"
+                              style={{ width: '36px', height: '36px', fontSize: '14px' }}
                             >
                               {msg.name ? msg.name.charAt(0).toUpperCase() : 'U'}
                             </div>
@@ -357,10 +370,11 @@ export default function AdminContactsPage() {
                         </td>
 
                         <td className="pe-4 py-3 text-end" onClick={(e) => e.stopPropagation()}>
-                          <div className="d-flex align-items-center justify-content-end gap-1.5">
+                          <div className="d-flex align-items-center justify-content-end gap-2">
                             <button
                               onClick={() => handleOpenDetail(msg)}
-                              className="btn btn-sm btn-outline-primary p-1.5 rounded-2"
+                              className="btn btn-sm btn-outline-primary rounded-3 d-flex align-items-center justify-content-center shadow-xs"
+                              style={{ width: '36px', height: '36px', flexShrink: 0 }}
                               title="View Full Message"
                             >
                               <span className="material-symbols-outlined fs-6">visibility</span>
@@ -368,7 +382,8 @@ export default function AdminContactsPage() {
 
                             <a
                               href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}&body=Hi ${encodeURIComponent(msg.name)},\n\nThank you for reaching out to LearnHub support.\n\nRegarding your inquiry:\n"${encodeURIComponent(msg.message)}"\n\n`}
-                              className="btn btn-sm btn-outline-secondary p-1.5 rounded-2"
+                              className="btn btn-sm btn-outline-secondary rounded-3 d-flex align-items-center justify-content-center shadow-xs"
+                              style={{ width: '36px', height: '36px', flexShrink: 0 }}
                               title="Reply via Email"
                             >
                               <span className="material-symbols-outlined fs-6">mail</span>
@@ -377,8 +392,8 @@ export default function AdminContactsPage() {
                             <select
                               value={msg.status}
                               onChange={(e) => handleUpdateStatus(id, e.target.value, msg.responseNotes || '')}
-                              className="form-select form-select-sm py-1 px-2 rounded-2 font-body-sm"
-                              style={{ width: '110px', fontSize: '12px' }}
+                              className="form-select form-select-sm py-1.5 px-2.5 rounded-3 font-body-sm input-premium"
+                              style={{ width: '120px', height: '36px', fontSize: '12px', flexShrink: 0 }}
                             >
                               <option value="Unread">Unread</option>
                               <option value="Read">Read</option>
@@ -388,7 +403,8 @@ export default function AdminContactsPage() {
 
                             <button
                               onClick={() => handleDelete(id)}
-                              className="btn btn-sm btn-outline-danger p-1.5 rounded-2"
+                              className="btn btn-sm btn-outline-danger rounded-3 d-flex align-items-center justify-content-center shadow-xs"
+                              style={{ width: '36px', height: '36px', flexShrink: 0 }}
                               title="Delete Message"
                             >
                               <span className="material-symbols-outlined fs-6">delete</span>
@@ -402,6 +418,7 @@ export default function AdminContactsPage() {
               </table>
             </div>
           )}
+        </div>
         </div>
 
         {/* Message Detail Modal */}
