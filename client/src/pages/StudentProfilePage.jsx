@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
+import { STATIC_AVATARS } from '../data/staticAvatars';
 
 export default function StudentProfilePage() {
   const { user, updateProfile } = useAuth();
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   const [formData, setFormData] = useState({
     name: user?.name || '',
     phone: user?.phone || '',
-    avatar: user?.avatar || '',
+    avatar: user?.avatar || STATIC_AVATARS[0].url,
     bio: user?.bio || '',
     currentPassword: '',
     newPassword: '',
@@ -21,7 +23,7 @@ export default function StudentProfilePage() {
         ...prev,
         name: user.name || '',
         phone: user.phone || '',
-        avatar: user.avatar || '',
+        avatar: user.avatar || STATIC_AVATARS[0].url,
         bio: user.bio || '',
       }));
     }
@@ -30,8 +32,22 @@ export default function StudentProfilePage() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
   const [fieldErrors, setFieldErrors] = useState({});
+
+  const categories = ['All', '3D & Anime', 'Tech & Robots', 'Pixel & Retro', 'Minimalist', 'Real Life'];
+
+  const filteredAvatars = selectedCategory === 'All'
+    ? STATIC_AVATARS
+    : STATIC_AVATARS.filter((a) => a.category === selectedCategory);
+
+  const handleSelectAvatar = (url) => {
+    setFormData((prev) => ({ ...prev, avatar: url }));
+  };
+
+  const handleShuffleAvatar = () => {
+    const randomIndex = Math.floor(Math.random() * STATIC_AVATARS.length);
+    setFormData((prev) => ({ ...prev, avatar: STATIC_AVATARS[randomIndex].url }));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -102,23 +118,113 @@ export default function StudentProfilePage() {
           {error && <div className="alert alert-danger font-body-sm rounded-3">{error}</div>}
 
           <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
-            <div className="d-flex align-items-center gap-3 mb-3">
-              <img
-                src={formData.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC'}
-                alt="Avatar"
-                className="rounded-circle border border-2 border-primary object-fit-cover"
-                style={{ width: '70px', height: '70px' }}
-              />
-              <div className="flex-grow-1">
-                <label className="font-label-caps text-on-surface-variant mb-1">Avatar Image URL</label>
-                <input
-                  type="text"
-                  name="avatar"
-                  value={formData.avatar}
-                  onChange={handleChange}
-                  placeholder="https://..."
-                  className="form-control font-body-sm input-premium"
-                />
+            {/* Profile Avatar Selection Section */}
+            <div className="p-3.5 p-md-4 rounded-4 bg-surface-container-low border border-outline-variant/30 mb-2">
+              <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-3 pb-3 border-bottom border-outline-variant/20">
+                <div className="d-flex align-items-center gap-3">
+                  <div className="position-relative">
+                    <img
+                      src={formData.avatar || STATIC_AVATARS[0].url}
+                      alt="Selected Avatar"
+                      className="rounded-circle border border-3 border-primary object-fit-cover shadow-sm bg-white"
+                      style={{ width: '74px', height: '74px' }}
+                    />
+                    <span
+                      className="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center border border-2 border-white shadow-xs"
+                      style={{ width: '22px', height: '22px', fontSize: '12px' }}
+                      title="Active Avatar"
+                    >
+                      ✓
+                    </span>
+                  </div>
+                  <div>
+                    <span className="font-label-caps text-primary fw-bold d-block" style={{ fontSize: '11px' }}>
+                      SELECTED AVATAR
+                    </span>
+                    <h4 className="font-body-base fw-bold text-on-surface m-0" style={{ fontSize: '15px' }}>
+                      {formData.name || 'Your Profile'}
+                    </h4>
+                    <span className="font-body-sm text-on-surface-variant" style={{ fontSize: '12px' }}>
+                      Click any avatar below to select
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleShuffleAvatar}
+                  className="btn btn-sm btn-outline-primary font-label-caps d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill shadow-xs align-self-start align-self-sm-center"
+                  style={{ fontSize: '12px' }}
+                >
+                  <span>🎲 Randomize</span>
+                </button>
+              </div>
+
+              {/* Category Filter Pills */}
+              <div className="d-flex align-items-center gap-1.5 flex-wrap mb-3">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`btn btn-sm py-0.5 px-2.5 rounded-pill font-label-caps transition-all ${
+                      selectedCategory === cat
+                        ? 'btn-primary text-white shadow-xs'
+                        : 'btn-surface border border-outline-variant/30 text-on-surface-variant hover-primary'
+                    }`}
+                    style={{ fontSize: '11px' }}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              {/* Avatar Selector Visual Grid */}
+              <div
+                className="d-grid gap-2.5 p-2 rounded-3 bg-white border border-outline-variant/20 overflow-y-auto"
+                style={{
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(58px, 1fr))',
+                  maxHeight: '190px',
+                }}
+              >
+                {filteredAvatars.map((av) => {
+                  const isSelected = formData.avatar === av.url;
+                  return (
+                    <button
+                      key={av.id}
+                      type="button"
+                      onClick={() => handleSelectAvatar(av.url)}
+                      title={av.name}
+                      className={`p-1 rounded-circle border-0 bg-transparent position-relative transition-all d-flex align-items-center justify-content-center ${
+                        isSelected ? 'scale-105' : 'opacity-85 hover-opacity-100 hover-scale'
+                      }`}
+                      style={{ outline: 'none' }}
+                    >
+                      <div
+                        className={`rounded-circle p-0.5 transition-all ${
+                          isSelected
+                            ? 'ring-3 ring-primary shadow-sm bg-primary/10'
+                            : 'border border-outline-variant/30 bg-surface-container-low hover-border-primary'
+                        }`}
+                      >
+                        <img
+                          src={av.url}
+                          alt={av.name}
+                          className="rounded-circle object-fit-cover bg-white"
+                          style={{ width: '48px', height: '48px' }}
+                        />
+                      </div>
+                      {isSelected && (
+                        <span
+                          className="position-absolute top-0 end-0 bg-success text-white rounded-circle d-flex align-items-center justify-content-center border border-2 border-white shadow-xs"
+                          style={{ width: '18px', height: '18px', fontSize: '10px' }}
+                        >
+                          ✓
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
