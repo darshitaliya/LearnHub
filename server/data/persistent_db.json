@@ -739,6 +739,16 @@
       "updatedAt": "2026-09-01T09:14:26.592Z",
       "quizCompleted": true,
       "quizSubmittedAt": "2026-09-01T09:06:35.420Z"
+    },
+    "usr_1787480175136_crs_1787480497023": {
+      "key": "usr_1787480175136_crs_1787480497023",
+      "userId": "usr_1787480175136",
+      "courseId": "crs_1787480497023",
+      "completedLessons": [],
+      "percentage": 0,
+      "certificateEarned": false,
+      "quizPassed": false,
+      "quizScore": 0
     }
   },
   "enrollments": [

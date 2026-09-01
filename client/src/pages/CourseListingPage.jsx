@@ -124,27 +124,27 @@ export default function CourseListingPage() {
           <div className="d-flex flex-wrap align-items-center gap-2 mb-4 bg-white p-3 rounded-4 border border-outline-variant/30 shadow-xs">
             <span className="font-label-caps text-on-surface-variant me-1" style={{ fontSize: '11px' }}>Active Filters:</span>
             {category !== 'All' && (
-              <span className="badge bg-primary-container text-primary font-label-caps px-3 py-1.5 rounded-pill d-flex align-items-center gap-1">
+              <span className="badge bg-primary text-white font-label-caps px-3 py-1.5 rounded-pill d-flex align-items-center gap-1.5 shadow-xs">
                 Category: {category}
-                <span className="material-symbols-outlined fs-6 cursor-pointer" onClick={() => setCategory('All')}>close</span>
+                <span className="material-symbols-outlined fs-6 cursor-pointer text-white-50 hover-white" onClick={() => setCategory('All')}>close</span>
               </span>
             )}
             {level !== 'All' && (
-              <span className="badge bg-secondary-container text-secondary font-label-caps px-3 py-1.5 rounded-pill d-flex align-items-center gap-1">
+              <span className="badge bg-secondary text-white font-label-caps px-3 py-1.5 rounded-pill d-flex align-items-center gap-1.5 shadow-xs">
                 Level: {level}
-                <span className="material-symbols-outlined fs-6 cursor-pointer" onClick={() => setLevel('All')}>close</span>
+                <span className="material-symbols-outlined fs-6 cursor-pointer text-white-50 hover-white" onClick={() => setLevel('All')}>close</span>
               </span>
             )}
             {priceFilter !== 'All' && (
-              <span className="badge bg-info-subtle text-info-emphasis font-label-caps px-3 py-1.5 rounded-pill d-flex align-items-center gap-1">
+              <span className="badge bg-info text-white font-label-caps px-3 py-1.5 rounded-pill d-flex align-items-center gap-1.5 shadow-xs">
                 Pricing: {priceFilter}
-                <span className="material-symbols-outlined fs-6 cursor-pointer" onClick={() => setPriceFilter('All')}>close</span>
+                <span className="material-symbols-outlined fs-6 cursor-pointer text-white-50 hover-white" onClick={() => setPriceFilter('All')}>close</span>
               </span>
             )}
             {search && (
-              <span className="badge bg-surface-container text-on-surface font-label-caps px-3 py-1.5 rounded-pill d-flex align-items-center gap-1 border">
+              <span className="badge bg-dark text-white font-label-caps px-3 py-1.5 rounded-pill d-flex align-items-center gap-1.5 shadow-xs">
                 Search: "{search}"
-                <span className="material-symbols-outlined fs-6 cursor-pointer" onClick={() => setSearch('')}>close</span>
+                <span className="material-symbols-outlined fs-6 cursor-pointer text-white-50 hover-white" onClick={() => setSearch('')}>close</span>
               </span>
             )}
             <button onClick={handleResetFilters} className="btn btn-link text-primary font-body-sm p-0 ms-auto text-decoration-none fw-semibold">
