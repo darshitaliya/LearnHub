@@ -41,12 +41,9 @@ export default function AboutPage() {
         <section className="py-5 bg-white border-bottom border-outline-variant/20">
           <div className="max-w-container-max mx-auto px-3 px-md-5 text-start">
             <span className="font-label-caps text-primary mb-1 d-block">ABOUT LEARNHUB</span>
-            <h1 className="font-headline-md text-on-surface m-0 fw-bold fs-2 mb-2">
+            <h1 className="font-headline-md text-on-surface m-0 fw-bold fs-2">
               Revolutionizing Technical Education For Everyone
             </h1>
-            <p className="font-body-base text-on-surface-variant m-0 max-w-lg" style={{ lineHeight: '1.6' }}>
-              LearnHub was founded with a single mission: to empower software engineers, designers, and AI researchers through world-class, 100% free technical education.
-            </p>
           </div>
         </section>
 
