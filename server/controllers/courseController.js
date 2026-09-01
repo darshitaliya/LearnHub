@@ -69,7 +69,7 @@ export const createCourse = async (req, res, next) => {
           id: `mod_${Date.now()}`,
           title: 'Module 1: Foundations',
           lessons: [
-            { id: `les_${Date.now()}`, title: 'Course Overview & Introduction', duration: '15:00', videoUrl: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8', isLocked: false, type: 'video' },
+            { id: `les_${Date.now()}`, title: 'Course Overview & Introduction', duration: '15:00', videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8', isLocked: false, type: 'video' },
           ],
         },
       ],

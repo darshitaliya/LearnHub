@@ -20,7 +20,7 @@ const DEFAULT_BLANK_COURSE = {
         {
           title: 'Lesson 1: Overview & Environment Setup',
           duration: '15:00',
-          videoUrl: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8',
+          videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8',
         },
       ],
     },
@@ -80,7 +80,7 @@ export default function AdminCoursesPage() {
             {
               title: 'Lesson 1: Overview & Environment Setup',
               duration: '15:00',
-              videoUrl: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8',
+              videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8',
             },
           ],
         },
@@ -102,14 +102,14 @@ export default function AdminCoursesPage() {
             ? m.lessons.map((l, lIdx) => ({
                 title: l.title || `Lesson ${lIdx + 1}`,
                 duration: l.duration || '15:00',
-                videoUrl: l.videoUrl || 'https://www.youtube.com/watch?v=w7ejDZ8SWv8',
+                videoUrl: l.videoUrl || 'https://www.youtube.com/watch?v=bMknfKXIFA8',
               }))
-            : [{ title: 'Lesson 1', duration: '15:00', videoUrl: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8' }],
+            : [{ title: 'Lesson 1', duration: '15:00', videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8' }],
         }))
       : [
           {
             title: 'Module 1: Fundamentals',
-            lessons: [{ title: 'Lesson 1: Overview', duration: '15:00', videoUrl: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8' }],
+            lessons: [{ title: 'Lesson 1: Overview', duration: '15:00', videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8' }],
           },
         ];
 
@@ -168,7 +168,7 @@ export default function AdminCoursesPage() {
             {
               title: 'Lesson 1: Overview & Environment Setup',
               duration: '15:00',
-              videoUrl: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8',
+              videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8',
             },
           ],
         },
@@ -192,7 +192,7 @@ export default function AdminCoursesPage() {
             {
               title: 'Lesson 1: Practical Exercise & Walkthrough',
               duration: '18:00',
-              videoUrl: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8',
+              videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8',
             },
           ],
         },
@@ -221,7 +221,7 @@ export default function AdminCoursesPage() {
     updated[mIdx].lessons.push({
       title: `Lesson ${updated[mIdx].lessons.length + 1}: Deep Dive Session`,
       duration: '15:00',
-      videoUrl: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8',
+      videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8',
     });
     setFormData({ ...formData, modules: updated });
   };
@@ -267,7 +267,7 @@ export default function AdminCoursesPage() {
             id: `les_${Date.now()}_${mIdx}_${lIdx}`,
             title: l.title || `Lesson ${lIdx + 1}`,
             duration: l.duration || '15:00',
-            videoUrl: l.videoUrl || 'https://www.youtube.com/watch?v=w7ejDZ8SWv8',
+            videoUrl: l.videoUrl || 'https://www.youtube.com/watch?v=bMknfKXIFA8',
             isLocked: false,
             type: 'video',
           })),

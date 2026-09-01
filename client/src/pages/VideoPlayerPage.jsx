@@ -26,31 +26,11 @@ export default function VideoPlayerPage() {
   const [quizScore, setQuizScore] = useState(0);
 
 
-  // Mode: 'youtube' or 'mp4' (Default to 'youtube' for course-synchronized video)
-  const [streamMode, setStreamMode] = useState('youtube');
-  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
     fetchCourseAndProgress();
   }, [id]);
-
-  useEffect(() => {
-    if (streamMode === 'mp4' && videoRef.current) {
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => setIsPlaying(true))
-          .catch(() => setIsPlaying(false));
-      }
-    }
-  }, [activeLesson, streamMode]);
-
-  const handleStartPlay = () => {
-    if (videoRef.current) {
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(console.error);
-    }
-  };
 
   const fetchCourseAndProgress = async () => {
     setLoading(true);
@@ -74,7 +54,7 @@ export default function VideoPlayerPage() {
                   id: 'les_1',
                   title: `${loadedCourse?.title || 'Course'} - Core Architecture Overview`,
                   duration: '22:15',
-                  videoUrl: 'https://www.youtube.com/watch?v=SqcY0GlETPk',
+                  videoUrl: 'https://www.youtube.com/watch?v=bMknfKXIFA8',
                   type: 'video',
                 },
                 {
@@ -250,7 +230,7 @@ export default function VideoPlayerPage() {
   const extractYouTubeId = (lesson, currentCourse) => {
     // List of known broken/dead/restricted/placeholder video IDs on YouTube to always bypass:
     const brokenIds = new Set([
-      'w7ejDZ8SWv8', 'h5wLuVCD0ls', 'PyQNfsGUnQA', 'NuyzuNBFWxQ', '2e6i_YgXW_A', 
+      'w7ejDZ8SWv8', 'NWONte5ncC5', 'h5wLuVCD0ls', 'PyQNfsGUnQA', 'NuyzuNBFWxQ', '2e6i_YgXW_A', 
       'jpno9AtS2wU', 'VPvVD8t0208', 'OU-A2EmVrkq', 'wm5gMKCORL4', 'ulprqHHWlnU',
       'LqUo3g2lVAc', 'inWWhr5tnEA', 'lZAoFs75_cs', 'pTFZFxd4hOI', 'SqcY0GlETPk',
       'gvkqT_UoZ5g', '1oW_W-tP9qM', '7U5F-cW2_9Y', 'YqQx75OPRa0', 'rg7Fvvl3taU'
@@ -290,8 +270,9 @@ export default function VideoPlayerPage() {
     if (textToSearch.includes('airflow') || textToSearch.includes('data engineering')) return 'K9AnJ9_ZAXE';
     if (textToSearch.includes('prompt') || textToSearch.includes('llm') || textToSearch.includes('chatgpt') || textToSearch.includes('genai')) return 'jC4v5AS4RIM';
     if (textToSearch.includes('transformer') || textToSearch.includes('bert') || textToSearch.includes('nlp')) return 'zjkBMFhNj_g';
-    if (textToSearch.includes('machine learning') || textToSearch.includes('ai') || textToSearch.includes('data science')) return 'NWONte5ncC5';
-    if (textToSearch.includes('pandas') || textToSearch.includes('numpy') || textToSearch.includes('analytics')) return 'rfscVS0vtbw';
+    if (textToSearch.includes('machine learning') || textToSearch.includes('supervised') || textToSearch.includes('ai masterclass')) return 'i_LwzRVP7bg';
+    if (textToSearch.includes('data science') || textToSearch.includes('scikit')) return 'i_LwzRVP7bg';
+    if (textToSearch.includes('pandas') || textToSearch.includes('numpy') || textToSearch.includes('analytics') || textToSearch.includes('regression')) return 'rfscVS0vtbw';
     if (textToSearch.includes('python')) return 'rfscVS0vtbw';
 
     // Frontend & Web Frameworks
@@ -348,7 +329,7 @@ export default function VideoPlayerPage() {
 
   const getSyncedYouTubeUrl = (lesson, currentCourse) => {
     const ytId = extractYouTubeId(lesson, currentCourse);
-    return `https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1&enablejsapi=1&controls=1&playsinline=1`;
+    return `https://www.youtube-nocookie.com/embed/${ytId}?rel=0&modestbranding=1&enablejsapi=1&controls=1&playsinline=1`;
   };
 
   // Helper for Direct MP4 CDN Backup Stream (multiple fallbacks to prevent unsupported codec errors)
@@ -384,6 +365,10 @@ export default function VideoPlayerPage() {
   const syncedYtUrl = getSyncedYouTubeUrl(activeLesson, course);
   const directMp4Source = getDirectVideoSource(activeLesson);
   const directWatchUrl = `https://www.youtube.com/watch?v=${currentYtId}`;
+  const isDirectMp4 = Boolean(
+    activeLesson?.type === 'mp4' ||
+    String(activeLesson?.videoUrl || activeLesson?.url || '').toLowerCase().includes('.mp4')
+  );
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-surface">
@@ -426,53 +411,8 @@ export default function VideoPlayerPage() {
             </div>
           </div>
 
-          {/* Dual Stream Multi-Server Switcher */}
-          <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2 mb-2 px-1">
-            <div className="d-flex align-items-center gap-2">
-              <span className="badge bg-primary font-label-caps px-2.5 py-1">SYNCHRONIZED VIDEO STREAM ENGINE</span>
-              <span className="font-label-caps text-white-50" style={{ fontSize: '11px' }}>
-                Mode: {streamMode === 'youtube' ? '📺 Official YouTube HD Stream' : '⚡ Direct Ultra-HD Stream'}
-              </span>
-            </div>
-
-            <div className="d-flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setStreamMode('youtube')}
-                className={`btn btn-sm px-3 py-1 rounded-pill font-body-sm d-flex align-items-center gap-1 ${
-                  streamMode === 'youtube' ? 'btn-primary text-white fw-bold shadow-xs' : 'btn-outline-light text-white-50 opacity-75'
-                }`}
-                style={{ fontSize: '12px' }}
-              >
-                <span className="material-symbols-outlined fs-6">play_circle</span> YouTube HD Stream
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setStreamMode('mp4')}
-                className={`btn btn-sm px-3 py-1 rounded-pill font-body-sm d-flex align-items-center gap-1 ${
-                  streamMode === 'mp4' ? 'btn-success text-white fw-bold shadow-xs' : 'btn-outline-light text-white-50 opacity-75'
-                }`}
-                style={{ fontSize: '12px' }}
-              >
-                <span className="material-symbols-outlined fs-6">bolt</span> Direct MP4 Stream
-              </button>
-
-              <a
-                href={directWatchUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-sm btn-outline-danger px-3 py-1 rounded-pill font-body-sm d-flex align-items-center gap-1 text-decoration-none"
-                style={{ fontSize: '12px' }}
-                title="Open and watch video directly on YouTube"
-              >
-                <span className="material-symbols-outlined fs-6">open_in_new</span> Watch on YouTube
-              </a>
-            </div>
-          </div>
-
           {/* Player Container */}
-          <div className="w-100 bg-black rounded-3 overflow-hidden d-flex align-items-center justify-content-center position-relative mb-3 shadow-lg" style={{ aspectRatio: '16/9', maxHeight: '560px' }}>
+          <div className="w-100 bg-black rounded-3 overflow-hidden d-flex align-items-center justify-content-center position-relative mb-3 shadow-lg flex-grow-1" style={{ aspectRatio: '16/9', maxHeight: '620px' }}>
             {activeLesson?.type === 'text' ? (
               <div className="p-5 text-center bg-surface-container-low text-on-surface rounded-3 w-100 h-100 d-flex flex-column justify-content-center align-items-center">
                 <span className="material-symbols-outlined fs-1 text-secondary mb-2">description</span>
@@ -484,7 +424,19 @@ export default function VideoPlayerPage() {
                   Mark Module Complete
                 </button>
               </div>
-            ) : streamMode === 'youtube' ? (
+            ) : isDirectMp4 ? (
+              <video
+                ref={videoRef}
+                controls
+                playsInline
+                key={(activeLesson?.id || activeLesson?.title) + '_mp4_player'}
+                className="w-100 h-100 object-fit-contain"
+                poster={course?.thumbnail}
+              >
+                <source src={directMp4Source} type="video/mp4" />
+                Your browser does not support HTML5 video playback.
+              </video>
+            ) : (
               <iframe
                 key={(activeLesson?.id || activeLesson?.title) + '_yt_synced_' + currentYtId}
                 src={syncedYtUrl}
@@ -493,47 +445,7 @@ export default function VideoPlayerPage() {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
               />
-            ) : (
-              <>
-                <video
-                  ref={videoRef}
-                  controls
-                  playsInline
-                  key={(activeLesson?.id || activeLesson?.title) + '_mp4_player'}
-                  className="w-100 h-100 object-fit-contain"
-                  poster={course?.thumbnail}
-                >
-                  <source src={directMp4Source} type="video/mp4" />
-                  Your browser does not support HTML5 video playback.
-                </video>
-              </>
             )}
-          </div>
-
-          {/* Playback Assistance Notice */}
-          <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 rounded-3 bg-white/5 border border-white/10 mb-3" style={{ fontSize: '12px' }}>
-            <div className="d-flex align-items-center gap-1.5 text-white-50">
-              <span className="material-symbols-outlined text-warning fs-6">info</span>
-              <span>Video blocked or says unavailable in your browser?</span>
-            </div>
-            <div className="d-flex align-items-center gap-2">
-              <button
-                onClick={() => setStreamMode(streamMode === 'youtube' ? 'mp4' : 'youtube')}
-                className="btn btn-sm btn-outline-info py-0.5 px-2.5 font-label-caps"
-                style={{ fontSize: '11px' }}
-              >
-                Switch to {streamMode === 'youtube' ? 'Direct Stream' : 'YouTube Stream'}
-              </button>
-              <a
-                href={directWatchUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-sm btn-danger py-0.5 px-2.5 font-label-caps d-flex align-items-center gap-1 text-decoration-none text-white fw-bold"
-                style={{ fontSize: '11px' }}
-              >
-                <span className="material-symbols-outlined fs-6">open_in_new</span> Open on YouTube
-              </a>
-            </div>
           </div>
 
           {/* Player Navigation Bar */}

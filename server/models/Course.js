@@ -5,7 +5,7 @@ const lessonSchema = new mongoose.Schema(
     id: { type: String, required: true },
     title: { type: String, required: true },
     duration: { type: String, default: '15:00' },
-    videoUrl: { type: String, default: 'https://www.youtube.com/watch?v=w7ejDZ8SWv8' },
+    videoUrl: { type: String, default: 'https://www.youtube.com/watch?v=bMknfKXIFA8' },
     isLocked: { type: Boolean, default: false },
     type: { type: String, default: 'video' },
   },

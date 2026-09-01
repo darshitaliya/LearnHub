@@ -53,7 +53,8 @@
         "crs_1787474026830",
         "crs_1787469340460",
         "crs_1787468529801",
-        "crs_1787477280878"
+        "crs_1787477280878",
+        "crs_1787480410655"
       ],
       "wishlist": [],
       "createdAt": "2026-08-23T08:23:06.811Z",
@@ -174,7 +175,7 @@
               "id": "les_1787480410634_0_0",
               "title": "Machine Learning Algorithms Overview",
               "duration": "25:00",
-              "videoUrl": "https://www.youtube.com/watch?v=NWONte5ncC5",
+              "videoUrl": "https://www.youtube.com/watch?v=i_LwzRVP7bg",
               "isLocked": false,
               "type": "video"
             },
@@ -720,9 +721,42 @@
       "percentage": 100,
       "certificateEarned": true,
       "lastWatchedLesson": "les_1787480497013_0_0"
+    },
+    "usr_1787473386811_crs_1787480410655": {
+      "key": "usr_1787473386811_crs_1787480410655",
+      "userId": "usr_1787473386811",
+      "courseId": "crs_1787480410655",
+      "completedLessons": [
+        "les_1787480410634_0_0",
+        "les_1787480410634_0_1"
+      ],
+      "percentage": 100,
+      "certificateEarned": true,
+      "quizPassed": true,
+      "quizScore": 80,
+      "lastWatchedLesson": "les_1787480410634_0_1",
+      "updatedAt": "2026-09-01T09:14:26.592Z",
+      "quizCompleted": true,
+      "quizSubmittedAt": "2026-09-01T09:06:35.420Z"
     }
   },
   "enrollments": [
+    {
+      "_id": "enr_1788253469299_p7t9w",
+      "id": "enr_1788253469299_p7t9w",
+      "userId": "usr_1787473386811",
+      "userName": "Darsh Italiya",
+      "userEmail": "darshitaliya3@gmail.com",
+      "userPhone": "+919409970864",
+      "profession": "Student",
+      "goal": "Skill Upgrade & Professional Certification",
+      "courseId": "crs_1787480410655",
+      "courseTitle": "Artificial Intelligence & Machine Learning Masterclass",
+      "status": "Active",
+      "isDeleted": false,
+      "deletedAt": null,
+      "createdAt": "2026-09-01T09:04:29.299Z"
+    },
     {
       "id": "enr_1787480996116",
       "userId": "usr_1787480175136",

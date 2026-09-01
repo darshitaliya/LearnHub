@@ -212,7 +212,7 @@ export const COURSE_PRESETS_50 = [
       {
         title: 'Module 1: Supervised & Unsupervised Learning',
         lessons: [
-          { title: 'Machine Learning Algorithms Overview', duration: '25:00', videoUrl: 'https://www.youtube.com/watch?v=NWONte5ncC5', type: 'video' },
+          { title: 'Machine Learning Algorithms Overview', duration: '25:00', videoUrl: 'https://www.youtube.com/watch?v=i_LwzRVP7bg', type: 'video' },
           { title: 'Linear & Logistic Regression in Python', duration: '22:30', videoUrl: 'https://www.youtube.com/watch?v=rfscVS0vtbw', type: 'video' },
         ],
       },
