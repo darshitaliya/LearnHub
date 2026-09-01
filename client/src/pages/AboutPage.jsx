@@ -13,22 +13,22 @@ export default function AboutPage() {
 
   const team = [
     {
-      name: 'Dr. Elena Rostova',
-      role: 'Head of AI Research & Curriculum',
-      bio: 'Former AI Research Lead with 12+ years of experience in deep learning, neural architectures, and LLM engineering.',
-      avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAXsLFd9D54QvHC0YzVKgLxHnnpERLlfdgwtLORSSs-tNRp-QmFZO2N6hDlOwY4x1YQPu2xppRb0y7Znoil2TshKCTUkd0a-yYGk5Su4MWRVe3T_a9Ip01U3Ouw28n9nEcUzBOnvUSpbLqrQhL2mobnRZyxz1nmOj7wHnAyCbza00LARkU3ve07zwoM3KCRp_eschNgIu0MYW1mNjmkarjPPMHEd9LoEG2l2hK4csZx1DvTbpTJqdf4',
+      name: 'Vishv Bhikadiya',
+      role: 'Co-Founder & Lead AI / Full-Stack Architect',
+      bio: 'Visionary software engineer and AI researcher passionate about scalable cloud architectures, neural networks, and educational empowerment.',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Vishv&backgroundColor=b6e3f4',
     },
     {
-      name: 'Prof. Marcus Vance',
-      role: 'Principal Systems Architect',
-      bio: 'Specialist in high-performance distributed systems, operating system kernels, and algorithmic optimization.',
-      avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDIJh83q13eEpGU20synQHsPiLBWAHfuQGbFrNMH3dBeHkJ8paWZIrNyFW4wj6cCOx5MePDBGSCIV8zxOnRIUYrTf3PfA2Cz5RuQARD_r-z7xi4y-mStutjazfEJaiP_TNrg_Yr1pSVEF3lF_e02oksSiJFrYGBvnm-T_wnG6_zVy3enIm5snB7eIde_E-KoIYRaBpoMRaaZo0MslueJlNPhAdIvxnoetUmJnLfCwOmB9-ZX-SDBmsP',
+      name: 'Meera Dolasiya',
+      role: 'Co-Founder & Head of Product & UX Design',
+      bio: 'Creative product architect specializing in modern UI/UX design systems, interactive web experiences, and learner-first digital interfaces.',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Meera&backgroundColor=ffdfbf',
     },
     {
-      name: 'Sarah Jenkins',
-      role: 'Director of Product Design & UX',
-      bio: 'Creative director focused on building next-generation glassmorphism design systems and intuitive user interfaces.',
-      avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCltDBBGb1o36sJNwdVN9piBzAcW0fuRngoD3uVPh_QMMD0CzW5VFD0CyJbZk-TLFIms15TQRQjlrHkDi6a4EZDd_m7osSWHw1gP4wY6ilOB86N-nPGOcUQxDoF43GQcuHTL9qIFEIXmGubxlzdSjPaPnlxhTLV70oay2ToJ7-2IQcoAXuJyJSmOu9GjnPiBtC2s3wdRs3t8CyzLnDNJ0nMkRM0T18oDC02siOMMfphtpBXCjAb61vV',
+      name: 'Jash Jiyani',
+      role: 'Co-Founder & Principal Platform Engineer',
+      bio: 'Expert backend architect focused on high-performance distributed microservices, database scalability, and DevOps automation.',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jash&backgroundColor=d1d4f9',
     },
   ];
 

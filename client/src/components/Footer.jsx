@@ -90,7 +90,7 @@ export default function Footer({ onNavigate }) {
         {/* Bottom Copyright & Back To Top */}
         <div className="pt-4 border-top border-outline-variant/30 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
           <p className="font-body-sm text-on-surface-variant text-center text-md-start m-0">
-            © 2026 LearnHub Global Education Inc. All rights reserved. Created with ❤️ by <span className="fw-bold text-on-surface">Vishv, Meera & Jash</span>.
+            © 2026 LearnHub Global Education Inc. All rights reserved. Created with ❤️ by <span className="fw-bold text-on-surface">Vishv Bhikadiya, Meera Dolasiya & Jash Jiyani</span>.
           </p>
 
           <button
