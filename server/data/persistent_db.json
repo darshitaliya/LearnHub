@@ -46,7 +46,7 @@
       "phone": "+919409970864",
       "password": "$2b$10$SEBH9.CRazygdVNIOWpbRuXIBDIYeLIBBTUo0SlSv.91CprCaYcnW",
       "role": "student",
-      "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCr9CHF12DMyqfTqDPJoBj_xC_FhZnCOV1I6J1SMhxGh9dcJ3yPsxD2HtzKxLTHnyTSpG0uX0MEYSV840HpNX-y1wjUL2W5uzc-jWwkVaS1whPOnE5SxNKOpXId2qBfE-9gu0NTJ6WC0LlVlX-xhbFqOzPgYtHkBVsyxV3NAvnoOITYBeL22R1XVab90baoCu1D0V5K4T5SuN-718WnFxyTEDsfdHu9ezm90n-qADcvPeqDMj_eqNdC",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Milo&backgroundColor=d1d4f9",
       "enrolledCourses": [
         "web101",
         "cs201",
@@ -58,7 +58,8 @@
       ],
       "wishlist": [],
       "createdAt": "2026-08-23T08:23:06.811Z",
-      "_id": "usr_1787473386811"
+      "_id": "usr_1787473386811",
+      "bio": ""
     },
     {
       "id": "usr_1787480175136",

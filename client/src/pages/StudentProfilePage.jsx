@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
@@ -7,6 +7,7 @@ import { STATIC_AVATARS } from '../data/staticAvatars';
 export default function StudentProfilePage() {
   const { user, updateProfile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -34,7 +35,7 @@ export default function StudentProfilePage() {
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
 
-  const categories = ['All', '3D & Anime', 'Tech & Robots', 'Pixel & Retro', 'Minimalist', 'Real Life'];
+  const categories = ['All', '3D & Anime', 'Tech & Robots', 'Pixel & Retro', 'Minimalist', 'Creative & Fun'];
 
   const filteredAvatars = selectedCategory === 'All'
     ? STATIC_AVATARS
@@ -47,6 +48,30 @@ export default function StudentProfilePage() {
   const handleShuffleAvatar = () => {
     const randomIndex = Math.floor(Math.random() * STATIC_AVATARS.length);
     setFormData((prev) => ({ ...prev, avatar: STATIC_AVATARS[randomIndex].url }));
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please select a valid image file (PNG, JPG, WebP, etc.).');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image size must be less than 5MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Url = event.target.result;
+      setFormData((prev) => ({ ...prev, avatar: base64Url }));
+      setMessage('Custom photo selected! Click "Save Profile Settings" below to apply changes.');
+      setError('');
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleChange = (e) => {
@@ -150,14 +175,35 @@ export default function StudentProfilePage() {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleShuffleAvatar}
-                  className="btn btn-sm btn-outline-primary font-label-caps d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill shadow-xs align-self-start align-self-sm-center"
-                  style={{ fontSize: '12px' }}
-                >
-                  <span>🎲 Randomize</span>
-                </button>
+                <div className="d-flex align-items-center gap-2 align-self-start align-self-sm-center flex-wrap">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    className="d-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="btn btn-sm btn-primary text-white font-label-caps d-flex align-items-center gap-1.5 px-3 py-1.5 rounded-pill shadow-xs"
+                    style={{ fontSize: '12px' }}
+                    title="Upload and use your own custom photo"
+                  >
+                    <span className="material-symbols-outlined fs-6">add_a_photo</span>
+                    <span>Upload Image</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleShuffleAvatar}
+                    className="btn btn-sm btn-outline-primary font-label-caps d-flex align-items-center gap-1 px-2.5 py-1.5 rounded-pill shadow-xs"
+                    style={{ fontSize: '12px' }}
+                    title="Shuffle random avatar"
+                  >
+                    <span>🎲 Shuffle</span>
+                  </button>
+                </div>
               </div>
 
               {/* Category Filter Pills */}
