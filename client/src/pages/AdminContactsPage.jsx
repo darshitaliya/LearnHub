@@ -15,18 +15,32 @@ export default function AdminContactsPage() {
 
   useEffect(() => {
     fetchMessages();
+    // Auto-poll for live inquiries every 6 seconds
+    const interval = setInterval(() => {
+      fetchMessages(false);
+    }, 6000);
+
+    const handleFocus = () => fetchMessages(false);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
-  const fetchMessages = async () => {
-    setLoading(true);
+  const fetchMessages = async (showLoading = true) => {
+    if (showLoading) setLoading(true);
     try {
       const res = await api.get('/admin/contacts');
       setMessages(res.data || []);
     } catch (err) {
       console.error('Failed to load contact messages:', err);
-      setAlert({ type: 'danger', message: 'Failed to load contact messages from server.' });
+      if (showLoading) {
+        setAlert({ type: 'danger', message: 'Failed to load contact messages from server.' });
+      }
     } finally {
-      setLoading(false);
+      if (showLoading) setLoading(false);
     }
   };
 
