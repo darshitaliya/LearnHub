@@ -59,17 +59,38 @@ export default function StudentProfilePage() {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      setError('Image size must be less than 5MB.');
+    if (file.size > 15 * 1024 * 1024) {
+      setError('Image file is too large (must be under 15MB).');
       return;
     }
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const base64Url = event.target.result;
-      setFormData((prev) => ({ ...prev, avatar: base64Url }));
-      setMessage('Custom photo selected! Click "Save Profile Settings" below to apply changes.');
-      setError('');
+      const img = new Image();
+      img.onload = () => {
+        // Optimize and center-crop to a clean square 256x256 avatar
+        const canvas = document.createElement('canvas');
+        const size = 256;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        const minDim = Math.min(img.width, img.height);
+        const startX = (img.width - minDim) / 2;
+        const startY = (img.height - minDim) / 2;
+
+        ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, size, size);
+
+        // Convert to high-quality compressed JPEG (approx 20-30 KB)
+        const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+        setFormData((prev) => ({ ...prev, avatar: optimizedDataUrl }));
+        setMessage('Custom photo uploaded & optimized! Click "Save Profile Settings" below to apply changes.');
+        setError('');
+      };
+      img.onerror = () => {
+        setError('Failed to process image. Please try selecting a different image.');
+      };
+      img.src = event.target.result;
     };
     reader.readAsDataURL(file);
   };
