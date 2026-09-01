@@ -368,17 +368,17 @@ export default function StudentDashboardPage() {
                               <button
                                 type="button"
                                 onClick={() => setSelectedQuizCourse(course)}
-                                className={`btn btn-sm font-body-sm py-1 px-2.5 rounded-2 d-flex align-items-center gap-1 ${
+                                className={`btn btn-sm font-body-sm py-1.5 px-3 rounded-3 d-flex align-items-center gap-1.5 text-nowrap ${
                                   prog.quizPassed
                                     ? 'btn-outline-success text-success fw-bold'
                                     : 'btn-warning text-dark fw-bold shadow-xs'
                                 }`}
-                                style={{ fontSize: '11px' }}
+                                style={{ fontSize: '11.5px' }}
                               >
                                 <span className="material-symbols-outlined fs-6 fill">
                                   {prog.quizPassed ? 'verified' : 'quiz'}
                                 </span>
-                                <span>{prog.quizPassed ? `Quiz Passed (${prog.quizScore || 100}%) ✅` : '📝 Take Quiz (Unlocked)'}</span>
+                                <span>{prog.quizPassed ? `Quiz Passed (${prog.quizScore || 100}%)` : 'Take Quiz (Unlocked)'}</span>
                               </button>
                             ) : (
                               <span

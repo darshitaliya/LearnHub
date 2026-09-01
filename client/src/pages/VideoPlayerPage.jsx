@@ -394,10 +394,10 @@ export default function VideoPlayerPage() {
                 onClick={() => setShowQuiz(true)}
                 className={`btn btn-sm ${
                   quizPassed ? 'btn-success text-white' : 'btn-outline-warning text-warning'
-                } font-label-caps d-flex align-items-center gap-1 fw-bold px-3 py-1.5 rounded-3 shadow-xs`}
+                } font-label-caps d-flex align-items-center gap-1.5 fw-bold px-3 py-1.5 rounded-3 shadow-xs text-nowrap`}
               >
-                <span className="material-symbols-outlined fs-6 fill">quiz</span>
-                <span>{quizPassed ? `Quiz Passed (${quizScore || 100}%) ✅` : 'Take Course Quiz'}</span>
+                <span className="material-symbols-outlined fs-6 fill">{quizPassed ? 'verified' : 'quiz'}</span>
+                <span>{quizPassed ? `Quiz Passed (${quizScore || 100}%)` : 'Take Course Quiz'}</span>
               </button>
 
               {(percentage >= 100 || quizPassed) && (
@@ -567,19 +567,20 @@ export default function VideoPlayerPage() {
               <div className="p-3 d-flex flex-column gap-2">
                 <button
                   onClick={() => setShowQuiz(true)}
-                  className={`btn w-100 font-body-sm py-2 px-3 rounded-3 d-flex align-items-center justify-content-between text-start ${
+                  className={`btn w-100 font-body-sm py-2 px-3 rounded-3 d-flex align-items-center justify-content-between flex-nowrap ${
                     quizPassed
                       ? 'btn-outline-success border-success text-success fw-bold'
                       : 'btn-primary text-white fw-bold shadow-xs'
                   }`}
+                  style={{ minHeight: '44px' }}
                 >
-                  <div className="d-flex align-items-center gap-2">
-                    <span className="material-symbols-outlined fs-5 fill">
+                  <div className="d-flex align-items-center gap-2 flex-nowrap text-truncate">
+                    <span className="material-symbols-outlined fs-5 fill flex-shrink-0">
                       {quizPassed ? 'verified' : 'quiz'}
                     </span>
-                    <span>{quizPassed ? `Quiz Passed (${quizScore || 100}%)` : 'Take Course Quiz'}</span>
+                    <span className="text-nowrap">{quizPassed ? `Quiz Passed (${quizScore || 100}%)` : 'Take Course Quiz'}</span>
                   </div>
-                  <span className="material-symbols-outlined fs-6">
+                  <span className="material-symbols-outlined fs-6 flex-shrink-0 ms-2">
                     {quizPassed ? 'check' : 'arrow_forward'}
                   </span>
                 </button>

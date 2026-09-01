@@ -748,7 +748,12 @@
       ],
       "percentage": 100,
       "certificateEarned": true,
-      "lastWatchedLesson": "les_1787477280867_0_0"
+      "lastWatchedLesson": "les_1787477280867_0_0",
+      "key": "usr_1787473386811_crs_1787477280878",
+      "quizCompleted": true,
+      "quizScore": 100,
+      "quizPassed": true,
+      "quizSubmittedAt": "2026-09-01T11:29:49.051Z"
     },
     "usr_admin_crs_1787477280878": {
       "userId": "usr_admin",
@@ -959,21 +964,6 @@
     }
   ],
   "contacts": [
-    {
-      "_id": "msg_1788262007016_k41fm",
-      "id": "msg_1788262007016_k41fm",
-      "name": "Audit Test User",
-      "email": "test@learnhub.com",
-      "category": "General Inquiry",
-      "subject": "System Verification Test",
-      "message": "Automated test message to ensure end-to-end flow.",
-      "status": "Unread",
-      "responseNotes": "",
-      "isDeleted": false,
-      "deletedAt": null,
-      "createdAt": "2026-09-01T11:26:47.016Z",
-      "updatedAt": "2026-09-01T11:26:47.016Z"
-    },
     {
       "_id": "msg_1788260862268_pcs56",
       "id": "msg_1788260862268_pcs56",
