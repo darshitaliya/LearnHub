@@ -14,6 +14,7 @@ export default function AdminSidebar() {
     { path: '/admin/users', label: 'Registered Users', icon: 'group' },
     { path: '/admin/courses', label: 'Manage Courses', icon: 'menu_book' },
     { path: '/admin/enrollments', label: 'Enrolled Students', icon: 'assignment_turned_in' },
+    { path: '/admin/contacts', label: 'Contact Messages', icon: 'mark_email_unread' },
     { path: '/admin/categories', label: 'Categories', icon: 'category' },
     { path: '/admin/reports', label: 'Analytics Reports', icon: 'analytics' },
   ];

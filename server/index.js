@@ -11,6 +11,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import captchaRoutes from './routes/captchaRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
 
 dotenv.config();
 
@@ -69,6 +70,7 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Health check endpoint
 app.get(['/api/health', '/health'], (req, res) => {

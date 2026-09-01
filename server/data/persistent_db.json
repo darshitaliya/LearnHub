@@ -957,5 +957,37 @@
       "createdAt": "2026-08-23T07:18:44.127Z",
       "status": "Active"
     }
+  ],
+  "contacts": [
+    {
+      "_id": "msg_1788257000001_a1b2c",
+      "id": "msg_1788257000001_a1b2c",
+      "name": "Aarav Sharma",
+      "email": "aarav.sharma@example.com",
+      "category": "Certificate Verification",
+      "subject": "Verification Request for UI/UX Design System Certificate",
+      "message": "Hello LearnHub team, I completed the UI/UX Design Systems masterclass and would like to verify my certificate ID for my LinkedIn profile and university submission. Thank you!",
+      "status": "Unread",
+      "responseNotes": "",
+      "isDeleted": false,
+      "deletedAt": null,
+      "createdAt": "2026-09-01T09:45:00.000Z",
+      "updatedAt": "2026-09-01T09:45:00.000Z"
+    },
+    {
+      "_id": "msg_1788257000002_d3e4f",
+      "id": "msg_1788257000002_d3e4f",
+      "name": "Priya Patel",
+      "email": "priya.patel@techcorp.io",
+      "category": "Instructor Partnership",
+      "subject": "Proposal for Advanced Kubernetes & Cloud Native Course",
+      "message": "Hi, I am a Principal DevOps Architect with 10+ years experience. I would love to contribute a specialized course on Kubernetes clustering and GitOps to LearnHub.",
+      "status": "In Review",
+      "responseNotes": "Reviewed resume and curriculum outline. Scheduled call for Friday.",
+      "isDeleted": false,
+      "deletedAt": null,
+      "createdAt": "2026-08-31T14:20:00.000Z",
+      "updatedAt": "2026-08-31T16:00:00.000Z"
+    }
   ]
 }

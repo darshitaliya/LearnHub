@@ -20,6 +20,7 @@ import AdminCoursesPage from '../pages/AdminCoursesPage';
 import AdminEnrollmentsPage from '../pages/AdminEnrollmentsPage';
 import AdminCategoriesPage from '../pages/AdminCategoriesPage';
 import AdminReportsPage from '../pages/AdminReportsPage';
+import AdminContactsPage from '../pages/AdminContactsPage';
 import AboutPage from '../pages/AboutPage';
 import ContactPage from '../pages/ContactPage';
 import NotFoundPage from '../pages/NotFoundPage';
@@ -50,6 +51,7 @@ export default function AppRoutes() {
       <Route path="/admin/users" element={<ProtectedRoute role="admin"><AdminUsersPage /></ProtectedRoute>} />
       <Route path="/admin/courses" element={<ProtectedRoute role="admin"><AdminCoursesPage /></ProtectedRoute>} />
       <Route path="/admin/enrollments" element={<ProtectedRoute role="admin"><AdminEnrollmentsPage /></ProtectedRoute>} />
+      <Route path="/admin/contacts" element={<ProtectedRoute role="admin"><AdminContactsPage /></ProtectedRoute>} />
       <Route path="/admin/categories" element={<ProtectedRoute role="admin"><AdminCategoriesPage /></ProtectedRoute>} />
       <Route path="/admin/reports" element={<ProtectedRoute role="admin"><AdminReportsPage /></ProtectedRoute>} />
 

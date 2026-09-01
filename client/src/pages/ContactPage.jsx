@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import CaptchaField from '../components/CaptchaField';
+import api from '../services/api';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -14,27 +15,57 @@ export default function ContactPage() {
 
   const [captchaData, setCaptchaData] = useState({ captchaToken: '', captchaInput: '' });
   const [captchaError, setCaptchaError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (errorMessage) setErrorMessage('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setCaptchaError('');
+    setErrorMessage('');
 
-    if (!captchaData.captchaInput?.trim()) {
+    if (captchaData.captchaToken && !captchaData.captchaInput?.trim()) {
       setCaptchaError('Please enter the CAPTCHA code.');
       return;
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      // If captcha token is active, verify captcha first
+      if (captchaData.captchaToken && captchaData.captchaInput) {
+        try {
+          await api.post('/captcha/verify', {
+            token: captchaData.captchaToken,
+            input: captchaData.captchaInput,
+          });
+        } catch (cErr) {
+          setCaptchaError(cErr.response?.data?.error || 'Incorrect CAPTCHA code. Please try again.');
+          setLoading(false);
+          return;
+        }
+      }
+
+      await api.post('/contact', formData);
       setSubmitted(true);
-    }, 800);
+      setFormData({
+        name: '',
+        email: '',
+        category: 'General Inquiry',
+        subject: '',
+        message: '',
+      });
+    } catch (err) {
+      setErrorMessage(
+        err.response?.data?.error || 'Failed to deliver message. Please check your internet connection and try again.'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const faqs = [
@@ -108,6 +139,13 @@ export default function ContactPage() {
               <div className="col-12 col-lg-7">
                 <div className="bg-white rounded-4 border border-outline-variant/30 p-4 p-md-5 shadow-sm">
                   <h3 className="font-headline-md fs-4 fw-bold text-on-surface mb-4">Send Us A Message</h3>
+
+                  {errorMessage && (
+                    <div className="alert alert-danger font-body-sm rounded-3 d-flex align-items-center gap-2 mb-3">
+                      <span className="material-symbols-outlined fs-5">error</span>
+                      <span>{errorMessage}</span>
+                    </div>
+                  )}
 
                   {submitted ? (
                     <div className="bg-success-container/30 border border-success/30 rounded-4 p-4 text-center">

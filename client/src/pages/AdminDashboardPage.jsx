@@ -12,6 +12,7 @@ export default function AdminDashboardPage() {
   const [courses, setCourses] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
   const [users, setUsers] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [activeChartTab, setActiveChartTab] = useState('weekly');
@@ -23,25 +24,29 @@ export default function AdminDashboardPage() {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const [statsRes, enrollRes, coursesRes, usersRes] = await Promise.all([
+      const [statsRes, enrollRes, coursesRes, usersRes, contactsRes] = await Promise.all([
         api.get('/admin/stats').catch(() => ({ data: {} })),
         api.get('/admin/enrollments').catch(() => ({ data: [] })),
         api.get('/courses').catch(() => ({ data: [] })),
         api.get('/admin/users').catch(() => ({ data: [] })),
+        api.get('/admin/contacts').catch(() => ({ data: [] })),
       ]);
 
       const enrollList = enrollRes.data || [];
       const courseList = coursesRes.data || [];
       const userList = usersRes.data || [];
+      const contactList = contactsRes.data || [];
 
       enrollList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
       courseList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
       userList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      contactList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
       setStats(statsRes.data || {});
       setEnrollments(enrollList);
       setCourses(courseList);
       setUsers(userList);
+      setContacts(contactList);
     } catch (err) {
       console.error('Failed to fetch executive dashboard data:', err);
     } finally {
@@ -421,16 +426,23 @@ export default function AdminDashboardPage() {
 
                   <div className="col-12 col-sm-6">
                     <div
-                      onClick={() => navigate('/dashboard')}
-                      className="p-3 rounded-4 bg-surface-container-lowest border border-outline-variant/30 cursor-pointer hover-elevation transition-all d-flex align-items-center gap-3 h-100"
+                      onClick={() => navigate('/admin/contacts')}
+                      className="p-3 rounded-4 bg-surface-container-lowest border border-outline-variant/30 cursor-pointer hover-elevation transition-all d-flex align-items-center gap-3 h-100 position-relative"
                     >
-                      <div className="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center" style={{ width: '42px', height: '42px', flexShrink: 0 }}>
-                        <span className="material-symbols-outlined fs-5">school</span>
+                      <div className="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center" style={{ width: '42px', height: '42px', flexShrink: 0 }}>
+                        <span className="material-symbols-outlined fs-5">mark_email_unread</span>
                       </div>
                       <div>
-                        <h5 className="font-body-base fw-bold text-on-surface m-0" style={{ fontSize: '14px' }}>Student Experience</h5>
-                        <span className="font-body-sm text-dark fw-semibold d-flex align-items-center gap-1 mt-0.5" style={{ fontSize: '12px' }}>
-                          Student panel <span className="material-symbols-outlined fs-6">arrow_forward</span>
+                        <div className="d-flex align-items-center gap-1.5">
+                          <h5 className="font-body-base fw-bold text-on-surface m-0" style={{ fontSize: '14px' }}>Contact Inquiries</h5>
+                          {contacts.filter((c) => c.status === 'Unread').length > 0 && (
+                            <span className="badge bg-danger text-white font-label-caps" style={{ fontSize: '9px' }}>
+                              {contacts.filter((c) => c.status === 'Unread').length} NEW
+                            </span>
+                          )}
+                        </div>
+                        <span className="font-body-sm text-warning fw-semibold d-flex align-items-center gap-1 mt-0.5" style={{ fontSize: '12px' }}>
+                          View support inbox <span className="material-symbols-outlined fs-6">arrow_forward</span>
                         </span>
                       </div>
                     </div>

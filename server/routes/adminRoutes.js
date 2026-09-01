@@ -11,6 +11,11 @@ import {
   deleteEnrollment,
   getExecutiveReport,
 } from '../controllers/adminController.js';
+import {
+  getAdminContactMessages,
+  updateContactMessageStatus,
+  deleteContactMessage,
+} from '../controllers/contactController.js';
 import { requireAuth, requireRole } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -28,5 +33,10 @@ router.delete('/users/:userId', deleteUser);
 router.get('/orders', getAllOrders);
 router.get('/enrollments', getEnrollments);
 router.delete('/enrollments/:id', deleteEnrollment);
+
+// Inquiries & Contact Messages
+router.get('/contacts', getAdminContactMessages);
+router.put('/contacts/:id/status', updateContactMessageStatus);
+router.delete('/contacts/:id', deleteContactMessage);
 
 export default router;

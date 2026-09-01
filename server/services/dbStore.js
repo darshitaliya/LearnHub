@@ -9,6 +9,7 @@ import Progress from '../models/Progress.js';
 import Enrollment from '../models/Enrollment.js';
 import Category from '../models/Category.js';
 import Review from '../models/Review.js';
+import ContactMessage from '../models/ContactMessage.js';
 
 import { fileURLToPath } from 'url';
 
@@ -51,6 +52,7 @@ export function loadStateFromFile() {
             if (Array.isArray(parsed.courses) && parsed.courses.length > 0) memoryStore.courses = parsed.courses;
             if (Array.isArray(parsed.orders)) memoryStore.orders = parsed.orders;
             if (Array.isArray(parsed.enrollments)) memoryStore.enrollments = parsed.enrollments;
+            if (Array.isArray(parsed.contacts)) memoryStore.contacts = parsed.contacts;
             if (parsed.progress) memoryStore.progress = parsed.progress;
             return true;
           }
@@ -677,6 +679,109 @@ export const dbStore = {
       memoryStore.enrollments[idx] = { ...memoryStore.enrollments[idx], ...softDeleteData };
       saveStateToFile();
       return memoryStore.enrollments[idx];
+    }
+    return null;
+  },
+
+  // CONTACT INQUIRIES & MESSAGES
+  async createContactMessage(data) {
+    const id = `msg_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const newMsg = {
+      _id: id,
+      id,
+      name: data.name?.trim(),
+      email: data.email?.trim().toLowerCase(),
+      category: data.category || 'General Inquiry',
+      subject: data.subject?.trim(),
+      message: data.message?.trim(),
+      status: 'Unread',
+      responseNotes: '',
+      isDeleted: false,
+      deletedAt: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (isMongoConnected()) {
+      try {
+        const created = await ContactMessage.create(newMsg);
+        return created;
+      } catch (err) {
+        console.error('Error creating contact message in Mongo:', err);
+      }
+    }
+
+    if (!memoryStore.contacts) memoryStore.contacts = [];
+    memoryStore.contacts.unshift(newMsg);
+    saveStateToFile();
+    return newMsg;
+  },
+
+  async getAllContactMessages() {
+    if (isMongoConnected()) {
+      try {
+        const list = await ContactMessage.find({ isDeleted: { $ne: true } }).sort({ createdAt: -1, _id: -1 });
+        return list;
+      } catch (err) {
+        console.error('Error fetching contact messages from Mongo:', err);
+      }
+    }
+    if (!memoryStore.contacts) memoryStore.contacts = [];
+    return [...memoryStore.contacts]
+      .filter((m) => !m.isDeleted)
+      .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  },
+
+  async updateContactMessageStatus(id, status, responseNotes = '') {
+    const updatePayload = {
+      status,
+      responseNotes,
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (isMongoConnected()) {
+      try {
+        const updated = await ContactMessage.findOneAndUpdate(
+          { $or: [{ _id: id }, { id }] },
+          updatePayload,
+          { new: true }
+        );
+        return updated;
+      } catch (err) {
+        console.error('Error updating contact message status in Mongo:', err);
+      }
+    }
+
+    if (!memoryStore.contacts) memoryStore.contacts = [];
+    const idx = memoryStore.contacts.findIndex((m) => m.id === id || m._id === id);
+    if (idx !== -1) {
+      memoryStore.contacts[idx] = { ...memoryStore.contacts[idx], ...updatePayload };
+      saveStateToFile();
+      return memoryStore.contacts[idx];
+    }
+    return null;
+  },
+
+  async deleteContactMessage(id) {
+    const softDeleteData = { isDeleted: true, deletedAt: new Date().toISOString() };
+    if (isMongoConnected()) {
+      try {
+        const deleted = await ContactMessage.findOneAndUpdate(
+          { $or: [{ _id: id }, { id }] },
+          softDeleteData,
+          { new: true }
+        );
+        return deleted;
+      } catch (err) {
+        console.error('Error deleting contact message in Mongo:', err);
+      }
+    }
+    if (!memoryStore.contacts) memoryStore.contacts = [];
+    const idx = memoryStore.contacts.findIndex((m) => m.id === id || m._id === id);
+    if (idx !== -1) {
+      memoryStore.contacts[idx] = { ...memoryStore.contacts[idx], ...softDeleteData };
+      saveStateToFile();
+      return memoryStore.contacts[idx];
     }
     return null;
   },
